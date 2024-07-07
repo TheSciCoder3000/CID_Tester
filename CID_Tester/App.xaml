@@ -9,6 +9,9 @@
 		        x:Key="{x:Type LayoutAnchorableFloatingWindowControl}"
 		        BasedOn="{StaticResource {x:Type LayoutAnchorableFloatingWindowControl}}"
 		        TargetType="{x:Type LayoutAnchorableFloatingWindowControl}" />
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Styles/MenuStyles.xaml" />
+            </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>
 </Application>
