@@ -24,6 +24,40 @@ namespace CID_Tester
             InitializeComponent();
             this.DataContext = this;
 
+            navigationBar.AddDocumentRequested += AddDocumentToWorkspace;
+
+        }
+
+        private void AddDocumentToWorkspace(string documentTitle, UserControl control)
+        {
+
+            bool documentExists = LayoutDocumentPane.Children.OfType<LayoutDocument>().Any(doc => doc.Title == documentTitle);
+
+            if (!documentExists)
+            {
+                // Create a new LayoutDocument.
+                var newDocument = new LayoutDocument
+                {
+                    Title = documentTitle,
+                    Content = control
+                };
+
+                // Add the new document to the DocumentPane.
+                LayoutDocumentPane.Children.Add(newDocument);
+                LayoutDocument documentToFocus = LayoutDocumentPane.Children.OfType<LayoutDocument>().FirstOrDefault(doc => doc.Title == documentTitle);
+                if (documentToFocus != null)
+                {
+                    dockManager.ActiveContent = documentToFocus;
+                }
+            }
+            else
+            {
+                LayoutDocument documentToFocus = LayoutDocumentPane.Children.OfType<LayoutDocument>().FirstOrDefault(doc => doc.Title == documentTitle);
+                if (documentToFocus != null)
+                {
+                    dockManager.ActiveContent = documentToFocus;
+                }
+            }
         }
 
         private void OnSaveLayout(object sender, RoutedEventArgs e)
