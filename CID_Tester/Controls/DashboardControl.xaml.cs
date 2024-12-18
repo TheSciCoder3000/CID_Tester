@@ -31,7 +31,6 @@ namespace CID_Tester.Controls
             InitializeComponent();
             DataContext context = new DataContext();
 
-            Debug.WriteLine("TEST");
             CreateCustomTable(context.TEST_PARAMETER.ToList());
             //myDataGrid2.ItemsSource = context.TEST_PROCEDURE.ToList();
             //myDataGrid3.ItemsSource = context.DUT.ToList();
@@ -39,41 +38,6 @@ namespace CID_Tester.Controls
         }
 
 
-        private List<SampleData> LoadCollectionData()
-        {
-            List<SampleData> SampleDatas = new List<SampleData>();
-            SampleDatas.Add(new SampleData()
-            {
-                PARAM_CODE = 1,
-                TEST_CODE = 101,
-                DESC= "Graphics Programming with GDI+",
-                VALUE = 150.6F,
-                UNIT = "mV",
-                PASS = true
-            });
-
-            SampleDatas.Add(new SampleData()
-            {
-                PARAM_CODE = 2,
-                TEST_CODE = 101,
-                DESC = "Test Plan Parameter 2",
-                VALUE = 150.6F,
-                UNIT = "mV",
-                PASS = true
-            });
-
-            SampleDatas.Add(new SampleData()
-            {
-                PARAM_CODE = 3,
-                TEST_CODE = 101,
-                DESC = "Test Plan Parameter 3",
-                VALUE = 150.6F,
-                UNIT = "mV",
-                PASS = true
-            });
-
-            return SampleDatas;
-        }
 
         private void CreateCell(String displayText, int rowCount, int columnCount)
         {
@@ -99,17 +63,31 @@ namespace CID_Tester.Controls
 
             foreach (var test in tableData)
             {
-                // Create a TextBlock to display the data
-
 
                 CreateCell(test.DESCRIPTION.ToString(), row_count, 0);
                 CreateCell(test.METRIC.ToString(), row_count, 1);
                 CreateCell(test.TARGET.ToString(), row_count, 2);
                 CreateCell(test.VALUE.ToString(), row_count, 3);
-                CreateCell(test.PASS.ToString(), row_count, 4);
 
+                TextBlock text = new TextBlock
+                {
+                    Text = (test.PASS == 1) ? "PASS" : "FAIL",
+                    FontWeight = FontWeights.Bold,
+                    Padding = new Thickness(10),
+                    Foreground = Brushes.White,
+                    HorizontalAlignment = HorizontalAlignment.Center,
+                };
 
-                // Add the cell to the grid at the appropriate row and column
+                Border border = new Border
+                {
+                    Child = text,
+                    Padding = new Thickness(5),
+                    Background = (test.PASS == 1) ? Brushes.Green : Brushes.Red
+                };
+                Grid.SetRow(border, row_count);
+                Grid.SetColumn(border, 4);
+                MainGrid.Children.Add(border);
+
 
                 RowDefinition rowParams = new RowDefinition();
                 MainGrid.RowDefinitions.Add(rowParams);

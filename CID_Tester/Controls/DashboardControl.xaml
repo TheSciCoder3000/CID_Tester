@@ -23,9 +23,7 @@
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"  MinWidth="300"/>
                         <ColumnDefinition Width="100"/>
-
                         <ColumnDefinition Width="100"/>
-
                         <ColumnDefinition Width="100"/>
                         <ColumnDefinition Width="100"/>
 
@@ -50,7 +48,7 @@
                         <TextBlock Text="TARGET" Padding="10" Foreground="White"/>
                     </Border>
                     <Border Background="#252526" Grid.Column="4" Padding="5">
-                        <TextBlock Text="STATUS" Padding="10" Foreground="White"/>
+                        <TextBlock Text="STATUS" Padding="10" Foreground="White" HorizontalAlignment="Center"/>
                     </Border>
 
 
