@@ -12,7 +12,7 @@ namespace CID_Tester.Model
         public int TEST_CODE { get; set; }
         public string DESCRIPTION {  get; set; }
         public string METRIC { get; set; }
-        public float VALUE { get; set; }
+        public decimal VALUE { get; set; }
         public string UNIT { get; set; }
 
     }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CID_Tester.Model;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,6 +24,13 @@ namespace CID_Tester.Controls
         public TestPlanControl()
         {
             InitializeComponent();
+
+            DataContext context = new DataContext();
+            myDataGrid1.ItemsSource = context.TEST_PARAMETER.ToList();
+            myDataGrid2.ItemsSource = context.TEST_PROCEDURE.ToList();
+            myDataGrid3.ItemsSource = context.DUT.ToList();
+            myDataGrid4.ItemsSource = context.TEST_USER.ToList();
+
         }
     }
 }

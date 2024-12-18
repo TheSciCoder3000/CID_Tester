@@ -6,7 +6,11 @@
              xmlns:local="clr-namespace:CID_Tester.Controls"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <Grid>
+    <StackPanel>
         <TextBlock Text="Test Plan" Foreground="White" />
-    </Grid>
+        <DataGrid x:Name="myDataGrid1"/>
+        <DataGrid x:Name="myDataGrid2"/>
+        <DataGrid x:Name="myDataGrid3"/>
+        <DataGrid x:Name="myDataGrid4"/>
+    </StackPanel>
 </UserControl>
