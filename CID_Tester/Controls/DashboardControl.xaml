@@ -6,7 +6,71 @@
              xmlns:local="clr-namespace:CID_Tester.Controls"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <Grid>
-        <TextBlock Text="Dashboard" Foreground="White" />
-    </Grid>
+
+    <UserControl.Resources>
+        <Style TargetType="TextBlock">
+            <Setter Property="Foreground" Value="White" />
+        </Style>
+    </UserControl.Resources>
+
+    <StackPanel Orientation="Vertical">
+        <StackPanel Margin="20" VerticalAlignment="Stretch">
+            <Border CornerRadius="7" Background="#2D2D30">
+                <StackPanel Orientation="Horizontal" Margin="10">
+                    <Ellipse Width="100" Height="100" Margin="20,0" Stroke="#1FB151" StrokeThickness="2">
+                        <Ellipse.Fill>
+                            <ImageBrush ImageSource="../images/profile.jpg" />
+                        </Ellipse.Fill>
+                    </Ellipse>
+                    <StackPanel Orientation="Vertical">
+                        <TextBlock Text="Ivan Abilon" FontSize="22" />
+                        <StackPanel Orientation="Horizontal" Margin="0,7,0,0">
+                            <TextBlock Text="SITE:" FontWeight="Bold" FontSize="15" HorizontalAlignment="Center" />
+                            <TextBlock Text="SITE 1" VerticalAlignment="Center" FontSize="15" Margin="10,0,0,0" />
+                        </StackPanel>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+        </StackPanel>
+
+        <Grid Margin="20, 0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <Border CornerRadius="7" Background="#2D2D30" Grid.Column="0">
+                <StackPanel Orientation="Vertical" Margin="15">
+                    <TextBlock Text="Op Amp# 264451578" FontSize="16" />
+                    <TextBlock Text="Panasonic Corporation" FontSize="13" Foreground="#60ffffff" Margin="0,5" />
+                    <TextBlock Text="Test Pending" FontSize="13" Margin="0,40,0,0" VerticalAlignment="Stretch" TextAlignment="Right" Foreground="Red" />
+                </StackPanel>
+            </Border>
+
+            <Border CornerRadius="7" Background="#2D2D30" Grid.Column="2">
+                <Grid Margin="10" VerticalAlignment="Center" HorizontalAlignment="Center">
+                    <TextBlock FontSize="15" Text="0 Test Points Tested" TextAlignment="Center" FontWeight="Bold" />
+                </Grid>
+            </Border>
+
+            <Border CornerRadius="7" Background="#2D2D30" Grid.Column="4">
+                <Grid Margin="10" VerticalAlignment="Center" HorizontalAlignment="Center">
+                    <TextBlock FontSize="20" Foreground="#1FB151" Text="0 PASSED" FontWeight="Bold" TextAlignment="Center" />
+                </Grid>
+            </Border>
+
+            <Border CornerRadius="7" Background="#2D2D30" Grid.Column="6">
+                <Grid Margin="10" VerticalAlignment="Center" HorizontalAlignment="Center">
+                    <TextBlock FontSize="20" Foreground="#FF6B00" FontWeight="Bold" Text="0 FAILED" TextAlignment="Center" />
+                </Grid>
+            </Border>
+        </Grid>
+    </StackPanel>
+
+
 </UserControl>
