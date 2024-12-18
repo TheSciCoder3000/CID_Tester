@@ -101,6 +101,5 @@
             </LayoutRoot>
 
         </DockingManager>
-        <DataGrid Grid.Row="1" d:ItemsSource="{d:SampleData ItemCount=5}" Margin="87,232,87,56"/>
     </Grid>
 </Window>
