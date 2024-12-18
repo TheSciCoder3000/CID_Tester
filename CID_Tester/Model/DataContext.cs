@@ -11,7 +11,7 @@ namespace CID_Tester.Model
     {
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer("Data Source =localhost;Initial Catalog=master;Integrated Security=True;Encrypt=False;Trust Server Certificate=False")
+            optionsBuilder.UseSqlServer("Data Source =localhost;Initial Catalog=master;Integrated Security=True;Encrypt=False;Trust Server Certificate=False");
 
         }
 

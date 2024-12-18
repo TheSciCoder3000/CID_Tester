@@ -23,6 +23,49 @@ namespace CID_Tester.Controls
         public DashboardControl()
         {
             InitializeComponent();
+            ViewDataTable.ItemsSource = LoadCollectionData();
         }
+
+
+        private List<SampleData> LoadCollectionData()
+        {
+            List<SampleData> SampleDatas = new List<SampleData>();
+            SampleDatas.Add(new SampleData()
+            {
+                PARAM_CODE = 1,
+                TEST_CODE = 101,
+                DESC= "Graphics Programming with GDI+",
+                VALUE = 150.6F,
+                UNIT = "mV",
+                PASS = true
+            });
+
+            SampleDatas.Add(new SampleData()
+            {
+                PARAM_CODE = 2,
+                TEST_CODE = 101,
+                DESC = "Test Plan Parameter 2",
+                VALUE = 150.6F,
+                UNIT = "mV",
+                PASS = true
+            });
+
+            SampleDatas.Add(new SampleData()
+            {
+                PARAM_CODE = 3,
+                TEST_CODE = 101,
+                DESC = "Test Plan Parameter 3",
+                VALUE = 150.6F,
+                UNIT = "mV",
+                PASS = true
+            });
+
+            return SampleDatas;
+        }
+
+        
+
     }
+
+
 }
