@@ -1,6 +1,9 @@
-﻿using System;
+﻿using CID_Tester.Model;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -12,6 +15,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace CID_Tester.Controls
 {
@@ -20,10 +24,18 @@ namespace CID_Tester.Controls
     /// </summary>
     public partial class DashboardControl : UserControl
     {
+        
+
         public DashboardControl()
         {
             InitializeComponent();
-            ViewDataTable.ItemsSource = LoadCollectionData();
+            DataContext context = new DataContext();
+
+            Debug.WriteLine("TEST");
+            CreateCustomTable(context.TEST_PARAMETER.ToList());
+            //myDataGrid2.ItemsSource = context.TEST_PROCEDURE.ToList();
+            //myDataGrid3.ItemsSource = context.DUT.ToList();
+            //myDataGrid4.ItemsSource = context.TEST_USER.ToList();
         }
 
 
@@ -63,9 +75,54 @@ namespace CID_Tester.Controls
             return SampleDatas;
         }
 
-        
+        private void CreateCell(String displayText, int rowCount, int columnCount)
+        {
+            TextBlock text = new TextBlock
+            {
+                Text = displayText,
+                Padding = new Thickness(10),
+                Foreground = Brushes.White
+            };
+
+            Border border = new Border { Child = text, Padding = new Thickness(5)};
+            Grid.SetRow(border, rowCount);
+            Grid.SetColumn(border, columnCount);
+            MainGrid.Children.Add(border);
+        }
+
+        private void CreateCustomTable(List<TEST_PARAMETER> tableData)
+        {
+            Debug.WriteLine(tableData.Count);
+
+
+            int row_count = 1;
+
+            foreach (var test in tableData)
+            {
+                // Create a TextBlock to display the data
+
+
+                CreateCell(test.DESCRIPTION.ToString(), row_count, 0);
+                CreateCell(test.METRIC.ToString(), row_count, 1);
+                CreateCell(test.TARGET.ToString(), row_count, 2);
+                CreateCell(test.VALUE.ToString(), row_count, 3);
+                CreateCell(test.PASS.ToString(), row_count, 4);
+
+
+                // Add the cell to the grid at the appropriate row and column
+
+                RowDefinition rowParams = new RowDefinition();
+                MainGrid.RowDefinitions.Add(rowParams);
+
+                Debug.WriteLine(row_count);
+                row_count++;
+            }
+        }
+
+
 
     }
 
 
 }
+

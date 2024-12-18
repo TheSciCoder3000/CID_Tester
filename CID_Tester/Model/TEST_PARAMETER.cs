@@ -13,7 +13,8 @@ namespace CID_Tester.Model
         public string DESCRIPTION {  get; set; }
         public string METRIC { get; set; }
         public decimal VALUE { get; set; }
-        public string UNIT { get; set; }
+        public decimal TARGET { get; set; }
+        public int PASS { get; set; }
 
     }
 }

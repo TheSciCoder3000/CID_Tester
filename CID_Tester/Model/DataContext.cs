@@ -11,7 +11,7 @@ namespace CID_Tester.Model
     {
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer("Data Source =ACE\\SQLEXPRESS;Initial Catalog=CID_TESTER;Integrated Security=True;Encrypt=False;Trust Server Certificate=False");
+            optionsBuilder.UseSqlServer("Data Source =DESKTOP-M7O31AC\\SQLEXPRESS;Initial Catalog=THESIS;Integrated Security=True;Encrypt=False;Trust Server Certificate=False");
 
         }
 

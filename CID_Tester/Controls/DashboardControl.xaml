@@ -13,12 +13,50 @@
 
     <StackPanel Orientation="Vertical" Margin="20">
         <Border CornerRadius="10" Background="#2D2D30">
-            <StackPanel Orientation="Horizontal" Background="Transparent" Margin="20">
-                
-                <StackPanel Orientation="Vertical">
+            <StackPanel Orientation="Vertical" Background="Transparent" Margin="20">
+                <StackPanel Orientation="Horizontal" Margin="0 10">
                     <TextBlock Text="Status Report" Foreground="White"/>
-                    <DataGrid Name="ViewDataTable" Margin="0 30 0 0" AllowDrop="False" IsReadOnly="True" d:ItemsSource="{d:SampleData ItemCount=5}"/>
+                    <!--<DataGrid Name="ViewDataTable" Margin="0 30 0 0" AllowDrop="False" IsReadOnly="True" d:ItemsSource="{d:SampleData ItemCount=5}"/>-->
+
                 </StackPanel>
+                <Grid Name="MainGrid">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"  MinWidth="300"/>
+                        <ColumnDefinition Width="100"/>
+
+                        <ColumnDefinition Width="100"/>
+
+                        <ColumnDefinition Width="100"/>
+                        <ColumnDefinition Width="100"/>
+
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                                     
+                    <Border Background="#252526" Grid.Column="0" Padding="5">
+                        <TextBlock Text="TEST" Padding="10" Foreground="White"/>
+            
+                    </Border>
+                    <Border Background="#252526" Grid.Column="1"  Padding="5">
+                        <TextBlock Text="UNIT" Padding="10" Foreground="White"/>
+
+                    </Border>
+                    <Border Background="#252526" Grid.Column="2" Padding="5">
+                        <TextBlock Text="MEASURED" Padding="10" Foreground="White"/>
+
+                    </Border>
+                    <Border Background="#252526" Grid.Column="3" Padding="5">
+                        <TextBlock Text="TARGET" Padding="10" Foreground="White"/>
+                    </Border>
+                    <Border Background="#252526" Grid.Column="4" Padding="5">
+                        <TextBlock Text="STATUS" Padding="10" Foreground="White"/>
+                    </Border>
+
+
+                    <!-- The table will be dynamically created in the code-behind -->
+                </Grid>
+                
             </StackPanel>
         </Border>
     </StackPanel>
