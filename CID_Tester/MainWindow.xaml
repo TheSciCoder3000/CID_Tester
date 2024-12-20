@@ -31,12 +31,14 @@
                     <MenuItem Click="OnSaveLayout" Header="Layout_2" />
                     <MenuItem Click="OnSaveLayout" Header="Layout_3" />
                     <MenuItem Click="OnSaveLayout" Header="Layout_4" />
+                    <MenuItem Click="OnSaveLayout" Header="Layout_5" />
                 </MenuItem>
                 <MenuItem Header="Load">
                     <MenuItem Click="OnLoadLayout" Header="Layout_1" />
                     <MenuItem Click="OnLoadLayout" Header="Layout_2" />
                     <MenuItem Click="OnLoadLayout" Header="Layout_3" />
                     <MenuItem Click="OnLoadLayout" Header="Layout_4" />
+                    <MenuItem Click="OnLoadLayout" Header="Layout_5" />
                 </MenuItem>
                 <MenuItem Click="OnDumpToConsole" Header="Dump To Console" />
                 <MenuItem Click="OnUnloadManager" Header="Unload Manager" />
@@ -87,10 +89,6 @@
                                 Title="Tool Window 1"
                                 ContentId="toolWindow1"
                                 Hiding="OnToolWindow1Hiding">
-                                <StackPanel MinHeight="450">
-                                    <local:UserControl1 />
-                                    <TextBox Text="{Binding TestTimer, Mode=OneWay, StringFormat='Tool Window 1 Attached to Timer ->\{0\}'}" />
-                                </StackPanel>
                             </LayoutAnchorable>
                             <LayoutAnchorable Title="Tool Window 2" ContentId="toolWindow2">
                                 <TextBlock Text="{Binding FocusedElement}" />

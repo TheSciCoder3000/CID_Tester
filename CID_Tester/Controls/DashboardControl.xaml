@@ -29,8 +29,15 @@
                         <StackPanel Orientation="Horizontal" Margin="0,7,0,0">
                             <TextBlock Text="SITE:" FontWeight="Bold" FontSize="15" HorizontalAlignment="Center" />
                             <TextBlock Text="SITE 1" VerticalAlignment="Center" FontSize="15" Margin="10,0,0,0" />
+                            
                         </StackPanel>
+                        <Button Background="Transparent" HorizontalAlignment="Left" Margin="0 10" Click="Button_Click">
+                            <Border CornerRadius="7" Background="Maroon" Padding="15 6">
+                                <TextBlock Text="Log Out"/>
+                            </Border>
+                        </Button>
                     </StackPanel>
+
                 </StackPanel>
             </Border>
         </StackPanel>
@@ -72,8 +79,8 @@
                 </Grid>
             </Border>
         </Grid>
-      
-        <Border CornerRadius="10" Background="#2D2D30">
+
+        <Border CornerRadius="10" Background="#2D2D30" Margin="20">
             <StackPanel Orientation="Vertical" Background="Transparent" Margin="20">
                 <StackPanel Orientation="Horizontal" Margin="0 10">
                     <TextBlock Text="Status Report" Foreground="White"/>

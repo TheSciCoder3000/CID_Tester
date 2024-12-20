@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CID_Tester.Model
 {
-    internal class TEST_PARAMETER
+    public class TEST_PARAMETER
     {
         public int PARAM_CODE { get; set; }
         public int TEST_CODE { get; set; }

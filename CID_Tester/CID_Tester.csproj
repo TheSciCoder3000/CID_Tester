@@ -9,7 +9,17 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="images\Bg.mp4" />
+    <None Remove="images\Bg.wmv" />
+    <None Remove="images\exit.png" />
+    <None Remove="images\logo.png" />
     <None Remove="images\profile.jpg" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="images\Bg.mp4">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>
@@ -19,7 +29,14 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="images\Bg.wmv" />
+    <Resource Include="images\exit.png" />
+    <Resource Include="images\logo.png" />
     <Resource Include="images\profile.jpg" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Popup\" />
   </ItemGroup>
 
 </Project>

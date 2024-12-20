@@ -1,0 +1,75 @@
+﻿<Window x:Class="CID_Tester.Login"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:CID_Tester"
+        mc:Ignorable="d"
+        Title="Login" Height="569" Width="800" WindowStartupLocation="CenterScreen" ResizeMode="NoResize" WindowStyle="None" AllowsTransparency="True" MouseDown="Window_MouseDown">
+    <Grid>
+        <Grid.Background>
+            <VisualBrush>
+                <VisualBrush.Visual>
+                    <StackPanel Background="#2D2D30">
+                        <MediaElement Source="./images/Bg.mp4" MediaEnded="MediaElement_MediaEnded" Name="bg" Opacity="0.2" VerticalAlignment="Center"/>
+                    </StackPanel>
+                    
+                </VisualBrush.Visual>
+            </VisualBrush>
+        </Grid.Background>
+
+        <StackPanel Orientation="Vertical" Opacity="1">
+            
+            <StackPanel VerticalAlignment="Stretch">
+                <StackPanel HorizontalAlignment="Stretch">
+                    <Button HorizontalAlignment="Right" Margin="10" Height="30" Width="30" Background="Transparent" BorderThickness="0" Name="Exit" Click="Exit_Click">
+                        <Image RenderOptions.BitmapScalingMode="Fant" Width="20" Height="20">
+                            <Image.Source>
+                                <BitmapImage UriSource="./images/exit.png" ></BitmapImage>
+                            </Image.Source>
+                        </Image>
+                    </Button>
+                </StackPanel>
+                
+                <Border Background="Transparent" Height="500">
+
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,60" HorizontalAlignment="Center">
+
+                        <StackPanel Orientation="Vertical" VerticalAlignment="Center" Margin="30" Width="230" >
+
+                            <StackPanel Orientation="Horizontal" Margin="0,7,0,0" HorizontalAlignment="Center">
+
+                                <Image RenderOptions.BitmapScalingMode="Fant" Width="180">
+                                    <Image.Source>
+                                        <BitmapImage UriSource="./images/logo.png"></BitmapImage>
+                                    </Image.Source>
+                                </Image>
+                            </StackPanel>
+                        </StackPanel>
+                        <StackPanel Width="3" Background="White"></StackPanel>
+                        <StackPanel Orientation="Vertical" VerticalAlignment="Center" Margin="30" Width="230">
+                            <TextBlock Text="LOG IN" FontSize="22"  Foreground="White" FontWeight="Bold"/>
+                            <StackPanel Orientation="Vertical" Margin="0,35,0,17">
+                                <TextBox FontSize="15"  Foreground="Black" Margin="0 0 0 4" Padding="3" Name="username"/>
+                                <TextBlock Text="Username" VerticalAlignment="Center" FontSize="12" Foreground="White"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Vertical" Margin="0,2,0,17">
+                                <TextBox FontSize="15"  Foreground="Black" Margin="0 0 0 4" Padding="3" Name="password"/>
+                                <TextBlock Text="Password" VerticalAlignment="Center" FontSize="12" Foreground="White"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Vertical" Margin="0,2,0,17">
+                                <TextBox FontSize="15"  Foreground="Black" Margin="0 0 0 4" Padding="3" Name="site"/>
+                                <TextBlock Text="Site No." VerticalAlignment="Center" FontSize="12" Foreground="White"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Vertical" Margin="0,2,0,17">
+                                <Button VerticalAlignment="Center" Background="green" Click="Button_Click">
+                                    <TextBlock Text="Log In" VerticalAlignment="Center" FontSize="12" Foreground="White" Margin="2"/>
+                                </Button>
+                            </StackPanel>
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+        </StackPanel>
+    </Grid>
+</Window>

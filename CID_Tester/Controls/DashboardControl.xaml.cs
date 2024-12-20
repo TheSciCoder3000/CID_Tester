@@ -26,10 +26,13 @@ namespace CID_Tester.Controls
     {
         
 
+
         public DashboardControl()
         {
             InitializeComponent();
-            DataContext context = new DataContext();
+
+
+            DataContext? context = App.Me.Context;
 
             CreateCustomTable(context.TEST_PARAMETER.ToList());
             //myDataGrid2.ItemsSource = context.TEST_PROCEDURE.ToList();
@@ -97,8 +100,12 @@ namespace CID_Tester.Controls
             }
         }
 
-
-
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            var currentExecutablePath = Process.GetCurrentProcess().MainModule.FileName;
+            Process.Start(currentExecutablePath);
+            App.Current.Shutdown();
+        }
     }
 
 

@@ -7,12 +7,12 @@ using System.Threading.Tasks;
 
 namespace CID_Tester.Model
 {
-    internal class DataContext : DbContext
+    public class DataContext : DbContext
     {
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer("Data Source =DESKTOP-M7O31AC\\SQLEXPRESS;Initial Catalog=THESIS;Integrated Security=True;Encrypt=False;Trust Server Certificate=False");
-
+            optionsBuilder.UseSqlServer("Data Source =DESKTOP-6B62SE9\\SQLEXPRESS;Initial Catalog=CID_TESTER;Integrated Security=True;Encrypt=False;Trust Server Certificate=False");
+            
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -26,11 +26,12 @@ namespace CID_Tester.Model
             modelBuilder.Entity<TEST_PROCEDURE>()
                 .HasKey(tp => tp.TEST_CODE);
         }
+
         public DbSet<DUT> DUT { get; set; }
         public DbSet<TEST_PARAMETER> TEST_PARAMETER { get; set; }
         public DbSet<TEST_USER> TEST_USER { get; set; }
         public DbSet<TEST_PROCEDURE> TEST_PROCEDURE { get; set; }
 
-        
+
     }
 }
