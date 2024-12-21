@@ -2,6 +2,8 @@
 using System.Configuration;
 using System.Data;
 using System.Windows;
+using System.IO;
+using System.Diagnostics;
 
 namespace CID_Tester
 {
@@ -16,12 +18,13 @@ namespace CID_Tester
 
         private void ApplicationStart(object sender, StartupEventArgs e)
         {
+
             Context = new DataContext();
 
             Login login = new Login();
             login.ShowDialog();
 
-            
+
         }
     }
 
