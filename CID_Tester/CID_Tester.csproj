@@ -14,6 +14,7 @@
     <None Remove="images\exit.png" />
     <None Remove="images\logo.png" />
     <None Remove="images\profile.jpg" />
+    <None Remove="PDF\Sample.pdf" />
   </ItemGroup>
 
   <ItemGroup>
@@ -26,6 +27,8 @@
     <PackageReference Include="Dirkster.AvalonDock" Version="4.72.1" />
     <PackageReference Include="Dirkster.AvalonDock.Themes.VS2013" Version="4.72.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.0" />
+    <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.2903.40" />
+    <PackageReference Include="PDFsharp" Version="6.1.1" />
   </ItemGroup>
 
   <ItemGroup>
@@ -33,6 +36,9 @@
     <Resource Include="images\exit.png" />
     <Resource Include="images\logo.png" />
     <Resource Include="images\profile.jpg" />
+    <Content Include="PDF\Sample.pdf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>

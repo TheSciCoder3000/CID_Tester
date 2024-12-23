@@ -3,10 +3,33 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:wv2="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf"
              xmlns:local="clr-namespace:CID_Tester.Controls"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
-    <Grid>
-        <TextBlock Text="Results Overview" Foreground="White" />
-    </Grid>
+             d:DesignHeight="800" d:DesignWidth="800">
+    <UserControl.Resources>
+        <Style TargetType="TextBlock">
+            <Setter Property="Foreground" Value="White" />
+        </Style>
+    </UserControl.Resources>
+
+    <StackPanel Orientation="Vertical">
+        <StackPanel Margin="20" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Orientation="Horizontal">
+            <Border CornerRadius="7" Background="#2D2D30" Margin="0 0 20 0">
+                <StackPanel Orientation="Vertical" Margin="20">
+                    <TextBlock Text="REPORT PREVIEW" FontSize="22"/>
+                    <StackPanel Orientation="Horizontal" Margin="0,7,0,0">
+                        <TextBlock Text="SITE:" FontWeight="Bold" FontSize="15" HorizontalAlignment="Center" />
+                        <TextBlock Text="SITE 1" VerticalAlignment="Center" FontSize="15" Margin="10,0,0,0" />
+
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+            <Border CornerRadius="7" Background="#2D2D30">
+                <wv2:WebView2 MinWidth="1000" Margin="10" MinHeight="800" Name="pdf" Source="file:///C:/Users/pc/source/repos/TheSciCoder3000/CID_Tester/CID_Tester/bin/Debug/net8.0-windows/PDF/Sample.pdf"/>
+
+            </Border>
+        </StackPanel>
+    </StackPanel>
+
 </UserControl>
