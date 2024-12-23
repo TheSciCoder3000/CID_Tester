@@ -37,7 +37,7 @@
             </Style.Triggers>
         </Style>
     </UserControl.Resources>
-    
+
     <StackPanel Orientation="Vertical" HorizontalAlignment="Stretch">
         <Button Tag="dashboard" Margin="5" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Center" MouseDoubleClick="addDocument_Click">
             <StackPanel Orientation="Horizontal">

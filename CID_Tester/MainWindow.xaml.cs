@@ -1,5 +1,6 @@
 ﻿using AvalonDock.Layout;
 using AvalonDock.Layout.Serialization;
+using CID_Tester.Model;
 using System.IO;
 using System.Text;
 using System.Windows;
@@ -17,15 +18,16 @@ namespace CID_Tester
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
+    /// 
     public partial class MainWindow : Window
     {
+
         public MainWindow()
         {
             InitializeComponent();
             this.DataContext = this;
 
             navigationBar.AddDocumentRequested += AddDocumentToWorkspace;
-
         }
 
         private void AddDocumentToWorkspace(string documentTitle, UserControl control)
@@ -82,6 +84,7 @@ namespace CID_Tester
             //    };
             using (var stream = new StreamReader(string.Format(@".\AvalonDock_{0}.config", fileName)))
                 serializer.Deserialize(stream);
+
         }
 
 

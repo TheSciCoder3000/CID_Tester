@@ -11,7 +11,8 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
-using System.Windows.Shapes;
+using System.IO;
+using System.Diagnostics;
 
 namespace CID_Tester.Controls
 {
@@ -23,6 +24,29 @@ namespace CID_Tester.Controls
         public ResultsControl()
         {
             InitializeComponent();
+
+            //String path = AppDomain.CurrentDomain.BaseDirectory;
+            //String sample = "file:///" + path + "PDF\\Sample.pdf";
+
+
+            //Debug.WriteLine(new Uri(sample));
+            //pdf.Source = new Uri(sample);
+            //pdf.NavigateToString(sample);
+
+        }
+
+        private async void pdf_Initialized(object sender, EventArgs e)
+        {
+
+            String path = AppDomain.CurrentDomain.BaseDirectory;
+            String sample = "file:///" + path + "PDF\\Sample.pdf";
+
+
+            await pdf.EnsureCoreWebView2Async(null);
+            //pdf.NavigateToString("https://google.com");
+            pdf.Source = new Uri("https://www.google.com");
+
+            Debug.WriteLine(new Uri(sample));
         }
     }
 }

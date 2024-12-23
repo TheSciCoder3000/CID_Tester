@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CID_Tester.Model
 {
-    internal class TEST_PROCEDURE
+    public class TEST_PROCEDURE
     {
         public int TEST_CODE { get; set; }
         public string DATE {  get; set; }

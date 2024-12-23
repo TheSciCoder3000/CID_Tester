@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace CID_Tester.Model
 {
-    internal class DataContext : DbContext
+    public class DataContext : DbContext
     {
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -26,11 +26,12 @@ namespace CID_Tester.Model
             modelBuilder.Entity<TEST_PROCEDURE>()
                 .HasKey(tp => tp.TEST_CODE);
         }
+
         public DbSet<DUT> DUT { get; set; }
         public DbSet<TEST_PARAMETER> TEST_PARAMETER { get; set; }
         public DbSet<TEST_USER> TEST_USER { get; set; }
         public DbSet<TEST_PROCEDURE> TEST_PROCEDURE { get; set; }
 
-        
+
     }
 }

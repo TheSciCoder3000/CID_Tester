@@ -26,6 +26,8 @@ namespace CID_Tester.Controls
         public NavigationControl()
         {
             InitializeComponent();
+            UserControl dash = new DashboardControl();
+            AddDocumentRequested?.Invoke("dashboard", dash);
         }
 
         private void addDocument_Click(object sender, MouseButtonEventArgs e)
