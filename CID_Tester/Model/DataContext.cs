@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,7 +12,10 @@ namespace CID_Tester.Model
     {
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer("Data Source =NEUROSLAPTOP\\SQLEXPRESS;Initial Catalog=CID_TESTER;Integrated Security=True;Encrypt=False;Trust Server Certificate=False");
+            DotNetEnv.Env.TraversePath().Load();
+            String data_source = DotNetEnv.Env.GetString("DATA_SOURCE");
+            String database_name = DotNetEnv.Env.GetString("DATABASE");
+            optionsBuilder.UseSqlServer($"Data Source ={data_source};Initial Catalog={database_name};Integrated Security=True;Encrypt=False;Trust Server Certificate=False");
 
         }
 
