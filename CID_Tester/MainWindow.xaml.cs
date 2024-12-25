@@ -1,6 +1,7 @@
 ﻿using AvalonDock.Layout;
 using AvalonDock.Layout.Serialization;
 using CID_Tester.Model;
+using CID_Tester.ViewModel;
 using System.IO;
 using System.Text;
 using System.Windows;
@@ -21,12 +22,9 @@ namespace CID_Tester
     /// 
     public partial class MainWindow : Window
     {
-
         public MainWindow()
         {
             InitializeComponent();
-            this.DataContext = this;
-
             navigationBar.AddDocumentRequested += AddDocumentToWorkspace;
         }
 

@@ -4,6 +4,7 @@ using System.Data;
 using System.Windows;
 using System.IO;
 using System.Diagnostics;
+using CID_Tester.ViewModel;
 
 namespace CID_Tester
 {
@@ -21,7 +22,10 @@ namespace CID_Tester
 
             Context = new DataContext();
 
+            LoginViewModel vm = new LoginViewModel();
             Login login = new Login();
+            vm.ClosingRequest += (sender, e) => login.Close();
+            login.DataContext = vm;
             login.ShowDialog();
 
 

@@ -50,11 +50,11 @@
                         <StackPanel Orientation="Vertical" VerticalAlignment="Center" Margin="30" Width="230">
                             <TextBlock Text="LOG IN" FontSize="22"  Foreground="White" FontWeight="Bold"/>
                             <StackPanel Orientation="Vertical" Margin="0,35,0,17">
-                                <TextBox FontSize="15"  Foreground="Black" Margin="0 0 0 4" Padding="3" Name="username"/>
+                                <TextBox FontSize="15"  Foreground="Black" Margin="0 0 0 4" Padding="3" Name="username" Text="{Binding Username, UpdateSourceTrigger=PropertyChanged}"/>
                                 <TextBlock Text="Username" VerticalAlignment="Center" FontSize="12" Foreground="White"/>
                             </StackPanel>
                             <StackPanel Orientation="Vertical" Margin="0,2,0,17">
-                                <TextBox FontSize="15"  Foreground="Black" Margin="0 0 0 4" Padding="3" Name="password"/>
+                                <TextBox FontSize="15"  Foreground="Black" Margin="0 0 0 4" Padding="3" Name="password" Text="{Binding Password, UpdateSourceTrigger=PropertyChanged}"/>
                                 <TextBlock Text="Password" VerticalAlignment="Center" FontSize="12" Foreground="White"/>
                             </StackPanel>
                             <StackPanel Orientation="Vertical" Margin="0,2,0,17">
@@ -62,7 +62,7 @@
                                 <TextBlock Text="Site No." VerticalAlignment="Center" FontSize="12" Foreground="White"/>
                             </StackPanel>
                             <StackPanel Orientation="Vertical" Margin="0,2,0,17">
-                                <Button VerticalAlignment="Center" Background="green" Click="Button_Click">
+                                <Button VerticalAlignment="Center" Background="green" Command="{Binding LoginCommand}">
                                     <TextBlock Text="Log In" VerticalAlignment="Center" FontSize="12" Foreground="White" Margin="2"/>
                                 </Button>
                             </StackPanel>

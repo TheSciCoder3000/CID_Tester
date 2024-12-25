@@ -16,5 +16,10 @@ namespace CID_Tester.Model
         public string USER_NAME { get; set; }
         public string PASSWORD{ get; set; }
 
+        public override string ToString()
+        {
+            return $"{FIRST_NAME} {LAST_NAME}";
+        }
+
     }
 }

@@ -34,7 +34,7 @@ namespace CID_Tester.Controls
 
             DataContext? context = App.Me.Context;
 
-            CreateCustomTable(context.TEST_PARAMETER.ToList());
+            CreateCustomTable(context.TEST_PARAMETER.Local.ToList());
             //myDataGrid2.ItemsSource = context.TEST_PROCEDURE.ToList();
             //myDataGrid3.ItemsSource = context.DUT.ToList();
             //myDataGrid4.ItemsSource = context.TEST_USER.ToList();

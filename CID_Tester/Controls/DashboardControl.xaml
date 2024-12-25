@@ -25,7 +25,7 @@
                         </Ellipse.Fill>
                     </Ellipse>
                     <StackPanel Orientation="Vertical">
-                        <TextBlock Text="Ivan Abilon" FontSize="22" />
+                        <TextBlock x:Name="username_textbox" Text="{Binding User.Fullname}" FontSize="22" />
                         <StackPanel Orientation="Horizontal" Margin="0,7,0,0">
                             <TextBlock Text="SITE:" FontWeight="Bold" FontSize="15" HorizontalAlignment="Center" />
                             <TextBlock Text="SITE 1" VerticalAlignment="Center" FontSize="15" Margin="10,0,0,0" />
