@@ -25,11 +25,11 @@ namespace CID_Tester.Controls
         {
             InitializeComponent();
 
-            DataContext? context = App.Me.Context;
-            myDataGrid1.ItemsSource = context.TEST_PARAMETER.ToList();
-            myDataGrid2.ItemsSource = context.TEST_PROCEDURE.ToList();
-            myDataGrid3.ItemsSource = context.DUT.ToList();
-            myDataGrid4.ItemsSource = context.TEST_USER.ToList();
+            //DataContext? context = App.Me.Context;
+            //myDataGrid1.ItemsSource = context.TEST_PARAMETER.ToList();
+            //myDataGrid2.ItemsSource = context.TEST_PROCEDURE.ToList();
+            //myDataGrid3.ItemsSource = context.DUT.ToList();
+            //myDataGrid4.ItemsSource = context.TEST_USER.ToList();
 
         }
     }

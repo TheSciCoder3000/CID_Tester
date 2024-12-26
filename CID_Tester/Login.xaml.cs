@@ -22,9 +22,6 @@ namespace CID_Tester
         public Login()
         {
             InitializeComponent();
-            LoginViewModel vm = new LoginViewModel();
-            vm.ClosingRequest += (sender, e) => this.Close();
-            this.DataContext = vm;
         }
 
         private void Exit_Click(object sender, RoutedEventArgs e)

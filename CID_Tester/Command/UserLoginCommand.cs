@@ -12,7 +12,7 @@ namespace CID_Tester.Command
     public class UserLoginCommand : CommandBase
     {
         private readonly LoginViewModel _viewModel;
-        public event EventHandler? CloseLoginRequest;
+        public event EventHandler? LoginRequestEvent;
         public UserLoginCommand(LoginViewModel viewModel)
         {
             _viewModel = viewModel;
@@ -20,23 +20,7 @@ namespace CID_Tester.Command
 
         public override void Execute(object parameter)
         {
-            using (var context = new DataContext())
-            {
-                foreach (var user in context.TEST_USER.ToList())
-                {
-                    if (_viewModel.Username == user.USER_NAME && _viewModel.Password == user.PASSWORD)
-                    {
-
-                        MainWindow main = new MainWindow()
-                        {
-                            DataContext = new MainViewModel(user)
-                        };
-                        main.Show();
-                        CloseLoginRequest?.Invoke(this, EventArgs.Empty);
-                    }
-
-                }
-            }
+            LoginRequestEvent?.Invoke(this, EventArgs.Empty);
         }
     }
 }

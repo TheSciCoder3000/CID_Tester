@@ -9,7 +9,7 @@ namespace CID_Tester.Model
     public class DUT
     {
         public int DUT_CODE { get; set; }
-        public string DESCRIPTION { get; set; }
+        public string? DESCRIPTION { get; set; }
 
     }
 }
