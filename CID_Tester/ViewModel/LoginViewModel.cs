@@ -1,6 +1,7 @@
 ﻿using CID_Tester.Command;
 using CID_Tester.DbContexts;
 using CID_Tester.Model;
+using CID_Tester.Service.DbCreator;
 using CID_Tester.Service.DbProvider;
 using System;
 using System.Collections.Generic;
@@ -13,7 +14,8 @@ namespace CID_Tester.ViewModel
 {
     public class LoginViewModel : BaseViewModel
     {
-        private readonly DbProvider _dbProvider;
+        private readonly IDbProvider _dbProvider;
+        private readonly IDbCreator _dbCreator;
 
         public event EventHandler? ClosingRequest;
         public ICommand LoginCommand { get; }
@@ -46,9 +48,10 @@ namespace CID_Tester.ViewModel
             }
         }
 
-        public LoginViewModel(DbProvider dbProvider)
+        public LoginViewModel(IDbProvider dbProvider, IDbCreator dbCreator)
         {
             _dbProvider = dbProvider;
+            _dbCreator = dbCreator;
             UserLoginCommand command = new UserLoginCommand(this);
             command.LoginRequestEvent += async (sender, e) => await LoginRequestEventHandler();
             LoginCommand = command;
@@ -57,7 +60,7 @@ namespace CID_Tester.ViewModel
 
         private async Task LoginRequestEventHandler()
         {
-            TEST_USER? user = await _dbProvider.GetUser(_username, _password);
+            TEST_USER? user = await _dbProvider.GetUser(_username, _password, _dbCreator);
             if (user != null)
             {
                 MainWindow main = new MainWindow()

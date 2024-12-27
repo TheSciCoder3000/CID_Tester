@@ -1,6 +1,7 @@
 ﻿using CID_Tester.DbContexts;
 using CID_Tester.DbContexts.DTO;
 using CID_Tester.Model;
+using CID_Tester.Service.DbCreator;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -44,7 +45,7 @@ namespace CID_Tester.Service.DbProvider
             throw new NotImplementedException();
         }
 
-        public async Task<TEST_USER?> GetUser(string username, string password)
+        public async Task<TEST_USER?> GetUser(string username, string password, IDbCreator dbCreator)
         {
             using(TesterDbContext context = _dbContextFactory.CreateDbContext())
             {
@@ -53,16 +54,17 @@ namespace CID_Tester.Service.DbProvider
 
                 if (userDTO == null) return null;
 
-                TEST_USER user = new TEST_USER()
-                {
-                    USER_CODE = userDTO.USER_CODE,
-                    FIRST_NAME = userDTO.FIRST_NAME,
-                    LAST_NAME = userDTO.LAST_NAME,
-                    EMAIL = userDTO.EMAIL,
-                    PROFILE_IMAGE = userDTO.PROFILE_IMAGE,
-                    USER_NAME = userDTO.USER_NAME,
-                    PASSWORD = userDTO.PASSWORD
-                };
+                TEST_USER user = new TEST_USER(
+                    dbCreator,
+                    this, 
+                    userDTO.USER_CODE,
+                    userDTO.FIRST_NAME,
+                    userDTO.LAST_NAME,
+                    userDTO.EMAIL,
+                    userDTO.PROFILE_IMAGE,
+                    userDTO.USER_NAME,
+                    userDTO.PASSWORD
+                );
 
                 return user;
             }

@@ -52,7 +52,7 @@ namespace CID_Tester.Migrations
                     CYCLE_NO = table.Column<int>(type: "INTEGER", nullable: false),
                     TEST_TIME = table.Column<int>(type: "INTEGER", nullable: false),
                     DUT_CODE = table.Column<int>(type: "INTEGER", nullable: false),
-                    TEST_USERUSER_CODE = table.Column<int>(type: "INTEGER", nullable: false)
+                    USER_CODE = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -64,8 +64,8 @@ namespace CID_Tester.Migrations
                         principalColumn: "DUT_CODE",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_TEST_PLAN_TEST_USER_TEST_USERUSER_CODE",
-                        column: x => x.TEST_USERUSER_CODE,
+                        name: "FK_TEST_PLAN_TEST_USER_USER_CODE",
+                        column: x => x.USER_CODE,
                         principalTable: "TEST_USER",
                         principalColumn: "USER_CODE",
                         onDelete: ReferentialAction.Cascade);
@@ -77,7 +77,6 @@ namespace CID_Tester.Migrations
                 {
                     PARAM_CODE = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    TEST_PLANTEST_CODE = table.Column<int>(type: "INTEGER", nullable: false),
                     DESCRIPTION = table.Column<string>(type: "TEXT", nullable: true),
                     METRIC = table.Column<string>(type: "TEXT", nullable: false),
                     VALUE = table.Column<decimal>(type: "TEXT", nullable: false),
@@ -88,17 +87,12 @@ namespace CID_Tester.Migrations
                 {
                     table.PrimaryKey("PK_TEST_PARAMETER", x => x.PARAM_CODE);
                     table.ForeignKey(
-                        name: "FK_TEST_PARAMETER_TEST_PLAN_TEST_PLANTEST_CODE",
-                        column: x => x.TEST_PLANTEST_CODE,
+                        name: "FK_TEST_PARAMETER_TEST_PLAN_PARAM_CODE",
+                        column: x => x.PARAM_CODE,
                         principalTable: "TEST_PLAN",
                         principalColumn: "TEST_CODE",
                         onDelete: ReferentialAction.Cascade);
                 });
-
-            migrationBuilder.CreateIndex(
-                name: "IX_TEST_PARAMETER_TEST_PLANTEST_CODE",
-                table: "TEST_PARAMETER",
-                column: "TEST_PLANTEST_CODE");
 
             migrationBuilder.CreateIndex(
                 name: "IX_TEST_PLAN_DUT_CODE",
@@ -106,9 +100,9 @@ namespace CID_Tester.Migrations
                 column: "DUT_CODE");
 
             migrationBuilder.CreateIndex(
-                name: "IX_TEST_PLAN_TEST_USERUSER_CODE",
+                name: "IX_TEST_PLAN_USER_CODE",
                 table: "TEST_PLAN",
-                column: "TEST_USERUSER_CODE");
+                column: "USER_CODE");
         }
 
         /// <inheritdoc />

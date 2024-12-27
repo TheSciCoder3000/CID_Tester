@@ -18,8 +18,8 @@ namespace CID_Tester
     public partial class App : Application
     {
         private readonly TesterDbContextFactory _testerDbContextFactory;
-        private readonly DbProvider _dbProvider;
-        private readonly DbCreator _dbCreator;
+        private readonly IDbProvider _dbProvider;
+        private readonly IDbCreator _dbCreator;
 
         public App()
         {
@@ -31,7 +31,7 @@ namespace CID_Tester
 
         protected override void OnStartup(StartupEventArgs e)
         {
-            //using(TesterDbContext dbContext = _testerDbContextFactory.CreateDbContext())
+            //using (TesterDbContext dbContext = _testerDbContextFactory.CreateDbContext())
             //{
             //    dbContext.Database.Migrate();
             //}
@@ -42,7 +42,7 @@ namespace CID_Tester
         private void ApplicationStart(object sender, StartupEventArgs e)
         {
 
-            LoginViewModel vm = new LoginViewModel(_dbProvider);
+            LoginViewModel vm = new LoginViewModel(_dbProvider, _dbCreator);
             Login login = new Login();
             vm.ClosingRequest += (sender, e) => login.Close();
             login.DataContext = vm;

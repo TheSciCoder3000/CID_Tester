@@ -1,11 +1,13 @@
 ﻿using CID_Tester.DbContexts;
 using CID_Tester.DbContexts.DTO;
 using CID_Tester.Model;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace CID_Tester.Service.DbCreator
 {
@@ -18,14 +20,13 @@ namespace CID_Tester.Service.DbCreator
             _dbContextFactory = dbContextFactory;
         }
 
-        public async Task CreateDUT(DUT dut)
+        public async Task CreateDUT(string description)
         {
             using (TesterDbContext context  = _dbContextFactory.CreateDbContext())
             {
                 DutDTO dutDTO = new DutDTO()
                 {
-                    DUT_CODE = dut.DUT_CODE,
-                    DESCRIPTION = dut.DESCRIPTION,
+                    DESCRIPTION = description
                 };
 
                 context.DUT.Add(dutDTO);
@@ -38,9 +39,25 @@ namespace CID_Tester.Service.DbCreator
             throw new NotImplementedException();
         }
 
-        public Task CreateTestPlan(TEST_PROCEDURE testPlan)
+        public async Task CreateTestPlan(TEST_PROCEDURE testPlan, TEST_USER user)
         {
-            throw new NotImplementedException();
+            using (TesterDbContext context = _dbContextFactory.CreateDbContext())
+            {
+                UserDTO userDTO = user.ToDTO();
+                DutDTO dutDTO = testPlan.DUT.ToDTO();
+                context.Attach(userDTO);
+                context.Attach(dutDTO);
+                TestPlanDTO testPlanDTO = new TestPlanDTO()
+                {
+                    DATE = DateTime.Now,
+                    CYCLE_NO = 3,
+                    TEST_TIME = 0,
+                    TEST_USER = userDTO,
+                    DUT = dutDTO
+                };
+                context.TEST_PLAN.Add(testPlanDTO);
+                await context.SaveChangesAsync();
+            }
         }
 
         public Task CreateUser(TEST_USER user)

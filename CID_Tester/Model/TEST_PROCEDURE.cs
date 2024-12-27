@@ -15,5 +15,7 @@ namespace CID_Tester.Model
         public int CYCLE_NO { get; set; }
         public int TEST_TIME { get; set; }
 
+        public DUT DUT { get; set; } = null!;
+
     }
 }

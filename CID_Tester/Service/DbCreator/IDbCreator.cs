@@ -10,8 +10,8 @@ namespace CID_Tester.Service.DbCreator
     public interface IDbCreator
     {
         Task CreateUser(TEST_USER user);
-        Task CreateDUT(DUT dUT);
-        Task CreateTestPlan(TEST_PROCEDURE testPlan);
+        Task CreateDUT(string description);
+        Task CreateTestPlan(TEST_PROCEDURE testPlan, TEST_USER USER);
         Task CreateTestParameter(TEST_PARAMETER param);
     }
 }

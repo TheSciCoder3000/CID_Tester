@@ -50,15 +50,10 @@ namespace CID_Tester.Migrations
                     b.Property<decimal>("TARGET")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("TEST_PLANTEST_CODE")
-                        .HasColumnType("INTEGER");
-
                     b.Property<decimal>("VALUE")
                         .HasColumnType("TEXT");
 
                     b.HasKey("PARAM_CODE");
-
-                    b.HasIndex("TEST_PLANTEST_CODE");
 
                     b.ToTable("TEST_PARAMETER");
                 });
@@ -81,14 +76,14 @@ namespace CID_Tester.Migrations
                     b.Property<int>("TEST_TIME")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("TEST_USERUSER_CODE")
+                    b.Property<int>("USER_CODE")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("TEST_CODE");
 
                     b.HasIndex("DUT_CODE");
 
-                    b.HasIndex("TEST_USERUSER_CODE");
+                    b.HasIndex("USER_CODE");
 
                     b.ToTable("TEST_PLAN");
                 });
@@ -132,7 +127,7 @@ namespace CID_Tester.Migrations
                 {
                     b.HasOne("CID_Tester.DbContexts.DTO.TestPlanDTO", "TEST_PLAN")
                         .WithMany("TEST_PARAMETERS")
-                        .HasForeignKey("TEST_PLANTEST_CODE")
+                        .HasForeignKey("PARAM_CODE")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -149,7 +144,7 @@ namespace CID_Tester.Migrations
 
                     b.HasOne("CID_Tester.DbContexts.DTO.UserDTO", "TEST_USER")
                         .WithMany("TEST_PLANS")
-                        .HasForeignKey("TEST_USERUSER_CODE")
+                        .HasForeignKey("USER_CODE")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
