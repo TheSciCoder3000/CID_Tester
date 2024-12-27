@@ -39,7 +39,7 @@ namespace CID_Tester.DbContexts.DTO
         [Column(TypeName = "nvarchar(50)")]
         public string PASSWORD { get; set; } = null!;
 
-        public ICollection<TestPlanDTO>? TEST_PLANS { get; set; }
+        public ICollection<TestPlanDTO> TEST_PLANS { get; set; }
 
     }
 }

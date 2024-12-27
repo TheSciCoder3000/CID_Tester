@@ -3,12 +3,6 @@ using CID_Tester.DbContexts.DTO;
 using CID_Tester.Model;
 using CID_Tester.Service.DbCreator;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
 
 namespace CID_Tester.Service.DbProvider
 {
@@ -49,8 +43,13 @@ namespace CID_Tester.Service.DbProvider
         {
             using(TesterDbContext context = _dbContextFactory.CreateDbContext())
             {
-                UserDTO? userDTO = await context.TEST_USER.Where(r => r.USER_NAME == username && r.PASSWORD == password).FirstOrDefaultAsync();
-                var userCollection = await context.TEST_USER.ToListAsync();
+                UserDTO? userDTO = await context.TEST_USER
+                    .Where(r => r.USER_NAME == username && r.PASSWORD == password)
+                    .Include(u => u.TEST_PLANS)
+                        .ThenInclude(tp => tp.DUT)
+                    .Include(u => u.TEST_PLANS)
+                        .ThenInclude(tp => tp.TEST_PARAMETERS)
+                    .FirstOrDefaultAsync();
 
                 if (userDTO == null) return null;
 
