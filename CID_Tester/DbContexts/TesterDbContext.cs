@@ -33,7 +33,7 @@ namespace CID_Tester.DbContexts
             modelBuilder.Entity<TestPlanDTO>()
                 .HasMany(e => e.TEST_PARAMETERS)
                 .WithOne(e => e.TEST_PLAN)
-                .HasForeignKey("PARAM_CODE")
+                .HasForeignKey("TEST_CODE")
                 .IsRequired();
         }
     }
