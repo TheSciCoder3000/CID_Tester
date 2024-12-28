@@ -11,9 +11,6 @@
         <Style TargetType="TextBlock">
             <Setter Property="Foreground" Value="White" />
         </Style>
-        <DataTemplate x:Key="DashboardMetricTemplate">
-            <control:DashboardMetricControl />
-        </DataTemplate>
     </UserControl.Resources>
 
     <StackPanel Orientation="Vertical">
@@ -43,6 +40,6 @@
             </Border>
         </StackPanel>
 
-        <ContentControl Content="{Binding DashboardMetric}" />
+        <ContentControl Content="{Binding TestPlanStatusControl}" />
     </StackPanel>
 </UserControl>

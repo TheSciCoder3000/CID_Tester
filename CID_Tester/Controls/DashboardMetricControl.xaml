@@ -27,15 +27,15 @@
 
             <Border CornerRadius="7" Background="#2D2D30" Grid.Column="0">
                 <StackPanel Orientation="Vertical" Margin="15">
-                    <TextBlock Text="Op Amp# 264451578" FontSize="16" />
-                    <TextBlock Text="Panasonic Corporation" FontSize="13" Foreground="#60ffffff" Margin="0,5" />
+                    <TextBlock Text="{Binding DUTName}" FontSize="16" />
+                    <TextBlock Text="{Binding DUTDescription}" FontSize="13" Foreground="#60ffffff" Margin="0,5" />
                     <TextBlock Text="Test Pending" FontSize="13" Margin="0,40,0,0" VerticalAlignment="Stretch" TextAlignment="Right" Foreground="Red" />
                 </StackPanel>
             </Border>
 
             <Border CornerRadius="7" Background="#2D2D30" Grid.Column="2">
                 <Grid Margin="10" VerticalAlignment="Center" HorizontalAlignment="Center">
-                    <TextBlock FontSize="15" Text="0 Test Points Tested" TextAlignment="Center" FontWeight="Bold" />
+                    <TextBlock FontSize="15" Text="{Binding TotalNumberTests}" TextAlignment="Center" FontWeight="Bold" />
                 </Grid>
             </Border>
 

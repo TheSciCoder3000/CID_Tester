@@ -1,10 +1,14 @@
-﻿using CID_Tester.Model;
+﻿using CID_Tester.Command;
+using CID_Tester.Controls;
+using CID_Tester.Model;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace CID_Tester.ViewModel
 {
@@ -25,21 +29,25 @@ namespace CID_Tester.ViewModel
             }
         }
 
-        private UserControl _dashboardMetric;
-        public UserControl DashboardMetric
+        private UserControl _testPlanStatusControl;
+        public UserControl TestPlanStatusControl
         {
-            get { return _dashboardMetric; }
+            get { return _testPlanStatusControl; }
             set
             {
-                _dashboardMetric = value;
-                onPropertyChanged(nameof(DashboardMetric));
+                _testPlanStatusControl = value;
+                onPropertyChanged(nameof(TestPlanStatusControl));
             }
         }
 
-        public DashboardViewModel(TEST_USER user, string title)
+        public ICommand NavigateToTestPlanCommand { get; set; }
+
+        public DashboardViewModel(TEST_USER user, string title, ICommand navigateToTestPlanCommand)
         {
+            NavigateToTestPlanCommand = navigateToTestPlanCommand;
             Title = title;
             _fullname = user.ToString();
+            TestPlanStatusControl = new TestPlanStatusControl();
         }
     }
 }

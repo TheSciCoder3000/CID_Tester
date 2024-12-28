@@ -30,10 +30,10 @@ namespace CID_Tester.ViewModel
 
         public MainViewModel(TEST_USER user)
         {
-            NavigateToDashboard = new NavigateCommand(this, new DashboardViewModel(user, "Dashboard"));
             NavigateToTestPlan = new NavigateCommand(this, new TestPlanViewModel(user, "Test Plan"));
+            NavigateToDashboard = new NavigateCommand(this, new DashboardViewModel(user, "Dashboard", NavigateToTestPlan));
             NavigateToResults = new NavigateCommand(this, new ResultsViewModel(user, "Results Overview"));
-            NavigateToSettings = new NavigateCommand(this, new DashboardViewModel(user, "Settings"));
+            NavigateToSettings = new NavigateCommand(this, new ResultsViewModel(user, "Settings"));
         }
 
         public void NavigateTo(BaseViewModel viewModel)
