@@ -1,18 +1,8 @@
 ﻿using AvalonDock.Layout;
 using AvalonDock.Layout.Serialization;
-using CID_Tester.Model;
-using CID_Tester.ViewModel;
 using System.IO;
-using System.Text;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace CID_Tester
 {
@@ -25,39 +15,6 @@ namespace CID_Tester
         public MainWindow()
         {
             InitializeComponent();
-            navigationBar.AddDocumentRequested += AddDocumentToWorkspace;
-        }
-
-        private void AddDocumentToWorkspace(string documentTitle, UserControl control)
-        {
-
-            bool documentExists = LayoutDocumentPane.Children.OfType<LayoutDocument>().Any(doc => doc.Title == documentTitle);
-
-            if (!documentExists)
-            {
-                // Create a new LayoutDocument.
-                var newDocument = new LayoutDocument
-                {
-                    Title = documentTitle,
-                    Content = control
-                };
-
-                // Add the new document to the DocumentPane.
-                LayoutDocumentPane.Children.Add(newDocument);
-                LayoutDocument documentToFocus = LayoutDocumentPane.Children.OfType<LayoutDocument>().FirstOrDefault(doc => doc.Title == documentTitle);
-                if (documentToFocus != null)
-                {
-                    dockManager.ActiveContent = documentToFocus;
-                }
-            }
-            else
-            {
-                LayoutDocument documentToFocus = LayoutDocumentPane.Children.OfType<LayoutDocument>().FirstOrDefault(doc => doc.Title == documentTitle);
-                if (documentToFocus != null)
-                {
-                    dockManager.ActiveContent = documentToFocus;
-                }
-            }
         }
 
         private void OnSaveLayout(object sender, RoutedEventArgs e)
@@ -91,10 +48,6 @@ namespace CID_Tester
         {
             // Uncomment when TRACE is activated on AvalonDock project
             // dockManager.Layout.ConsoleDump(0);
-        }
-
-        private void OnReloadManager(object sender, RoutedEventArgs e)
-        {
         }
 
         private void OnUnloadManager(object sender, RoutedEventArgs e)

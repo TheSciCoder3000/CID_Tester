@@ -6,10 +6,24 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CID_Tester"
         xmlns:controls="clr-namespace:CID_Tester.Controls"
+        xmlns:vm="clr-namespace:CID_Tester.ViewModel"
+        xmlns:view="clr-namespace:CID_Tester.View"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800"
         WindowState="Maximized"
         UseLayoutRounding="True">
+    <Window.Resources>
+        <DataTemplate DataType="{x:Type vm:DashboardViewModel}">
+            <view:DashboardView />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:TestPlanViewModel}">
+            <view:TestPlanView />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:ResultsViewModel}">
+            <view:ResultsView />
+        </DataTemplate>
+    </Window.Resources>
+    
     <Grid x:Name="LayoutRoot">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -54,6 +68,8 @@
 
         <DockingManager x:Name="dockManager"
             Grid.Row="1"
+            DocumentsSource="{Binding Documents}"
+            ActiveContent="{Binding ActiveDocument, Mode=TwoWay}"
             AllowMixedOrientation="True"
             AutoWindowSizeWhenOpened="True"
             IsVirtualizingAnchorable="True"
@@ -62,6 +78,12 @@
             <DockingManager.Theme>
                 <avalonDock:Vs2013DarkTheme />
             </DockingManager.Theme>
+
+            <DockingManager.LayoutItemContainerStyle>
+                <Style TargetType="{x:Type LayoutItem}">
+                    <Setter Property="Title" Value="{Binding Model.Title}" />
+                </Style>
+            </DockingManager.LayoutItemContainerStyle>
 
             <LayoutRoot>
                 <LayoutPanel Orientation="Horizontal">
