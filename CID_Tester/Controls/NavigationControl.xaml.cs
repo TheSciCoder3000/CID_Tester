@@ -31,12 +31,15 @@ namespace CID_Tester.Controls
 
         private void addDocument_Click(object sender, MouseButtonEventArgs e)
         {
+
             String type = (String)((Button)sender).Tag;
             UserControl control = null;
             switch(type)
             {
                 case "dashboard":
-                    control = new DashboardControl();
+                    control = new DashboardView();
+                    //DashboardViewModel vm = new DashboardViewModel(((MainViewModel)this.DataContext).);
+                    //control.DataContext = vm;
                     break;
                 case "plan":
                     control = new TestPlanControl();

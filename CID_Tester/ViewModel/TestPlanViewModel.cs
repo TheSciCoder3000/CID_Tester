@@ -4,19 +4,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows;
 
 namespace CID_Tester.ViewModel
 {
-    public class UserViewModel : BaseViewModel
+    public class TestPlanViewModel : BaseViewModel
     {
         private readonly TEST_USER _user;
+        public string Title { get; set; }
 
-        public string Fullname => _user.ToString();
-
-        public UserViewModel(TEST_USER user)
+        public TestPlanViewModel(TEST_USER user, string title)
         {
             _user = user;
+            Title = title;
         }
     }
 }

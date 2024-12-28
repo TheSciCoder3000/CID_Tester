@@ -39,22 +39,22 @@
     </UserControl.Resources>
 
     <StackPanel Orientation="Vertical" HorizontalAlignment="Stretch">
-        <Button Tag="dashboard" Margin="5" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Center" MouseDoubleClick="addDocument_Click">
+        <Button Tag="dashboard" Margin="5" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Center" Command="{Binding NavigateToDashboard}">
             <StackPanel Orientation="Horizontal">
                 <TextBlock VerticalAlignment="Center" Text="Dashboard" />
             </StackPanel>
         </Button>
-        <Button Tag="plan" Margin="5" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Center" MouseDoubleClick="addDocument_Click">
+        <Button Tag="plan" Margin="5" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Center" Command="{Binding NavigateToTestPlan}">
             <StackPanel Orientation="Horizontal">
                 <TextBlock VerticalAlignment="Center" Text="Test Plan" />
             </StackPanel>
         </Button>
-        <Button Tag="results" Margin="5" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Center" MouseDoubleClick="addDocument_Click">
+        <Button Tag="results" Margin="5" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Center" Command="{Binding NavigateToResults}">
             <StackPanel Orientation="Horizontal">
                 <TextBlock VerticalAlignment="Center" Text="Results Overview" />
             </StackPanel>
         </Button>
-        <Button Tag="settings" Margin="5" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Center" MouseDoubleClick="addDocument_Click">
+        <Button Tag="settings" Margin="5" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Center" Command="{Binding NavigateToSettings}">
             <StackPanel Orientation="Horizontal">
                 <TextBlock VerticalAlignment="Center" Text="Settings" />
             </StackPanel>
