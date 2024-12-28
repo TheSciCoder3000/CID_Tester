@@ -1,4 +1,5 @@
-﻿using CID_Tester.Model;
+﻿
+using CID_Tester.Model;
 using System.Configuration;
 using System.Data;
 using System.Windows;
@@ -20,6 +21,7 @@ namespace CID_Tester
         private readonly TesterDbContextFactory _testerDbContextFactory;
         private readonly IDbProvider _dbProvider;
         private readonly IDbCreator _dbCreator;
+        private readonly bool _isProduction;
 
         public App()
         {
@@ -27,14 +29,16 @@ namespace CID_Tester
             _testerDbContextFactory = new TesterDbContextFactory(DotNetEnv.Env.GetString("CONNECTION_STRING"));
             _dbProvider = new DbProvider(_testerDbContextFactory);
             _dbCreator = new DbCreator(_testerDbContextFactory);
+            _isProduction = DotNetEnv.Env.GetBool("PRODUCTION");
         }
 
         protected override void OnStartup(StartupEventArgs e)
         {
-            //using (TesterDbContext dbContext = _testerDbContextFactory.CreateDbContext())
-            //{
-            //    dbContext.Database.Migrate();
-            //}
+            if (!_isProduction) 
+                using (TesterDbContext dbContext = _testerDbContextFactory.CreateDbContext())
+                {
+                    dbContext.Database.Migrate();
+                }
 
             base.OnStartup(e);
         }
