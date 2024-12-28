@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,17 +12,16 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
-using System.IO;
-using System.Diagnostics;
+using System.Windows.Shapes;
 
-namespace CID_Tester.Controls
+namespace CID_Tester.View
 {
     /// <summary>
-    /// Interaction logic for ResultsControl.xaml
+    /// Interaction logic for ResultsView.xaml
     /// </summary>
-    public partial class ResultsControl : UserControl
+    public partial class ResultsView : UserControl
     {
-        public ResultsControl()
+        public ResultsView()
         {
             InitializeComponent();
 

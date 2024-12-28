@@ -1,18 +1,19 @@
-﻿
-    
-<UserControl x:Class="CID_Tester.Controls.DashboardControl"
+﻿<UserControl x:Class="CID_Tester.View.DashboardView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:CID_Tester.Controls"
+             xmlns:local="clr-namespace:CID_Tester.View" 
+             xmlns:control="clr-namespace:CID_Tester.Controls"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-
     <UserControl.Resources>
         <Style TargetType="TextBlock">
             <Setter Property="Foreground" Value="White" />
         </Style>
+        <DataTemplate x:Key="DashboardMetricTemplate">
+            <control:DashboardMetricControl />
+        </DataTemplate>
     </UserControl.Resources>
 
     <StackPanel Orientation="Vertical">
@@ -25,7 +26,7 @@
                         </Ellipse.Fill>
                     </Ellipse>
                     <StackPanel Orientation="Vertical">
-                        <TextBlock x:Name="username_textbox" Text="{Binding User.Fullname}" FontSize="22" />
+                        <TextBlock x:Name="username_textbox" Text="{Binding Fullname}" FontSize="22" />
                         <StackPanel Orientation="Horizontal" Margin="0,7,0,0">
                             <TextBlock Text="SITE:" FontWeight="Bold" FontSize="15" HorizontalAlignment="Center" />
                             <TextBlock Text="SITE 1" VerticalAlignment="Center" FontSize="15" Margin="10,0,0,0" />
@@ -41,8 +42,7 @@
                 </StackPanel>
             </Border>
         </StackPanel>
-        <local:DashboardMetricControl />
+
+        <ContentControl Content="{Binding DashboardMetric}" />
     </StackPanel>
 </UserControl>
-
-    
