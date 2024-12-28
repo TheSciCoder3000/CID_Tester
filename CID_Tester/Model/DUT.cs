@@ -9,8 +9,17 @@ namespace CID_Tester.Model
 {
     public class DUT
     {
-        public int DUT_CODE { get; set; }
-        public string? DESCRIPTION { get; set; }
+        public int DUT_CODE { get; }
+        public string DESCRIPTION { get; }
+
+        public string DUT_NAME { get; } 
+
+        public DUT(int dutCode, string dutName, string description)
+        {
+            DUT_CODE = dutCode;
+            DUT_NAME = dutName;
+            DESCRIPTION = description;
+        }
 
         public DutDTO ToDTO()
         {

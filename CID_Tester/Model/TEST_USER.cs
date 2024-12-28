@@ -24,10 +24,10 @@ namespace CID_Tester.Model
         public string PROFILE_IMAGE { get; }
         public string USER_NAME { get; }
         public string PASSWORD { get; }
-        public ICollection<TEST_PROCEDURE> TEST_PLANS { get; } = new Collection<TEST_PROCEDURE>();
+        public ICollection<TEST_PROCEDURE> TEST_PLANS { get; }
 
 
-        public TEST_USER(IDbCreator dbCreator, IDbProvider dbProvider, int userCode, string firstName, string lastName, string email, string profileImage, string username, string password)
+        public TEST_USER(IDbCreator dbCreator, IDbProvider dbProvider, int userCode, string firstName, string lastName, string email, string profileImage, string username, string password, ICollection<TEST_PROCEDURE> testProcedures)
         {
             _dbCreator = dbCreator;
             _dbProvider = dbProvider;
@@ -38,6 +38,7 @@ namespace CID_Tester.Model
             PROFILE_IMAGE = profileImage;
             USER_NAME = username;
             PASSWORD = password;
+            TEST_PLANS = testProcedures;
         }
 
         public override string ToString()

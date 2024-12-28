@@ -9,7 +9,9 @@ namespace CID_Tester.Model.DTO
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int DUT_CODE { get; set; }
 
-        public string? DESCRIPTION { get; set; }
+        public string DUT_NAME { get; set; } = null!;
+
+        public string DESCRIPTION { get; set; } = null!;
 
         public ICollection<TestPlanDTO>? TEST_PLANS { get; set; }
     }
