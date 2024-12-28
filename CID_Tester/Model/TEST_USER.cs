@@ -1,4 +1,4 @@
-﻿using CID_Tester.DbContexts.DTO;
+﻿using CID_Tester.Model.DTO;
 using CID_Tester.Service.DbCreator;
 using CID_Tester.Service.DbProvider;
 using System;

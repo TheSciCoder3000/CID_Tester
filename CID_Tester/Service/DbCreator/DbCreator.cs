@@ -1,6 +1,6 @@
 ﻿using CID_Tester.DbContexts;
-using CID_Tester.DbContexts.DTO;
 using CID_Tester.Model;
+using CID_Tester.Model.DTO;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
