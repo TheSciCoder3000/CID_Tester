@@ -3,6 +3,8 @@ using CID_Tester.Model;
 using CID_Tester.Model.DTO;
 using CID_Tester.Service.DbCreator;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Identity.Client;
+using System.Diagnostics;
 
 namespace CID_Tester.Service.DbProvider
 {
@@ -20,11 +22,7 @@ namespace CID_Tester.Service.DbProvider
             using (TesterDbContext context = _dbContextFactory.CreateDbContext())
             {
                 IEnumerable<DutDTO> dutDTOs = await context.DUT.ToListAsync();
-                return dutDTOs.Select(r => new DUT()
-                {
-                    DUT_CODE = r.DUT_CODE,
-                    DESCRIPTION = r.DESCRIPTION
-                });
+                return dutDTOs.Select(r => new DUT(r.DUT_CODE, r.DUT_NAME, r.DESCRIPTION));
 
             }
         }
@@ -62,11 +60,34 @@ namespace CID_Tester.Service.DbProvider
                     userDTO.EMAIL,
                     userDTO.PROFILE_IMAGE,
                     userDTO.USER_NAME,
-                    userDTO.PASSWORD
+                    userDTO.PASSWORD,
+                    generateTestPlan(userDTO.TEST_PLANS)
                 );
+
+                Debug.WriteLine($"{user.TEST_PLANS.Count}");
 
                 return user;
             }
+
+        }
+        public ICollection<TEST_PROCEDURE> generateTestPlan(ICollection<TestPlanDTO> testPlans)
+        {
+            return testPlans.Select(tp => 
+                new TEST_PROCEDURE(
+                    tp.TEST_CODE, 
+                    tp.DATE, 
+                    tp.TEST_USER.USER_CODE, 
+                    tp.DUT.DUT_CODE, 
+                    tp.CYCLE_NO,
+                    tp.TEST_TIME,
+                    convertToDUT(tp.DUT)
+                )
+            ).ToList();
+        }
+
+        public DUT convertToDUT(DutDTO dut)
+        {
+            return new DUT(dut.DUT_CODE, dut.DUT_NAME, dut.DESCRIPTION);
         }
     }
 }
