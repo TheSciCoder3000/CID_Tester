@@ -56,14 +56,14 @@ namespace CID_Tester.Controls
             foreach (var test in tableData)
             {
 
-                CreateCell(test.DESCRIPTION.ToString(), row_count, 0);
-                CreateCell(test.METRIC.ToString(), row_count, 1);
-                CreateCell(test.TARGET.ToString(), row_count, 2);
-                CreateCell(test.VALUE.ToString(), row_count, 3);
+                CreateCell(test.Description.ToString(), row_count, 0);
+                CreateCell(test.Metric.ToString(), row_count, 1);
+                CreateCell(test.Target.ToString(), row_count, 2);
+                CreateCell(test.Value.ToString(), row_count, 3);
 
                 TextBlock text = new TextBlock
                 {
-                    Text = (test.PASS == 1) ? "PASS" : "FAIL",
+                    Text = (test.Pass == 1) ? "PASS" : "FAIL",
                     FontWeight = FontWeights.Bold,
                     Padding = new Thickness(10),
                     Foreground = Brushes.White,
@@ -74,7 +74,7 @@ namespace CID_Tester.Controls
                 {
                     Child = text,
                     Padding = new Thickness(5),
-                    Background = (test.PASS == 1) ? Brushes.Green : Brushes.Red
+                    Background = (test.Pass == 1) ? Brushes.Green : Brushes.Red
                 };
                 Grid.SetRow(border, row_count);
                 Grid.SetColumn(border, 4);
