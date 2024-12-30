@@ -15,59 +15,60 @@ namespace CID_Tester.Migrations
                 name: "DUT",
                 columns: table => new
                 {
-                    DUT_CODE = table.Column<int>(type: "INTEGER", nullable: false)
+                    DutCode = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    DESCRIPTION = table.Column<string>(type: "TEXT", nullable: true)
+                    DutName = table.Column<string>(type: "TEXT", nullable: false),
+                    Description = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_DUT", x => x.DUT_CODE);
+                    table.PrimaryKey("PK_DUT", x => x.DutCode);
                 });
 
             migrationBuilder.CreateTable(
                 name: "TEST_USER",
                 columns: table => new
                 {
-                    USER_CODE = table.Column<int>(type: "INTEGER", nullable: false)
+                    UserCode = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    FIRST_NAME = table.Column<string>(type: "nvarchar(50)", nullable: false),
-                    LAST_NAME = table.Column<string>(type: "nvarchar(50)", nullable: false),
-                    EMAIL = table.Column<string>(type: "nvarchar(150)", nullable: false),
-                    PROFILE_IMAGE = table.Column<string>(type: "nvarchar(50)", nullable: false),
-                    USER_NAME = table.Column<string>(type: "nvarchar(50)", nullable: false),
-                    PASSWORD = table.Column<string>(type: "nvarchar(50)", nullable: false)
+                    FirstName = table.Column<string>(type: "nvarchar(50)", nullable: false),
+                    LastName = table.Column<string>(type: "nvarchar(50)", nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(150)", nullable: false),
+                    ProfileImage = table.Column<string>(type: "nvarchar(50)", nullable: false),
+                    Username = table.Column<string>(type: "nvarchar(50)", nullable: false),
+                    Password = table.Column<string>(type: "nvarchar(50)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_TEST_USER", x => x.USER_CODE);
+                    table.PrimaryKey("PK_TEST_USER", x => x.UserCode);
                 });
 
             migrationBuilder.CreateTable(
                 name: "TEST_PLAN",
                 columns: table => new
                 {
-                    TEST_CODE = table.Column<int>(type: "INTEGER", nullable: false)
+                    TestCode = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    DATE = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    CYCLE_NO = table.Column<int>(type: "INTEGER", nullable: false),
-                    TEST_TIME = table.Column<int>(type: "INTEGER", nullable: false),
+                    Date = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    CycleNo = table.Column<int>(type: "INTEGER", nullable: false),
+                    TestTime = table.Column<int>(type: "INTEGER", nullable: false),
                     DUT_CODE = table.Column<int>(type: "INTEGER", nullable: false),
                     USER_CODE = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_TEST_PLAN", x => x.TEST_CODE);
+                    table.PrimaryKey("PK_TEST_PLAN", x => x.TestCode);
                     table.ForeignKey(
                         name: "FK_TEST_PLAN_DUT_DUT_CODE",
                         column: x => x.DUT_CODE,
                         principalTable: "DUT",
-                        principalColumn: "DUT_CODE",
+                        principalColumn: "DutCode",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_TEST_PLAN_TEST_USER_USER_CODE",
                         column: x => x.USER_CODE,
                         principalTable: "TEST_USER",
-                        principalColumn: "USER_CODE",
+                        principalColumn: "UserCode",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -75,24 +76,36 @@ namespace CID_Tester.Migrations
                 name: "TEST_PARAMETER",
                 columns: table => new
                 {
-                    PARAM_CODE = table.Column<int>(type: "INTEGER", nullable: false)
+                    ParamCode = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    DESCRIPTION = table.Column<string>(type: "TEXT", nullable: true),
-                    METRIC = table.Column<string>(type: "TEXT", nullable: false),
-                    VALUE = table.Column<decimal>(type: "TEXT", nullable: false),
-                    TARGET = table.Column<decimal>(type: "TEXT", nullable: false),
-                    PASS = table.Column<int>(type: "INTEGER", nullable: false)
+                    TEST_CODE = table.Column<int>(type: "INTEGER", nullable: false),
+                    Description = table.Column<string>(type: "TEXT", nullable: false),
+                    Metric = table.Column<string>(type: "TEXT", nullable: false),
+                    Value = table.Column<decimal>(type: "TEXT", nullable: false),
+                    Target = table.Column<decimal>(type: "TEXT", nullable: false),
+                    Pass = table.Column<int>(type: "INTEGER", nullable: false),
+                    Parameters = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_TEST_PARAMETER", x => x.PARAM_CODE);
+                    table.PrimaryKey("PK_TEST_PARAMETER", x => x.ParamCode);
                     table.ForeignKey(
-                        name: "FK_TEST_PARAMETER_TEST_PLAN_PARAM_CODE",
-                        column: x => x.PARAM_CODE,
+                        name: "FK_TEST_PARAMETER_TEST_PLAN_TEST_CODE",
+                        column: x => x.TEST_CODE,
                         principalTable: "TEST_PLAN",
-                        principalColumn: "TEST_CODE",
+                        principalColumn: "TestCode",
                         onDelete: ReferentialAction.Cascade);
                 });
+
+            migrationBuilder.InsertData(
+                table: "TEST_USER",
+                columns: new[] { "UserCode", "Email", "FirstName", "LastName", "Password", "ProfileImage", "Username" },
+                values: new object[] { 1, "drjjdevilla2002@gmail.com", "John Juvi", "De Villa", "password", "", "neurocoder" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TEST_PARAMETER_TEST_CODE",
+                table: "TEST_PARAMETER",
+                column: "TEST_CODE");
 
             migrationBuilder.CreateIndex(
                 name: "IX_TEST_PLAN_DUT_CODE",

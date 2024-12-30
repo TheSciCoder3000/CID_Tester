@@ -31,10 +31,10 @@ namespace CID_Tester.ViewModel
             }
         }
 
-        public DashboardMetricViewModel(TEST_PROCEDURE testPlan)
+        public DashboardMetricViewModel(TEST_PLAN testPlan)
         {
-            DUTName = testPlan.DUT.DESCRIPTION;
-            DUTDescription = testPlan.DUT.DESCRIPTION;
+            DUTName = testPlan.DUT.Description;
+            DUTDescription = testPlan.DUT.Description;
         }
     }
 }

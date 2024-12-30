@@ -17,79 +17,84 @@ namespace CID_Tester.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.0");
 
-            modelBuilder.Entity("CID_Tester.Model.DTO.DutDTO", b =>
+            modelBuilder.Entity("CID_Tester.Model.DUT", b =>
                 {
-                    b.Property<int>("DUT_CODE")
+                    b.Property<int>("DutCode")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("DESCRIPTION")
+                    b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("DUT_NAME")
+                    b.Property<string>("DutName")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.HasKey("DUT_CODE");
+                    b.HasKey("DutCode");
 
                     b.ToTable("DUT");
                 });
 
-            modelBuilder.Entity("CID_Tester.Model.DTO.ParameterDTO", b =>
+            modelBuilder.Entity("CID_Tester.Model.TEST_PARAMETER", b =>
                 {
-                    b.Property<int>("PARAM_CODE")
+                    b.Property<int>("ParamCode")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("DESCRIPTION")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("METRIC")
+                    b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("PASS")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<decimal>("TARGET")
+                    b.Property<string>("Metric")
+                        .IsRequired()
                         .HasColumnType("TEXT");
+
+                    b.Property<string>("Parameters")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("Pass")
+                        .HasColumnType("INTEGER");
 
                     b.Property<int>("TEST_CODE")
                         .HasColumnType("INTEGER");
 
-                    b.Property<decimal>("VALUE")
+                    b.Property<decimal>("Target")
                         .HasColumnType("TEXT");
 
-                    b.HasKey("PARAM_CODE");
+                    b.Property<decimal>("Value")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("ParamCode");
 
                     b.HasIndex("TEST_CODE");
 
                     b.ToTable("TEST_PARAMETER");
                 });
 
-            modelBuilder.Entity("CID_Tester.Model.DTO.TestPlanDTO", b =>
+            modelBuilder.Entity("CID_Tester.Model.TEST_PLAN", b =>
                 {
-                    b.Property<int>("TEST_CODE")
+                    b.Property<int>("TestCode")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("CYCLE_NO")
+                    b.Property<int>("CycleNo")
                         .HasColumnType("INTEGER");
-
-                    b.Property<DateTime>("DATE")
-                        .HasColumnType("TEXT");
 
                     b.Property<int>("DUT_CODE")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("TEST_TIME")
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("TestTime")
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("USER_CODE")
                         .HasColumnType("INTEGER");
 
-                    b.HasKey("TEST_CODE");
+                    b.HasKey("TestCode");
 
                     b.HasIndex("DUT_CODE");
 
@@ -98,61 +103,73 @@ namespace CID_Tester.Migrations
                     b.ToTable("TEST_PLAN");
                 });
 
-            modelBuilder.Entity("CID_Tester.Model.DTO.UserDTO", b =>
+            modelBuilder.Entity("CID_Tester.Model.TEST_USER", b =>
                 {
-                    b.Property<int>("USER_CODE")
+                    b.Property<int>("UserCode")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("EMAIL")
+                    b.Property<string>("Email")
                         .IsRequired()
                         .HasColumnType("nvarchar(150)");
 
-                    b.Property<string>("FIRST_NAME")
+                    b.Property<string>("FirstName")
                         .IsRequired()
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<string>("LAST_NAME")
+                    b.Property<string>("LastName")
                         .IsRequired()
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<string>("PASSWORD")
+                    b.Property<string>("Password")
                         .IsRequired()
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<string>("PROFILE_IMAGE")
+                    b.Property<string>("ProfileImage")
                         .IsRequired()
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<string>("USER_NAME")
+                    b.Property<string>("Username")
                         .IsRequired()
                         .HasColumnType("nvarchar(50)");
 
-                    b.HasKey("USER_CODE");
+                    b.HasKey("UserCode");
 
                     b.ToTable("TEST_USER");
+
+                    b.HasData(
+                        new
+                        {
+                            UserCode = 1,
+                            Email = "drjjdevilla2002@gmail.com",
+                            FirstName = "John Juvi",
+                            LastName = "De Villa",
+                            Password = "password",
+                            ProfileImage = "",
+                            Username = "neurocoder"
+                        });
                 });
 
-            modelBuilder.Entity("CID_Tester.Model.DTO.ParameterDTO", b =>
+            modelBuilder.Entity("CID_Tester.Model.TEST_PARAMETER", b =>
                 {
-                    b.HasOne("CID_Tester.Model.DTO.TestPlanDTO", "TEST_PLAN")
+                    b.HasOne("CID_Tester.Model.TEST_PLAN", "TestPlan")
                         .WithMany("TEST_PARAMETERS")
                         .HasForeignKey("TEST_CODE")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("TEST_PLAN");
+                    b.Navigation("TestPlan");
                 });
 
-            modelBuilder.Entity("CID_Tester.Model.DTO.TestPlanDTO", b =>
+            modelBuilder.Entity("CID_Tester.Model.TEST_PLAN", b =>
                 {
-                    b.HasOne("CID_Tester.Model.DTO.DutDTO", "DUT")
+                    b.HasOne("CID_Tester.Model.DUT", "DUT")
                         .WithMany("TEST_PLANS")
                         .HasForeignKey("DUT_CODE")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("CID_Tester.Model.DTO.UserDTO", "TEST_USER")
+                    b.HasOne("CID_Tester.Model.TEST_USER", "TEST_USER")
                         .WithMany("TEST_PLANS")
                         .HasForeignKey("USER_CODE")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -163,17 +180,17 @@ namespace CID_Tester.Migrations
                     b.Navigation("TEST_USER");
                 });
 
-            modelBuilder.Entity("CID_Tester.Model.DTO.DutDTO", b =>
+            modelBuilder.Entity("CID_Tester.Model.DUT", b =>
                 {
                     b.Navigation("TEST_PLANS");
                 });
 
-            modelBuilder.Entity("CID_Tester.Model.DTO.TestPlanDTO", b =>
+            modelBuilder.Entity("CID_Tester.Model.TEST_PLAN", b =>
                 {
                     b.Navigation("TEST_PARAMETERS");
                 });
 
-            modelBuilder.Entity("CID_Tester.Model.DTO.UserDTO", b =>
+            modelBuilder.Entity("CID_Tester.Model.TEST_USER", b =>
                 {
                     b.Navigation("TEST_PLANS");
                 });

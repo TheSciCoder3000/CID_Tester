@@ -1,4 +1,4 @@
-﻿using CID_Tester.Model.DTO;
+﻿using CID_Tester.Model;
 using Microsoft.EntityFrameworkCore;
 
 namespace CID_Tester.DbContexts
@@ -6,30 +6,36 @@ namespace CID_Tester.DbContexts
     public class TesterDbContext : DbContext
     {
         public TesterDbContext(DbContextOptions options) : base(options) { }
-        public DbSet<UserDTO> TEST_USER { get; set; }
-        public DbSet<TestPlanDTO> TEST_PLAN { get; set; }
-        public DbSet<ParameterDTO> TEST_PARAMETER { get; set; }
-        public DbSet<DutDTO> DUT { get; set; }
+        public DbSet<TEST_USER> TEST_USER { get; set; }
+        public DbSet<TEST_PLAN> TEST_PLAN { get; set; }
+        public DbSet<TEST_PARAMETER> TEST_PARAMETER { get; set; }
+        public DbSet<DUT> DUT { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<UserDTO>()
+            modelBuilder.Entity<TEST_USER>()
                 .HasMany(e => e.TEST_PLANS)
                 .WithOne(e => e.TEST_USER)
                 .HasForeignKey("USER_CODE")
                 .IsRequired();
 
-            modelBuilder.Entity<DutDTO>()
+            modelBuilder.Entity<DUT>()
                 .HasMany(e => e.TEST_PLANS)
                 .WithOne(e => e.DUT)
                 .HasForeignKey("DUT_CODE")
                 .IsRequired();
 
-            modelBuilder.Entity<TestPlanDTO>()
+            modelBuilder.Entity<TEST_PLAN>()
                 .HasMany(e => e.TEST_PARAMETERS)
-                .WithOne(e => e.TEST_PLAN)
+                .WithOne(e => e.TestPlan)
                 .HasForeignKey("TEST_CODE")
                 .IsRequired();
+
+
+            modelBuilder.Entity<TEST_USER>()
+                .HasData(
+                    new TEST_USER(1, "John Juvi", "De Villa", "drjjdevilla2002@gmail.com", "", "neurocoder", "password")
+                );
         }
     }
 }

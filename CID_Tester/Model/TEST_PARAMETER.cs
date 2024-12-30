@@ -1,20 +1,45 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations;
 
 namespace CID_Tester.Model
 {
     public class TEST_PARAMETER
     {
-        public int PARAM_CODE { get; set; }
-        public int TEST_CODE { get; set; }
-        public string DESCRIPTION {  get; set; }
-        public string METRIC { get; set; }
-        public decimal VALUE { get; set; }
-        public decimal TARGET { get; set; }
-        public int PASS { get; set; }
+        public TEST_PARAMETER(int paramCode, string description, string metric, decimal value, decimal target, int pass, string parameters)
+        {
+            ParamCode = paramCode;
+            Description = description;
+            Metric = metric;
+            Value = value;
+            Target = target;
+            Pass = pass;
+            Parameters = parameters;
+        }
+
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int ParamCode { get; private set; }
+
+        [Required]
+        public TEST_PLAN TestPlan { get; set; } = null!;
+
+
+        public string Description { get; private set; }
+
+        [Required]
+        public string Metric { get; private set; } = null!;
+
+        [Required]
+        public decimal Value { get; private set; }
+
+        [Required]
+        public decimal Target { get; private set; }
+
+        [Required]
+        public int Pass { get; private set; }
+
+        [Required]
+        public string Parameters { get; private set; }
 
     }
 }
