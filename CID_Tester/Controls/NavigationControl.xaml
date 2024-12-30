@@ -44,6 +44,11 @@
                 <TextBlock VerticalAlignment="Center" Text="Dashboard" />
             </StackPanel>
         </Button>
+        <Button Tag="dashboard" Margin="5" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Center" Command="{Binding NavigateToDevices}">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock VerticalAlignment="Center" Text="Devices" />
+            </StackPanel>
+        </Button>
         <Button Tag="plan" Margin="5" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Center" Command="{Binding NavigateToTestPlan}">
             <StackPanel Orientation="Horizontal">
                 <TextBlock VerticalAlignment="Center" Text="Test Plan" />

@@ -16,6 +16,9 @@
         <DataTemplate DataType="{x:Type vm:DashboardViewModel}">
             <view:DashboardView />
         </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:DevicesViewModel}">
+            <view:DevicesView />
+        </DataTemplate>
         <DataTemplate DataType="{x:Type vm:TestPlanViewModel}">
             <view:TestPlanView />
         </DataTemplate>
@@ -105,7 +108,7 @@
                     </LayoutDocumentPaneGroup>
 
 
-                    <LayoutAnchorablePaneGroup DockWidth="200">
+                    <!--<LayoutAnchorablePaneGroup DockWidth="200">
                         <LayoutAnchorablePane>
                             <LayoutAnchorable
                                 Title="Tool Window 1"
@@ -116,7 +119,7 @@
                                 <TextBlock Text="{Binding FocusedElement}" />
                             </LayoutAnchorable>
                         </LayoutAnchorablePane>
-                    </LayoutAnchorablePaneGroup>
+                    </LayoutAnchorablePaneGroup>-->
                 </LayoutPanel>
             </LayoutRoot>
 

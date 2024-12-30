@@ -20,7 +20,12 @@ namespace CID_Tester.Command
 
         public override void Execute(object? parameter)
         {
-            _viewModel.NavigateTo(_destViewModel);
+            //_viewModel.NavigateTo(_destViewModel);
+            if (!_viewModel.Documents.Contains(_destViewModel))
+            {
+                _viewModel.Documents.Add(_destViewModel);
+            }
+            _viewModel.ActiveDocument = _viewModel.Documents[_viewModel.Documents.IndexOf(_destViewModel)];
         }
     }
 }

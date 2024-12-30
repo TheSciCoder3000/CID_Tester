@@ -69,7 +69,7 @@ namespace CID_Tester.ViewModel
                 {
                     MainWindow main = new MainWindow()
                     {
-                        DataContext = new MainViewModel(user)
+                        DataContext = new MainViewModel(user, _dbProvider, _dbCreator)
                     };
                     main.Show();
                     ClosingRequest?.Invoke(this, EventArgs.Empty);
