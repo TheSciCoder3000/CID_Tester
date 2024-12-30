@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CID_Tester.Migrations
 {
     [DbContext(typeof(TesterDbContext))]
-    [Migration("20241229110254_Initial")]
+    [Migration("20241230035424_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -147,7 +147,7 @@ namespace CID_Tester.Migrations
                             Email = "drjjdevilla2002@gmail.com",
                             FirstName = "John Juvi",
                             LastName = "De Villa",
-                            Password = "password",
+                            Password = "$2a$11$qoIl2jzkPJaUSAwzsv6QberbuzQ/khrBVqRjLN7j/Fi4kOgJIMRHK",
                             ProfileImage = "",
                             Username = "neurocoder"
                         });

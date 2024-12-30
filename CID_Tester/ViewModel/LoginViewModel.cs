@@ -1,5 +1,6 @@
 ﻿using CID_Tester.Command;
 using CID_Tester.DbContexts;
+using CID_Tester.Exceptions;
 using CID_Tester.Model;
 using CID_Tester.Service.DbCreator;
 using CID_Tester.Service.DbProvider;
@@ -8,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 
 namespace CID_Tester.ViewModel
@@ -60,15 +62,21 @@ namespace CID_Tester.ViewModel
 
         private async Task LoginRequestEventHandler()
         {
-            TEST_USER? user = await _dbProvider.GetUser(_username, _password, _dbCreator);
-            if (user != null)
+            try
             {
-                MainWindow main = new MainWindow()
+                TEST_USER? user = await _dbProvider.GetUser(_username, _password, _dbCreator);
+                if (user != null)
                 {
-                    DataContext = new MainViewModel(user)
-                };
-                main.Show();
-                ClosingRequest?.Invoke(this, EventArgs.Empty);
+                    MainWindow main = new MainWindow()
+                    {
+                        DataContext = new MainViewModel(user)
+                    };
+                    main.Show();
+                    ClosingRequest?.Invoke(this, EventArgs.Empty);
+                }
+            } catch (IncorrectLoginException ex)
+            {
+                MessageBox.Show(ex.Message);
             }
         }
     }

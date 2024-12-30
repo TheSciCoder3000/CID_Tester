@@ -13,7 +13,7 @@ namespace CID_Tester.Model
 
         public string Description { get; private set; } = null!;
 
-        public ICollection<TEST_PLAN> TEST_PLANS { get; private set; } = null!;
+        public ICollection<TEST_PLAN> TEST_PLANS { get; set; } = null!;
 
         public DUT(int dutCode, string dutName, string description)
         {

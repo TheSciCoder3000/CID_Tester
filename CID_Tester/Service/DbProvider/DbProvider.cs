@@ -1,4 +1,5 @@
 ﻿using CID_Tester.DbContexts;
+using CID_Tester.Exceptions;
 using CID_Tester.Model;
 using CID_Tester.Service.DbCreator;
 using Microsoft.EntityFrameworkCore;
@@ -39,32 +40,24 @@ namespace CID_Tester.Service.DbProvider
         {
             using(TesterDbContext context = _dbContextFactory.CreateDbContext())
             {
-                TEST_USER? userDTO = await context.TEST_USER
-                    .Where(r => r.Username == username && r.Password == password)
+                var user = await context.TEST_USER
+                    .Where(r => r.Username == username)
+                    .Select(u => new { u.UserCode, u.Username, u.Password })
+                    .FirstOrDefaultAsync();
+
+                if (user == null) return null;
+
+                if (!BCrypt.Net.BCrypt.Verify(password, user.Password)) throw new IncorrectLoginException();
+
+                TEST_USER? verifiedUser = await context.TEST_USER
+                    .Where(r => r.UserCode == user.UserCode)
                     .Include(u => u.TEST_PLANS)
                         .ThenInclude(tp => tp.DUT)
                     .Include(u => u.TEST_PLANS)
                         .ThenInclude(tp => tp.TEST_PARAMETERS)
                     .FirstOrDefaultAsync();
 
-                if (userDTO == null) return null;
-
-                TEST_USER user = new TEST_USER(
-                    userDTO.UserCode,
-                    userDTO.FirstName,
-                    userDTO.LastName,
-                    userDTO.Email,
-                    userDTO.ProfileImage,
-                    userDTO.Username,
-                    userDTO.Password
-                )
-                {
-                    TEST_PLANS = userDTO.TEST_PLANS
-                };
-
-                Debug.WriteLine($"{user.TEST_PLANS.Count}");
-
-                return user;
+                return verifiedUser;
             }
 
         }

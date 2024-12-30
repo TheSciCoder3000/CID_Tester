@@ -34,7 +34,7 @@ namespace CID_Tester.DbContexts
 
             modelBuilder.Entity<TEST_USER>()
                 .HasData(
-                    new TEST_USER(1, "John Juvi", "De Villa", "drjjdevilla2002@gmail.com", "", "neurocoder", "password")
+                    new TEST_USER(1, "John Juvi", "De Villa", "drjjdevilla2002@gmail.com", "", "neurocoder", "$2a$11$qoIl2jzkPJaUSAwzsv6QberbuzQ/khrBVqRjLN7j/Fi4kOgJIMRHK")
                 );
         }
     }

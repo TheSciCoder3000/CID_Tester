@@ -144,7 +144,7 @@ namespace CID_Tester.Migrations
                             Email = "drjjdevilla2002@gmail.com",
                             FirstName = "John Juvi",
                             LastName = "De Villa",
-                            Password = "password",
+                            Password = "$2a$11$qoIl2jzkPJaUSAwzsv6QberbuzQ/khrBVqRjLN7j/Fi4kOgJIMRHK",
                             ProfileImage = "",
                             Username = "neurocoder"
                         });

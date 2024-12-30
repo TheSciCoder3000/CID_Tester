@@ -50,5 +50,11 @@ namespace CID_Tester.Model
         {
             return $"{FirstName} {LastName}";
         }
+
+        public bool VerifyUser(string username, string password)
+        {
+            bool passwordMatch = BCrypt.Net.BCrypt.Verify(password, Password);
+            return passwordMatch && username == Username;
+        }
     }
 }
