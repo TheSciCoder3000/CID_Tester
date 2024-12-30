@@ -1,33 +1,25 @@
-﻿using CID_Tester.Model.DTO;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations;
 
 namespace CID_Tester.Model
 {
     public class DUT
     {
-        public int DUT_CODE { get; }
-        public string DESCRIPTION { get; }
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int DutCode { get; private set; }
 
-        public string DUT_NAME { get; } 
+        public string DutName { get; private set; } = null!;
+
+        public string Description { get; private set; } = null!;
+
+        public ICollection<TEST_PLAN> TEST_PLANS { get; private set; } = null!;
 
         public DUT(int dutCode, string dutName, string description)
         {
-            DUT_CODE = dutCode;
-            DUT_NAME = dutName;
-            DESCRIPTION = description;
-        }
-
-        public DutDTO ToDTO()
-        {
-            return new DutDTO()
-            {
-                DUT_CODE = DUT_CODE,
-                DESCRIPTION = DESCRIPTION,
-            };
+            DutCode = dutCode;
+            DutName = dutName;
+            Description = description;
         }
 
     }
