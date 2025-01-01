@@ -3,7 +3,6 @@ using CID_Tester.Exceptions;
 using CID_Tester.Model;
 using CID_Tester.Service.DbCreator;
 using Microsoft.EntityFrameworkCore;
-using System.Diagnostics;
 
 namespace CID_Tester.Service.DbProvider
 {

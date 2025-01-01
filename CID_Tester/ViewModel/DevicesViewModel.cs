@@ -1,7 +1,5 @@
 ﻿using CID_Tester.Command;
 using CID_Tester.Model;
-using CID_Tester.Service.DbCreator;
-using CID_Tester.Service.DbProvider;
 using CID_Tester.View;
 using System.Windows;
 using System.Windows.Input;

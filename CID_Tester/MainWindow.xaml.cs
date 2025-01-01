@@ -1,6 +1,5 @@
 ﻿using AvalonDock.Layout;
 using AvalonDock.Layout.Serialization;
-using CID_Tester.ViewModel;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;

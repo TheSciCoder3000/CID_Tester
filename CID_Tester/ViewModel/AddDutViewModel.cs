@@ -1,13 +1,5 @@
 ﻿using CID_Tester.Command;
 using CID_Tester.Model;
-using CID_Tester.Service.DbCreator;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.RightsManagement;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace CID_Tester.ViewModel

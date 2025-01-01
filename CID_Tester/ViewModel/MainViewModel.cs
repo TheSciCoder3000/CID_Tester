@@ -2,7 +2,6 @@
 using CID_Tester.Model;
 using CID_Tester.Service.DbCreator;
 using CID_Tester.Service.DbProvider;
-using System.Collections.ObjectModel;
 using System.Windows.Input;
 
 namespace CID_Tester.ViewModel

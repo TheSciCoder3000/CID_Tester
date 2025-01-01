@@ -1,11 +1,4 @@
-﻿using CID_Tester.Model;
-using CID_Tester.ViewModel;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using CID_Tester.ViewModel;
 
 namespace CID_Tester.Command
 {

@@ -1,10 +1,4 @@
-﻿
-using CID_Tester.Model;
-using System.Configuration;
-using System.Data;
-using System.Windows;
-using System.IO;
-using System.Diagnostics;
+﻿using System.Windows;
 using CID_Tester.ViewModel;
 using CID_Tester.DbContexts;
 using Microsoft.EntityFrameworkCore;

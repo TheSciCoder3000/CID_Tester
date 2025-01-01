@@ -1,14 +1,8 @@
 ﻿using CID_Tester.Command;
-using CID_Tester.DbContexts;
 using CID_Tester.Exceptions;
 using CID_Tester.Model;
 using CID_Tester.Service.DbCreator;
 using CID_Tester.Service.DbProvider;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 
