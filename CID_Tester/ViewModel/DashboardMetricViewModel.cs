@@ -9,7 +9,7 @@ namespace CID_Tester.ViewModel
 {
     public class DashboardMetricViewModel : BaseViewModel
     {
-        private string _dutName;
+        private string _dutName = null!;
         public string DUTName
         {
             get { return _dutName; }
@@ -20,7 +20,7 @@ namespace CID_Tester.ViewModel
             }
         }
 
-        private string _dutDescription;
+        private string _dutDescription = null!;
         public string DUTDescription
         {
             get { return _dutDescription; }

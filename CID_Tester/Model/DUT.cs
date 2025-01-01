@@ -15,9 +15,8 @@ namespace CID_Tester.Model
 
         public ICollection<TEST_PLAN> TEST_PLANS { get; set; } = null!;
 
-        public DUT(int dutCode, string dutName, string description)
+        public DUT(string dutName, string description)
         {
-            DutCode = dutCode;
             DutName = dutName;
             Description = description;
         }

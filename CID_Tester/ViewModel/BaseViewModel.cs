@@ -9,7 +9,7 @@ namespace CID_Tester.ViewModel
 {
     public class BaseViewModel : INotifyPropertyChanged
     {
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler? PropertyChanged;
 
         protected void onPropertyChanged(string propertyName)
         {

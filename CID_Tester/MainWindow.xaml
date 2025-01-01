@@ -25,6 +25,9 @@
         <DataTemplate DataType="{x:Type vm:ResultsViewModel}">
             <view:ResultsView />
         </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:AddDutViewModel}">
+            <view:AddDutView />
+        </DataTemplate>
     </Window.Resources>
     
     <Grid x:Name="LayoutRoot">
@@ -73,6 +76,7 @@
             Grid.Row="1"
             DocumentsSource="{Binding Documents}"
             ActiveContent="{Binding ActiveDocument, Mode=TwoWay}"
+            AnchorablesSource="{Binding Anchorables}"
             AllowMixedOrientation="True"
             AutoWindowSizeWhenOpened="True"
             IsVirtualizingAnchorable="True"
@@ -85,13 +89,19 @@
             <DockingManager.LayoutItemContainerStyle>
                 <Style TargetType="{x:Type LayoutItem}">
                     <Setter Property="Title" Value="{Binding Model.Title}" />
+                    <Setter Property="CloseCommand" Value="{Binding Model.CloseCommand}" />
                 </Style>
             </DockingManager.LayoutItemContainerStyle>
+
+            <DockingManager.LayoutUpdateStrategy>
+                <vm:LayoutInitializer />
+            </DockingManager.LayoutUpdateStrategy>
+
 
             <LayoutRoot>
                 <LayoutPanel Orientation="Horizontal">
                     <LayoutAnchorablePane DockWidth="200">
-                        <LayoutAnchorable x:Name="WinFormsWindow"
+                        <LayoutAnchorable
                             Title="Explorer"
                             CanClose="False"
                             CanHide="False"
@@ -106,20 +116,8 @@
                         <LayoutDocumentPane x:Name="LayoutDocumentPane">
                         </LayoutDocumentPane>
                     </LayoutDocumentPaneGroup>
-
-
-                    <!--<LayoutAnchorablePaneGroup DockWidth="200">
-                        <LayoutAnchorablePane>
-                            <LayoutAnchorable
-                                Title="Tool Window 1"
-                                ContentId="toolWindow1"
-                                Hiding="OnToolWindow1Hiding">
-                            </LayoutAnchorable>
-                            <LayoutAnchorable Title="Tool Window 2" ContentId="toolWindow2">
-                                <TextBlock Text="{Binding FocusedElement}" />
-                            </LayoutAnchorable>
-                        </LayoutAnchorablePane>
-                    </LayoutAnchorablePaneGroup>-->
+                    
+                    
                 </LayoutPanel>
             </LayoutRoot>
 

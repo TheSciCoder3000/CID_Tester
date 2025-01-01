@@ -14,11 +14,15 @@ namespace CID_Tester.DbContexts
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<TEST_USER>()
+                .HasKey("UserCode");
+            modelBuilder.Entity<TEST_USER>()
                 .HasMany(e => e.TEST_PLANS)
                 .WithOne(e => e.TEST_USER)
                 .HasForeignKey("USER_CODE")
                 .IsRequired();
 
+            modelBuilder.Entity<DUT>()
+                .HasKey("DutCode");
             modelBuilder.Entity<DUT>()
                 .HasMany(e => e.TEST_PLANS)
                 .WithOne(e => e.DUT)
@@ -32,10 +36,10 @@ namespace CID_Tester.DbContexts
                 .IsRequired();
 
 
-            modelBuilder.Entity<TEST_USER>()
-                .HasData(
-                    new TEST_USER(1, "John Juvi", "De Villa", "drjjdevilla2002@gmail.com", "", "neurocoder", "$2a$11$qoIl2jzkPJaUSAwzsv6QberbuzQ/khrBVqRjLN7j/Fi4kOgJIMRHK")
-                );
+            //modelBuilder.Entity<TEST_USER>()
+            //    .HasData(
+            //        new TEST_USER("John Juvi", "De Villa", "drjjdevilla2002@gmail.com", "", "neurocoder", "$2a$11$qoIl2jzkPJaUSAwzsv6QberbuzQ/khrBVqRjLN7j/Fi4kOgJIMRHK")
+            //    );
         }
     }
 }

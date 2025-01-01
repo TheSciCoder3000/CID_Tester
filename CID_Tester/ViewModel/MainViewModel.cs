@@ -9,36 +9,56 @@ namespace CID_Tester.ViewModel
 {
     public class MainViewModel : BaseViewModel
     {
-        public ObservableCollection<BaseViewModel> Documents { get; } = new ObservableCollection<BaseViewModel>();
-        
-        private object _activeDocument = null!;
-        public object ActiveDocument
+        private readonly Store _AppStore;
+
+        private IEnumerable<BaseViewModel> _documents = [];
+        public IEnumerable<BaseViewModel> Documents
         {
-            get
-            {
-                return _activeDocument;
-            }
+            get => _documents;
             set
             {
-                _activeDocument = value;
+                _documents = value;
+                onPropertyChanged(nameof(Documents));
+            }
+        }
+
+        public object ActiveDocument
+        {
+            get => _AppStore.ActiveDocument;
+            set
+            {
+                _AppStore.ActiveDocument = value;
                 onPropertyChanged(nameof(ActiveDocument));
             }
         }
 
-        public ICommand NavigateToDashboard { get; set; }
-        public ICommand NavigateToDevices { get; set; }
-        public ICommand NavigateToTestPlan { get; set; }
-        public ICommand NavigateToResults { get; set; }
-        public ICommand NavigateToSettings { get; set; }
+        public ICommand NavigateToDashboard { get; } = null!;
+        public ICommand NavigateToDevices { get; } = null!;
+        public ICommand NavigateToTestPlan { get; } = null!;
+        public ICommand NavigateToResults { get; } = null!;
+        public ICommand NavigateToSettings { get; } = null!;
+
+        public ICommand AddDutCommand { get; } = null!;
+        public ICommand CloseCommand { get; } = null!;
 
 
         public MainViewModel(TEST_USER user, IDbProvider dbProvider, IDbCreator dbCreator)
         {
-            NavigateToTestPlan = new NavigateCommand(this, new TestPlanViewModel(user, "Test Plan"));
-            NavigateToDevices = new NavigateCommand(this, new DevicesViewModel("Devices", dbProvider, dbCreator));
-            NavigateToDashboard = new NavigateCommand(this, new DashboardViewModel(user, "Dashboard", NavigateToTestPlan));
-            NavigateToResults = new NavigateCommand(this, new ResultsViewModel(user, "Results Overview"));
-            NavigateToSettings = new NavigateCommand(this, new ResultsViewModel(user, "Settings"));
+            _AppStore = new Store(dbProvider, dbCreator, user, []);
+            _AppStore.OnDocumentOpenned         += LoadDocuments;
+            _AppStore.OnDocumentClosed          += LoadDocuments;
+            _AppStore.OnActiveDocumentChanged   += (activeDocument) => ActiveDocument = activeDocument; 
+
+            // Initialize Navigation Commands
+            NavigateToTestPlan  = new NavigateCommand(AddDocumentHandler, new TestPlanViewModel (_AppStore));
+            NavigateToDevices   = new NavigateCommand(AddDocumentHandler, new DevicesViewModel  (_AppStore));
+            NavigateToDashboard = new NavigateCommand(AddDocumentHandler, new DashboardViewModel(_AppStore, NavigateToTestPlan));
+            NavigateToResults   = new NavigateCommand(AddDocumentHandler, new ResultsViewModel  (_AppStore));
+            NavigateToSettings  = new NavigateCommand(AddDocumentHandler, new ResultsViewModel  (_AppStore));
         }
+
+        private void LoadDocuments(IEnumerable<BaseViewModel> documents) => Documents = documents;
+
+        private void AddDocumentHandler(BaseViewModel viewModel) => _AppStore.AddDocument(viewModel);
     }
 }

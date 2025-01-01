@@ -18,7 +18,7 @@ namespace CID_Tester.Command
             _viewModel = viewModel;
         }
 
-        public override void Execute(object parameter)
+        public override void Execute(object? parameter)
         {
             LoginRequestEvent?.Invoke(this, EventArgs.Empty);
         }

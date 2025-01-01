@@ -1,21 +1,23 @@
-﻿using CID_Tester.Model;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using CID_Tester.Command;
+using CID_Tester.Model;
+using System.Windows.Input;
 
 namespace CID_Tester.ViewModel
 {
-    public class TestPlanViewModel : BaseViewModel
+    public class TestPlanViewModel : BaseViewModel, IDocument
     {
-        private readonly TEST_USER _user;
-        public string Title { get; set; }
+        private readonly Store _AppStore;
+        public string Title { get; }
 
-        public TestPlanViewModel(TEST_USER user, string title)
+        public ICommand CloseCommand { get; }
+
+        public TestPlanViewModel(Store appStore)
         {
-            _user = user;
-            Title = title;
+            _AppStore = appStore;
+            Title = "Test Plan";
+            CloseCommand = new RelayCommand(CloseCommandHanlder);
         }
+
+        private void CloseCommandHanlder(object? parameter) => _AppStore.RemoveDocument(this);
     }
 }

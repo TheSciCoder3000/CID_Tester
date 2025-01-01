@@ -6,7 +6,7 @@ namespace CID_Tester.Model
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int UserCode { get; private set; }
+        public int UserCode { get; }
 
         [Required]
         [Column(TypeName = "nvarchar(50)")]
@@ -35,9 +35,8 @@ namespace CID_Tester.Model
         public ICollection<TEST_PLAN> TEST_PLANS { get; set; } = [];
 
 
-        public TEST_USER(int userCode, string firstName, string lastName, string email, string profileImage, string username, string password)
+        public TEST_USER(string firstName, string lastName, string email, string profileImage, string username, string password)
         {
-            UserCode = userCode;
             FirstName = firstName;
             LastName = lastName;
             Email = email;

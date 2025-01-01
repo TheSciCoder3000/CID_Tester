@@ -20,8 +20,7 @@ namespace CID_Tester.Service.DbProvider
         {
             using (TesterDbContext context = _dbContextFactory.CreateDbContext())
             {
-                IEnumerable<DUT> dutDTOs = await context.DUT.ToListAsync();
-                return dutDTOs.Select(r => new DUT(r.DutCode, r.DutName, r.Description));
+                return await context.DUT.ToListAsync();
 
             }
         }

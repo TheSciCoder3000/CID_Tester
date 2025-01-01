@@ -22,7 +22,7 @@ namespace CID_Tester.ViewModel
         public event EventHandler? ClosingRequest;
         public ICommand LoginCommand { get; }
 
-        private string _username;
+        private string _username = null!;
         public string Username
         {
             get
@@ -36,7 +36,7 @@ namespace CID_Tester.ViewModel
             }
         }
 
-        private string _password;
+        private string _password = null!;
         public string Password
         {
             get

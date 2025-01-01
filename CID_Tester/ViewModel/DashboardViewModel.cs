@@ -1,6 +1,7 @@
 ﻿using CID_Tester.Command;
 using CID_Tester.Controls;
 using CID_Tester.Model;
+using Microsoft.Identity.Client;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -12,24 +13,14 @@ using System.Windows.Input;
 
 namespace CID_Tester.ViewModel
 {
-    public class DashboardViewModel : BaseViewModel
+    public class DashboardViewModel : BaseViewModel, IDocument
     {
-        private readonly TEST_USER _user;
-        private string _fullname;
+        private readonly Store _AppStore;
 
         public string Title { get; set; }
+        public string Fullname { get { return _AppStore.TestUser.ToString(); } }
 
-        public string Fullname 
-        {
-            get { return _fullname; }
-            set 
-            { 
-                _fullname = value;
-                onPropertyChanged(nameof(Fullname));
-            }
-        }
-
-        private UserControl _testPlanStatusControl;
+        private UserControl _testPlanStatusControl = null!;
         public UserControl TestPlanStatusControl
         {
             get { return _testPlanStatusControl; }
@@ -41,13 +32,30 @@ namespace CID_Tester.ViewModel
         }
 
         public ICommand NavigateToTestPlanCommand { get; set; }
+        public ICommand CloseCommand { get; }
 
-        public DashboardViewModel(TEST_USER user, string title, ICommand navigateToTestPlanCommand)
+        public DashboardViewModel(Store appStore, ICommand navigateToTestPlanCommand)
         {
+            _AppStore = appStore;
             NavigateToTestPlanCommand = navigateToTestPlanCommand;
-            Title = title;
-            _fullname = user.ToString();
-            TestPlanStatusControl = new TestPlanStatusControl();
+            Title = "Dashboard";
+            CloseCommand = new RelayCommand(CloseCommandHanlder);
+
+
+            if (_AppStore.TestPlan == null)
+            {
+                TestPlanStatusControl = new TestPlanStatusControl();
+            }
+            else
+            {
+                TestPlanStatusControl = new DashboardMetricControl()
+                {
+                    DataContext = new DashboardMetricViewModel(_AppStore.TestPlan)
+                };
+            }
         }
+
+        private void CloseCommandHanlder(object? parameter) => _AppStore.RemoveDocument(this);
+
     }
 }

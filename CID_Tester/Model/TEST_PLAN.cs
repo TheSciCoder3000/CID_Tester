@@ -24,7 +24,7 @@ namespace CID_Tester.Model
 
         public TEST_USER TEST_USER { get; set; } = null!;
 
-        public ICollection<TEST_PARAMETER> TEST_PARAMETERS { get; set; }
+        public ICollection<TEST_PARAMETER> TEST_PARAMETERS { get; set; } = null!;
 
 
 

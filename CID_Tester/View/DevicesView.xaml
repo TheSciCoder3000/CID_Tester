@@ -10,53 +10,63 @@
         <Style TargetType="TextBlock">
             <Setter Property="Foreground" Value="White" />
         </Style>
+        <Style TargetType="DataGrid">
+            <Setter Property="Background" Value="#2E2E2E" />
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="RowBackground" Value="#3D3D3D" />
+            <Setter Property="AlternatingRowBackground" Value="#2E2E2E" />
+            <Setter Property="SelectionUnit" Value="FullRow" />
+            <Setter Property="SelectionMode" Value="Single" />
+            <Setter Property="HorizontalGridLinesBrush" Value="#444444" />
+            <Setter Property="VerticalGridLinesBrush" Value="#444444" />
+            <Setter Property="BorderBrush" Value="#444444" />
+            <Setter Property="CanUserResizeColumns" Value="False" />
+            <Setter Property="CanUserReorderColumns" Value="False" />
+            <Setter Property="AutoGenerateColumns" Value="False" />
+            <Setter Property="HeadersVisibility" Value="Column" />
+            <Setter Property="IsReadOnly" Value="True" />
+        </Style>
+
+        <Style TargetType="DataGridColumnHeader">
+            <Setter Property="Background" Value="#333333"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Height" Value="30"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="BorderBrush" Value="#444444"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+        </Style>
+
         <Style x:Key="DevicesTableRow" TargetType="{x:Type DataGridRow}">
-            <Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"/>
-            <Setter Property="SnapsToDevicePixels" Value="true"/>
-            <Setter Property="Validation.ErrorTemplate" Value="{x:Null}"/>
-            <Setter Property="ValidationErrorTemplate">
-                <Setter.Value>
-                    <ControlTemplate>
-                        <TextBlock Foreground="Red" Margin="2,0,0,0" Text="!" VerticalAlignment="Center"/>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type DataGridRow}">
-                        <Border x:Name="DGR_Border" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" SnapsToDevicePixels="True">
-                            <SelectiveScrollingGrid>
-                                <SelectiveScrollingGrid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="*"/>
-                                </SelectiveScrollingGrid.ColumnDefinitions>
-                                <SelectiveScrollingGrid.RowDefinitions>
-                                    <RowDefinition Height="*"/>
-                                    <RowDefinition Height="Auto"/>
-                                </SelectiveScrollingGrid.RowDefinitions>
-                                <DataGridCellsPresenter Grid.Column="1" ItemsPanel="{TemplateBinding ItemsPanel}" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
-                                <DataGridDetailsPresenter Grid.Column="1" Grid.Row="1" SelectiveScrollingGrid.SelectiveScrollingOrientation="{Binding AreRowDetailsFrozen, ConverterParameter={x:Static SelectiveScrollingOrientation.Vertical}, Converter={x:Static DataGrid.RowDetailsScrollingConverter}, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}" Visibility="{TemplateBinding DetailsVisibility}"/>
-                                <DataGridRowHeader Grid.RowSpan="2" SelectiveScrollingGrid.SelectiveScrollingOrientation="Vertical" Visibility="{Binding HeadersVisibility, ConverterParameter={x:Static DataGridHeadersVisibility.Row}, Converter={x:Static DataGrid.HeadersVisibilityConverter}, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}"/>
-                            </SelectiveScrollingGrid>
-                        </Border>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
+            <Setter Property="Background" Value="#2E2E2E"/>
+            <Setter Property="Foreground" Value="White"/>
             <Style.Triggers>
-                <Trigger Property="IsNewItem" Value="True">
-                    <Setter Property="Margin" Value="{Binding NewItemMargin, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}"/>
-                </Trigger>
+                <DataTrigger Binding="{Binding IsSelected, RelativeSource={RelativeSource Self}}" Value="True">
+                    <Setter Property="Background" Value="#5A5A5A"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+        
+        <Style TargetType="DataGridCell">
+            <Setter Property="Background" Value="#2E2E2E"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderBrush" Value="#444444"/>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding IsSelected, RelativeSource={RelativeSource Self}}" Value="True">
+                    <Setter Property="Background" Value="#5A5A5A"/>
+                </DataTrigger>
             </Style.Triggers>
         </Style>
     </UserControl.Resources>
     
     <StackPanel Margin="10">
-        <TextBlock Margin="0,0,0,10" FontSize="30">Devices Under Testing</TextBlock> 
-        <DataGrid AutoGenerateColumns="False" ItemsSource="{Binding Devices}" RowStyle="{DynamicResource DevicesTableRow}">
+        <TextBlock Margin="0,0,0,10" FontSize="30">Devices Under Testing</TextBlock>
+        <Button Command="{Binding AddDutCommand}">Add Device</Button>
+        <DataGrid ItemsSource="{Binding Devices}" RowStyle="{DynamicResource DevicesTableRow}">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="CODE" Binding="{Binding DutCode}" />
-                <DataGridTextColumn Header="Device name" Binding="{Binding DutName}" />
-                <DataGridTextColumn Header="Description" Binding="{Binding Description}" />
+                <DataGridTextColumn Header="CODE" Binding="{Binding DutCode}" MinWidth="100" />
+                <DataGridTextColumn Header="Device name" Binding="{Binding DutName}" Width="*" />
+                <DataGridTextColumn Header="Description" Binding="{Binding Description}" Width="*" />
             </DataGrid.Columns>
         </DataGrid>
     </StackPanel>
