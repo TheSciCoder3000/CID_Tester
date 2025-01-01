@@ -5,9 +5,9 @@ namespace CID_Tester.Model
 {
     public class TEST_PLAN
     {
-        public TEST_PLAN(int testCode, DateTime date, int cycleNo, int testTime)
+        public TEST_PLAN(string description, DateTime date, int cycleNo, int testTime)
         {
-            TestCode = testCode;
+            Description = description;
             Date = date;
             CycleNo = cycleNo;
             TestTime = testTime;
@@ -16,6 +16,7 @@ namespace CID_Tester.Model
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int TestCode { get; private set; }
+        public string Description { get; private set; }
         public DateTime Date { get; private set; }
         public int CycleNo { get; private set; }
         public int TestTime { get; private set; }

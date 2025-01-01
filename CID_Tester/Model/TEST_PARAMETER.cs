@@ -5,9 +5,9 @@ namespace CID_Tester.Model
 {
     public class TEST_PARAMETER
     {
-        public TEST_PARAMETER(int paramCode, string description, string metric, decimal value, decimal target, int pass, string parameters)
+        public TEST_PARAMETER(string name, string description, string metric, decimal value, decimal target, int pass, string parameters)
         {
-            ParamCode = paramCode;
+            Name = name;
             Description = description;
             Metric = metric;
             Value = value;
@@ -19,6 +19,9 @@ namespace CID_Tester.Model
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int ParamCode { get; private set; }
+
+        [Required]
+        public string Name { get; private set; }
 
         [Required]
         public TEST_PLAN TestPlan { get; set; } = null!;

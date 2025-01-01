@@ -28,13 +28,16 @@ namespace CID_Tester.DbContexts
                 .WithOne(e => e.DUT)
                 .HasForeignKey("DUT_CODE")
                 .IsRequired();
-
+            modelBuilder.Entity<TEST_PLAN>()
+                .HasKey("TestCode");
             modelBuilder.Entity<TEST_PLAN>()
                 .HasMany(e => e.TEST_PARAMETERS)
                 .WithOne(e => e.TestPlan)
                 .HasForeignKey("TEST_CODE")
                 .IsRequired();
 
+            modelBuilder.Entity<TEST_PARAMETER>()
+                .HasKey("ParamCode");
 
             //modelBuilder.Entity<TEST_USER>()
             //    .HasData(
