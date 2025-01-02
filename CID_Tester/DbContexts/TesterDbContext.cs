@@ -18,7 +18,7 @@ namespace CID_Tester.DbContexts
             modelBuilder.Entity<TEST_USER>()
                 .HasMany(e => e.TEST_PLANS)
                 .WithOne(e => e.TEST_USER)
-                .HasForeignKey("USER_CODE")
+                .HasForeignKey("UserCode")
                 .IsRequired();
 
             modelBuilder.Entity<DUT>()
@@ -26,14 +26,15 @@ namespace CID_Tester.DbContexts
             modelBuilder.Entity<DUT>()
                 .HasMany(e => e.TEST_PLANS)
                 .WithOne(e => e.DUT)
-                .HasForeignKey("DUT_CODE")
+                .HasForeignKey("DutCode")
                 .IsRequired();
+
             modelBuilder.Entity<TEST_PLAN>()
                 .HasKey("TestCode");
             modelBuilder.Entity<TEST_PLAN>()
                 .HasMany(e => e.TEST_PARAMETERS)
                 .WithOne(e => e.TestPlan)
-                .HasForeignKey("TEST_CODE")
+                .HasForeignKey("TestCode")
                 .IsRequired();
 
             modelBuilder.Entity<TEST_PARAMETER>()

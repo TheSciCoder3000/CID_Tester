@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace CID_Tester.Migrations
 {
     /// <inheritdoc />
-    public partial class Initial : Migration
+    public partial class Intial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -49,24 +49,25 @@ namespace CID_Tester.Migrations
                 {
                     TestCode = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
+                    Description = table.Column<string>(type: "TEXT", nullable: false),
                     Date = table.Column<DateTime>(type: "TEXT", nullable: false),
                     CycleNo = table.Column<int>(type: "INTEGER", nullable: false),
                     TestTime = table.Column<int>(type: "INTEGER", nullable: false),
-                    DUT_CODE = table.Column<int>(type: "INTEGER", nullable: false),
-                    USER_CODE = table.Column<int>(type: "INTEGER", nullable: false)
+                    DutCode = table.Column<int>(type: "INTEGER", nullable: false),
+                    UserCode = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_TEST_PLAN", x => x.TestCode);
                     table.ForeignKey(
-                        name: "FK_TEST_PLAN_DUT_DUT_CODE",
-                        column: x => x.DUT_CODE,
+                        name: "FK_TEST_PLAN_DUT_DutCode",
+                        column: x => x.DutCode,
                         principalTable: "DUT",
                         principalColumn: "DutCode",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_TEST_PLAN_TEST_USER_USER_CODE",
-                        column: x => x.USER_CODE,
+                        name: "FK_TEST_PLAN_TEST_USER_UserCode",
+                        column: x => x.UserCode,
                         principalTable: "TEST_USER",
                         principalColumn: "UserCode",
                         onDelete: ReferentialAction.Cascade);
@@ -78,7 +79,8 @@ namespace CID_Tester.Migrations
                 {
                     ParamCode = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    TEST_CODE = table.Column<int>(type: "INTEGER", nullable: false),
+                    Name = table.Column<string>(type: "TEXT", nullable: false),
+                    TestCode = table.Column<int>(type: "INTEGER", nullable: false),
                     Description = table.Column<string>(type: "TEXT", nullable: false),
                     Metric = table.Column<string>(type: "TEXT", nullable: false),
                     Value = table.Column<decimal>(type: "TEXT", nullable: false),
@@ -90,27 +92,27 @@ namespace CID_Tester.Migrations
                 {
                     table.PrimaryKey("PK_TEST_PARAMETER", x => x.ParamCode);
                     table.ForeignKey(
-                        name: "FK_TEST_PARAMETER_TEST_PLAN_TEST_CODE",
-                        column: x => x.TEST_CODE,
+                        name: "FK_TEST_PARAMETER_TEST_PLAN_TestCode",
+                        column: x => x.TestCode,
                         principalTable: "TEST_PLAN",
                         principalColumn: "TestCode",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_TEST_PARAMETER_TEST_CODE",
+                name: "IX_TEST_PARAMETER_TestCode",
                 table: "TEST_PARAMETER",
-                column: "TEST_CODE");
+                column: "TestCode");
 
             migrationBuilder.CreateIndex(
-                name: "IX_TEST_PLAN_DUT_CODE",
+                name: "IX_TEST_PLAN_DutCode",
                 table: "TEST_PLAN",
-                column: "DUT_CODE");
+                column: "DutCode");
 
             migrationBuilder.CreateIndex(
-                name: "IX_TEST_PLAN_USER_CODE",
+                name: "IX_TEST_PLAN_UserCode",
                 table: "TEST_PLAN",
-                column: "USER_CODE");
+                column: "UserCode");
         }
 
         /// <inheritdoc />

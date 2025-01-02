@@ -1,5 +1,6 @@
 ﻿using CID_Tester.DbContexts;
 using CID_Tester.Model;
+using Microsoft.EntityFrameworkCore;
 
 namespace CID_Tester.Service.DbCreator
 {
@@ -22,6 +23,15 @@ namespace CID_Tester.Service.DbCreator
             }
         }
 
+        public async Task DeleteDUT(DUT dut)
+        {
+            using (TesterDbContext context = _dbContextFactory.CreateDbContext())
+            {
+                context.DUT.Remove(dut);
+                await context.SaveChangesAsync();
+            }
+        }
+
         public Task CreateTestParameter(TEST_PARAMETER param)
         {
             throw new NotImplementedException();
@@ -31,7 +41,11 @@ namespace CID_Tester.Service.DbCreator
         {
             using (TesterDbContext context = _dbContextFactory.CreateDbContext())
             {
+                context.Entry(testPlan.DUT).State = EntityState.Unchanged;
+                context.Entry(testPlan.TEST_USER).State = EntityState.Unchanged;
+
                 context.TEST_PLAN.Add(testPlan);
+                
                 await context.SaveChangesAsync();
             }
         }

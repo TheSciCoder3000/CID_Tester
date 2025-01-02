@@ -6,6 +6,7 @@ namespace CID_Tester.Service.DbCreator
     {
         Task CreateUser(TEST_USER user);
         Task CreateDUT(DUT dut);
+        Task DeleteDUT(DUT dut);
         Task CreateTestPlan(TEST_PLAN testPlan);
         Task CreateTestParameter(TEST_PARAMETER param);
     }

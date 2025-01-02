@@ -61,8 +61,11 @@
     
     <StackPanel Margin="10">
         <TextBlock Margin="0,0,0,10" FontSize="30">Devices Under Testing</TextBlock>
-        <Button Command="{Binding AddDutCommand}">Add Device</Button>
-        <DataGrid ItemsSource="{Binding Devices}" RowStyle="{DynamicResource DevicesTableRow}">
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+            <Button Command="{Binding AddDutCommand}">Add Device</Button>
+            <Button Command="{Binding DeleteDutCommand}">Delete Device</Button>
+        </StackPanel>
+        <DataGrid SelectedItem="{Binding SelectedItem}" ItemsSource="{Binding Devices}" RowStyle="{DynamicResource DevicesTableRow}">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="CODE" Binding="{Binding DutCode}" MinWidth="100" />
                 <DataGridTextColumn Header="Device name" Binding="{Binding DutName}" Width="*" />

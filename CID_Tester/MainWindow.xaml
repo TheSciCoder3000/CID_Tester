@@ -26,8 +26,20 @@
             <view:ResultsView />
         </DataTemplate>
         <DataTemplate DataType="{x:Type vm:AddDutViewModel}">
-            <view:AddDutView />
+            <view:AddDutView1 />
         </DataTemplate>
+
+        <!-- Style for LayoutDocumentItem -->
+        <Style x:Key="DocumentStyle" TargetType="{x:Type LayoutDocumentItem}">
+            <Setter Property="Title" Value="{Binding Model.Title}" />
+            <Setter Property="CloseCommand" Value="{Binding Model.CloseCommand}" />
+        </Style>
+
+        <!-- Style for LayoutAnchorableItem -->
+        <Style x:Key="AnchorableStyle" TargetType="{x:Type LayoutAnchorableItem}">
+            <Setter Property="Title" Value="{Binding Model.Title}" />
+            <Setter Property="HideCommand" Value="{Binding Model.CloseCommand}" />
+        </Style>
     </Window.Resources>
     
     <Grid x:Name="LayoutRoot">
@@ -86,17 +98,13 @@
                 <avalonDock:Vs2013DarkTheme />
             </DockingManager.Theme>
 
-            <DockingManager.LayoutItemContainerStyle>
-                <Style TargetType="{x:Type LayoutItem}">
-                    <Setter Property="Title" Value="{Binding Model.Title}" />
-                    <Setter Property="CloseCommand" Value="{Binding Model.CloseCommand}" />
-                </Style>
-            </DockingManager.LayoutItemContainerStyle>
+            <DockingManager.LayoutItemContainerStyleSelector>
+                <vm:ItemStyleSelector DocumentStyle="{StaticResource DocumentStyle}" AnchorableStyle="{StaticResource AnchorableStyle}" />
+            </DockingManager.LayoutItemContainerStyleSelector>
 
             <DockingManager.LayoutUpdateStrategy>
                 <vm:LayoutInitializer />
             </DockingManager.LayoutUpdateStrategy>
-
 
             <LayoutRoot>
                 <LayoutPanel Orientation="Horizontal">

@@ -3,6 +3,7 @@ using CID_Tester.Service.DbProvider;
 using CID_Tester.ViewModel;
 using Microsoft.Identity.Client;
 using System.Reflection.Metadata;
+using System.Xml.Linq;
 
 namespace CID_Tester.Model
 {
@@ -26,9 +27,13 @@ namespace CID_Tester.Model
 
         public event Action<TEST_USER> OnTestUserUpdated;
 
+        public event Action<IEnumerable<TEST_PARAMETER>> OnTestParameterUpdated;
+
         public event Action<IEnumerable<BaseViewModel>> OnDocumentOpenned;
         public event Action<IEnumerable<BaseViewModel>> OnDocumentClosed;
         public event Action<BaseViewModel> OnActiveDocumentChanged;
+        public event Action<IEnumerable<BaseViewModel>> OnAnchorableAdded;
+        public event Action<IEnumerable<BaseViewModel>> OnAnchorableRemoved;
 
         #endregion
 
@@ -68,6 +73,38 @@ namespace CID_Tester.Model
             OnDocumentClosed?.Invoke(Documents);
         }
 
+        public void AddAnchorables(BaseViewModel anchorable)
+        {
+            ICollection<BaseViewModel> AnchorableCollection = Anchorables.ToList();
+            BaseViewModel? ancorableExist = AnchorableCollection.FirstOrDefault(d => d == anchorable);
+
+            if (ancorableExist == null)
+            {
+                AnchorableCollection.Add(anchorable);
+                Anchorables = AnchorableCollection;
+                OnAnchorableAdded?.Invoke(Anchorables);
+            }
+        }
+
+        public void RemoveAnchorable(BaseViewModel anchorable)
+        {
+            ICollection<BaseViewModel> AnchorableCollection = Anchorables.ToList();
+            AnchorableCollection.Remove(anchorable);
+            Anchorables = AnchorableCollection;
+            OnAnchorableRemoved?.Invoke(Anchorables);
+        }
+
+        #endregion
+
+        #region Test Plan Function
+
+        public async Task CreateTestPlan(TEST_PLAN testPlan)
+        {
+            await _dbCreator.CreateTestPlan(testPlan);
+            TestPlan = testPlan;
+            OnTestParameterUpdated?.Invoke(TestPlan.TEST_PARAMETERS);
+        }
+
         #endregion
 
         #region DUT Functions
@@ -90,6 +127,12 @@ namespace CID_Tester.Model
             OnDutCreated?.Invoke(DUTs);
         }
 
+        public async Task DeleteDut(DUT dut)
+        {
+            await _dbCreator.DeleteDUT(dut);
+            LoadDut();
+            OnDutDeleted?.Invoke(DUTs);
+        }
         #endregion
     }
 }

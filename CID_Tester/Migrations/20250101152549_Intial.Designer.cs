@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CID_Tester.Migrations
 {
     [DbContext(typeof(TesterDbContext))]
-    [Migration("20250101104139_TestPlanMigration")]
-    partial class TestPlanMigration
+    [Migration("20250101152549_Intial")]
+    partial class Intial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -64,18 +64,18 @@ namespace CID_Tester.Migrations
                     b.Property<int>("Pass")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("TEST_CODE")
-                        .HasColumnType("INTEGER");
-
                     b.Property<decimal>("Target")
                         .HasColumnType("TEXT");
+
+                    b.Property<int>("TestCode")
+                        .HasColumnType("INTEGER");
 
                     b.Property<decimal>("Value")
                         .HasColumnType("TEXT");
 
                     b.HasKey("ParamCode");
 
-                    b.HasIndex("TEST_CODE");
+                    b.HasIndex("TestCode");
 
                     b.ToTable("TEST_PARAMETER");
                 });
@@ -89,9 +89,6 @@ namespace CID_Tester.Migrations
                     b.Property<int>("CycleNo")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("DUT_CODE")
-                        .HasColumnType("INTEGER");
-
                     b.Property<DateTime>("Date")
                         .HasColumnType("TEXT");
 
@@ -99,17 +96,20 @@ namespace CID_Tester.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<int>("DutCode")
+                        .HasColumnType("INTEGER");
+
                     b.Property<int>("TestTime")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("USER_CODE")
+                    b.Property<int>("UserCode")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("TestCode");
 
-                    b.HasIndex("DUT_CODE");
+                    b.HasIndex("DutCode");
 
-                    b.HasIndex("USER_CODE");
+                    b.HasIndex("UserCode");
 
                     b.ToTable("TEST_PLAN");
                 });
@@ -153,7 +153,7 @@ namespace CID_Tester.Migrations
                 {
                     b.HasOne("CID_Tester.Model.TEST_PLAN", "TestPlan")
                         .WithMany("TEST_PARAMETERS")
-                        .HasForeignKey("TEST_CODE")
+                        .HasForeignKey("TestCode")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -164,13 +164,13 @@ namespace CID_Tester.Migrations
                 {
                     b.HasOne("CID_Tester.Model.DUT", "DUT")
                         .WithMany("TEST_PLANS")
-                        .HasForeignKey("DUT_CODE")
+                        .HasForeignKey("DutCode")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("CID_Tester.Model.TEST_USER", "TEST_USER")
                         .WithMany("TEST_PLANS")
-                        .HasForeignKey("USER_CODE")
+                        .HasForeignKey("UserCode")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

@@ -23,7 +23,19 @@ namespace CID_Tester.ViewModel
             }
         }
 
+        private DUT _selectedItem = null!;
+        public DUT SelectedItem
+        {
+            get => _selectedItem;
+            set
+            {
+                _selectedItem = value;
+                onPropertyChanged(nameof(SelectedItem));
+            }
+        }
+
         public ICommand AddDutCommand { get; }
+        public ICommand DeleteDutCommand { get; }
         public ICommand CloseCommand { get; }
 
         public DevicesViewModel(Store appStore)
@@ -32,16 +44,20 @@ namespace CID_Tester.ViewModel
 
             _AppStore = appStore;
             _AppStore.OnDutUpdated += Load;
+            _AppStore.OnDutDeleted += Load;
 
             CloseCommand = new RelayCommand(CloseCommandHanlder);
             AddDutCommand = new RelayCommand(ShowDutForm);
+            DeleteDutCommand = new RelayCommand(DeleteDutHandler);
             Load();
         }
+
+        private async void DeleteDutHandler(object? obj) => await _AppStore.DeleteDut(SelectedItem);
 
         private void ShowDutForm(object? obj)
         {
             Window addDutView = new AddDutView();
-            BaseViewModel vm = new AddDutViewModel(_AppStore, () => addDutView.Close());
+            BaseViewModel vm = new AddDutViewModel(_AppStore);
             addDutView.DataContext = vm;
             addDutView.ShowDialog();
         }

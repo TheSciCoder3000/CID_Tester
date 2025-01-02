@@ -4,7 +4,7 @@ using System.Windows.Input;
 
 namespace CID_Tester.ViewModel
 {
-    public class AddDutViewModel : BaseViewModel
+    public class AddDutViewModel : BaseViewModel, IDocument
     {
         private readonly Action _closeDialog;
 
@@ -33,17 +33,27 @@ namespace CID_Tester.ViewModel
 
         public ICommand AddDutCommand { get; }
 
-        public AddDutViewModel(Store appStore, Action CloseDialog)
+        public string Title { get; }
+
+        public ICommand CloseCommand { get; }
+
+        public AddDutViewModel(Store appStore)
         {
+            Title = "Add Devices";
             _AppStore = appStore;
-            _closeDialog = CloseDialog;
             AddDutCommand = new RelayCommand(CreateDutHandler);
+            CloseCommand = new RelayCommand(RemoveAnchorable);
+        }
+
+        private void RemoveAnchorable(object? obj)
+        {
+            _AppStore.RemoveAnchorable(this);
         }
 
         private async void CreateDutHandler(object? obj)
         {
             await _AppStore.CreateDut(new DUT(DutName, DutDescription));
-            _closeDialog.Invoke();
+            //_closeDialog.Invoke();
         }
     }
 }
