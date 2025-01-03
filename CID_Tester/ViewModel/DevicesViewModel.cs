@@ -59,7 +59,7 @@ namespace CID_Tester.ViewModel
         private void ShowDutForm(object? obj)
         {
             Window addDutView = new AddDutView();
-            BaseViewModel vm = new AddDutViewModel(_AppStore);
+            BaseViewModel vm = new AddDutViewModel(_AppStore, () => addDutView.Close());
             addDutView.DataContext = vm;
             addDutView.ShowDialog();
         }

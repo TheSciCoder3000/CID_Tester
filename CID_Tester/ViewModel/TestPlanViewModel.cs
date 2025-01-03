@@ -1,6 +1,6 @@
 ﻿using CID_Tester.ViewModel.Command;
 using CID_Tester.Model;
-
+using CID_Tester.View.Windows;
 using CID_Tester.View;
 using CID_Tester.ViewModel.Interfaces;
 using System.Windows.Input;
@@ -14,8 +14,8 @@ namespace CID_Tester.ViewModel
         public string Title { get; }
 
         public bool ShowParameterTable { get; set; } = false;
-        private IEnumerable<TEST_PARAMETER>? _parameters = null;
-        public IEnumerable<TEST_PARAMETER>? TestParameters
+        private ICollection<TEST_PARAMETER>? _parameters = [];
+        public ICollection<TEST_PARAMETER>? TestParameters
         {
             get => _parameters;
             set {
@@ -29,6 +29,7 @@ namespace CID_Tester.ViewModel
         public ICommand CloseCommand { get; }
         public ICommand CreateTestPlanCommand { get; }
         public ICommand DoubleClickCommand { get; }
+        public ICommand AddTestParameterCommand { get; }
 
         public TestPlanViewModel(Store appStore)
         {
@@ -37,12 +38,21 @@ namespace CID_Tester.ViewModel
             Title = "Test Plan";
             CloseCommand = new RelayCommand(CloseCommandHanlder);
             CreateTestPlanCommand = new RelayCommand(CreateTestPlanHandler);
+            AddTestParameterCommand = new RelayCommand(AddTestParameterHandler);
             TestParameters = _AppStore.TestPlan?.TEST_PARAMETERS;
+        }
+
+        private void AddTestParameterHandler(object? obj)
+        {
+            AddParameterView addParameterView = new AddParameterView();
+            AddParameterViewModel vm = new AddParameterViewModel(_AppStore, () => addParameterView.Close());
+            addParameterView.DataContext = vm;
+            addParameterView.ShowDialog();
         }
 
         private void LoadTestParameters(IEnumerable<TEST_PARAMETER> testParameters)
         {
-            TestParameters = testParameters;
+            TestParameters = testParameters.ToList();
         }
 
         private void CreateTestPlanHandler(object? obj)
