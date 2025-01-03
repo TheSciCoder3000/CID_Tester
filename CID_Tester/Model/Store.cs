@@ -91,9 +91,20 @@ namespace CID_Tester.Model
             OnAnchorableRemoved?.Invoke(Anchorables);
         }
 
+        public void ClearAnchorables()
+        {
+            Anchorables = [];
+        }
+
         #endregion
 
         #region Test Plan Function
+
+        public void setTestPlan(TEST_PLAN testPlan)
+        {
+            TestPlan = testPlan;
+            OnTestParameterUpdated?.Invoke(TestPlan.TEST_PARAMETERS);
+        }
 
         public async Task CreateTestPlan(TEST_PLAN testPlan)
         {

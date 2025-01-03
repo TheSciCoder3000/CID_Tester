@@ -5,6 +5,10 @@ using CID_Tester.View;
 using CID_Tester.ViewModel.Interfaces;
 using System.Windows.Input;
 using CID_Tester.ViewModel.Windows;
+using System.ComponentModel;
+using System.Windows.Data;
+using CID_Tester.ViewModel.Controls;
+using System.Collections.ObjectModel;
 
 namespace CID_Tester.ViewModel
 {
@@ -15,14 +19,28 @@ namespace CID_Tester.ViewModel
 
         public bool ShowParameterTable { get; set; } = false;
         private ICollection<TEST_PARAMETER>? _parameters = [];
-        public ICollection<TEST_PARAMETER>? TestParameters
+        public ICollectionView? TestParameters
         {
-            get => _parameters;
+            get => CollectionViewSource.GetDefaultView(_parameters);
             set {
-                _parameters = value;
+                if (value == null) _parameters = null;
+                else _parameters = ((IEnumerable<TEST_PARAMETER>)value.SourceCollection).ToList();
                 ShowParameterTable = value != null;
                 onPropertyChanged(nameof(ShowParameterTable));
                 onPropertyChanged(nameof(TestParameters));
+            }
+        }
+
+        public ObservableCollection<TEST_PLAN> TestPlanList => new ObservableCollection<TEST_PLAN>(_AppStore.TestUser.TEST_PLANS);
+
+        private TEST_PLAN _selectedTestPlan;
+        public TEST_PLAN SelectedTestPlan
+        {
+            get => _selectedTestPlan;
+            set
+            {
+                _selectedTestPlan = value;
+                onPropertyChanged(nameof(SelectedTestPlan));
             }
         }
 
@@ -30,6 +48,7 @@ namespace CID_Tester.ViewModel
         public ICommand CreateTestPlanCommand { get; }
         public ICommand DoubleClickCommand { get; }
         public ICommand AddTestParameterCommand { get; }
+        public ICommand OpenTestPlanCommand { get; }
 
         public TestPlanViewModel(Store appStore)
         {
@@ -39,7 +58,24 @@ namespace CID_Tester.ViewModel
             CloseCommand = new RelayCommand(CloseCommandHanlder);
             CreateTestPlanCommand = new RelayCommand(CreateTestPlanHandler);
             AddTestParameterCommand = new RelayCommand(AddTestParameterHandler);
-            TestParameters = _AppStore.TestPlan?.TEST_PARAMETERS;
+            TestParameters = CollectionViewSource.GetDefaultView(_AppStore.TestPlan?.TEST_PARAMETERS);
+            DoubleClickCommand = new RelayCommand(DoubleClickHandler);
+            OpenTestPlanCommand = new RelayCommand(OpenTestPlanHandler);
+        }
+
+        private void OpenTestPlanHandler(object? obj)
+        {
+            if (SelectedTestPlan != null) _AppStore.setTestPlan(SelectedTestPlan);
+        }
+
+        private void DoubleClickHandler(object? obj)
+        {
+            if (obj is TEST_PARAMETER && obj != null)
+            {
+                TEST_PARAMETER parameter = (TEST_PARAMETER)obj;
+                _AppStore.ClearAnchorables();
+                _AppStore.AddAnchorables(new TestParameterPropertiesViewModel(_AppStore, parameter));
+            }
         }
 
         private void AddTestParameterHandler(object? obj)
@@ -52,7 +88,7 @@ namespace CID_Tester.ViewModel
 
         private void LoadTestParameters(IEnumerable<TEST_PARAMETER> testParameters)
         {
-            TestParameters = testParameters.ToList();
+            TestParameters = CollectionViewSource.GetDefaultView(testParameters);
         }
 
         private void CreateTestPlanHandler(object? obj)
