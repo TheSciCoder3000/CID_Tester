@@ -1,6 +1,6 @@
-﻿using CID_Tester.DbContexts;
-using CID_Tester.Exceptions;
+﻿using CID_Tester.Exceptions;
 using CID_Tester.Model;
+using CID_Tester.Model.DbContexts;
 using CID_Tester.Service.DbCreator;
 using Microsoft.EntityFrameworkCore;
 

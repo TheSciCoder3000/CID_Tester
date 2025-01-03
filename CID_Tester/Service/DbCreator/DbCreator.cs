@@ -1,5 +1,5 @@
-﻿using CID_Tester.DbContexts;
-using CID_Tester.Model;
+﻿using CID_Tester.Model;
+using CID_Tester.Model.DbContexts;
 using Microsoft.EntityFrameworkCore;
 
 namespace CID_Tester.Service.DbCreator
