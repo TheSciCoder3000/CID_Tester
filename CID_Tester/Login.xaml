@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CID_Tester"
-        xmlns:control="clr-namespace:CID_Tester.Controls"
+        xmlns:control="clr-namespace:CID_Tester.View.Controls"
         mc:Ignorable="d"
         Title="Login" Height="569" Width="800" WindowStartupLocation="CenterScreen" ResizeMode="NoResize" WindowStyle="None" AllowsTransparency="True" MouseDown="Window_MouseDown">
     <Grid>

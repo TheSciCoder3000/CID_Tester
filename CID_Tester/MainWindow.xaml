@@ -5,9 +5,11 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CID_Tester"
-        xmlns:controls="clr-namespace:CID_Tester.Controls"
+        xmlns:controls="clr-namespace:CID_Tester.View.Controls"
         xmlns:vm="clr-namespace:CID_Tester.ViewModel"
+        xmlns:StyleSelector="clr-namespace:CID_Tester.ViewModel.StyleSelectors"
         xmlns:view="clr-namespace:CID_Tester.View"
+        xmlns:windowVm="clr-namespace:CID_Tester.ViewModel.Windows"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800"
         WindowState="Maximized"
@@ -25,7 +27,7 @@
         <DataTemplate DataType="{x:Type vm:ResultsViewModel}">
             <view:ResultsView />
         </DataTemplate>
-        <DataTemplate DataType="{x:Type vm:AddDutViewModel}">
+        <DataTemplate DataType="{x:Type windowVm:AddDutViewModel}">
             <view:AddDutView1 />
         </DataTemplate>
 
@@ -99,7 +101,7 @@
             </DockingManager.Theme>
 
             <DockingManager.LayoutItemContainerStyleSelector>
-                <vm:ItemStyleSelector DocumentStyle="{StaticResource DocumentStyle}" AnchorableStyle="{StaticResource AnchorableStyle}" />
+                <StyleSelector:ItemStyleSelector DocumentStyle="{StaticResource DocumentStyle}" AnchorableStyle="{StaticResource AnchorableStyle}" />
             </DockingManager.LayoutItemContainerStyleSelector>
 
             <DockingManager.LayoutUpdateStrategy>
