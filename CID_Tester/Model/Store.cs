@@ -1,9 +1,6 @@
 ﻿using CID_Tester.Service.DbCreator;
 using CID_Tester.Service.DbProvider;
 using CID_Tester.ViewModel;
-using Microsoft.Identity.Client;
-using System.Reflection.Metadata;
-using System.Xml.Linq;
 
 namespace CID_Tester.Model
 {
@@ -102,6 +99,12 @@ namespace CID_Tester.Model
         {
             await _dbCreator.CreateTestPlan(testPlan);
             TestPlan = testPlan;
+            OnTestParameterUpdated?.Invoke(TestPlan.TEST_PARAMETERS);
+        }
+
+        public async Task CreateTestParameter(TEST_PARAMETER testParameter)
+        {
+            await _dbCreator.CreateTestParameter(testParameter);
             OnTestParameterUpdated?.Invoke(TestPlan.TEST_PARAMETERS);
         }
 

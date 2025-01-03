@@ -32,9 +32,16 @@ namespace CID_Tester.Service.DbCreator
             }
         }
 
-        public Task CreateTestParameter(TEST_PARAMETER param)
+        public async Task CreateTestParameter(TEST_PARAMETER param)
         {
-            throw new NotImplementedException();
+            using (TesterDbContext context = _dbContextFactory.CreateDbContext())
+            {
+                context.Entry(param.TestPlan).State = EntityState.Unchanged;
+
+                context.TEST_PARAMETER.Add(param);
+
+                await context.SaveChangesAsync();
+            }
         }
 
         public async Task CreateTestPlan(TEST_PLAN testPlan)
