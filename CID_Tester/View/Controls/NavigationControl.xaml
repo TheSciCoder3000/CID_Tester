@@ -1,0 +1,69 @@
+﻿<UserControl x:Class="CID_Tester.View.Controls.NavigationControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:CID_Tester.View.Controls"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <Style TargetType="Button">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Padding" Value="10,5" />
+            <!-- Add Padding Setter -->
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" 
+                            BorderBrush="{TemplateBinding BorderBrush}" 
+                            BorderThickness="{TemplateBinding BorderThickness}" 
+                            Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Left" 
+                                          VerticalAlignment="Center" />
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <!-- Hover Trigger -->
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background">
+                        <Setter.Value>
+                            <SolidColorBrush Color="White" Opacity="0.1" />
+                        </Setter.Value>
+                    </Setter>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </UserControl.Resources>
+
+    <StackPanel Orientation="Vertical" HorizontalAlignment="Stretch">
+        <Button Tag="dashboard" Margin="5" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Center" Command="{Binding NavigateToDashboard}">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock VerticalAlignment="Center" Text="Dashboard" />
+            </StackPanel>
+        </Button>
+        <Button Tag="dashboard" Margin="5" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Center" Command="{Binding NavigateToDevices}">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock VerticalAlignment="Center" Text="Devices" />
+            </StackPanel>
+        </Button>
+        <Button Tag="plan" Margin="5" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Center" Command="{Binding NavigateToTestPlan}">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock VerticalAlignment="Center" Text="Test Plan" />
+            </StackPanel>
+        </Button>
+        <Button Tag="results" Margin="5" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Center" Command="{Binding NavigateToResults}">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock VerticalAlignment="Center" Text="Results Overview" />
+            </StackPanel>
+        </Button>
+        <Button Tag="settings" Margin="5" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Center" Command="{Binding NavigateToSettings}">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock VerticalAlignment="Center" Text="Settings" />
+            </StackPanel>
+        </Button>
+    </StackPanel>
+</UserControl>
