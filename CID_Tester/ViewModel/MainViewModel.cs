@@ -1,4 +1,4 @@
-﻿using CID_Tester.Command;
+﻿using CID_Tester.ViewModel.Command;
 using CID_Tester.Model;
 using CID_Tester.Service.DbCreator;
 using CID_Tester.Service.DbProvider;

@@ -1,5 +1,6 @@
-﻿using CID_Tester.Command;
+﻿using CID_Tester.ViewModel.Command;
 using CID_Tester.Model;
+using CID_Tester.ViewModel.Interfaces;
 using System.Windows.Input;
 
 namespace CID_Tester.ViewModel

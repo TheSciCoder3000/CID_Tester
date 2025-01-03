@@ -1,8 +1,10 @@
-﻿using CID_Tester.Command;
+﻿using CID_Tester.ViewModel.Command;
 using CID_Tester.Model;
 using CID_Tester.View;
+using CID_Tester.ViewModel.Interfaces;
 using System.Windows;
 using System.Windows.Input;
+using CID_Tester.ViewModel.Windows;
 
 namespace CID_Tester.ViewModel
 {
