@@ -38,9 +38,10 @@ public class AddDutViewModel : BaseViewModel, IDocument
 
     public ICommand CloseCommand { get; }
 
-    public AddDutViewModel(Store appStore)
+    public AddDutViewModel(Store appStore, Action closeDialog)
     {
         Title = "Add Devices";
+        _closeDialog = closeDialog;
         _AppStore = appStore;
         AddDutCommand = new RelayCommand(CreateDutHandler);
         CloseCommand = new RelayCommand(RemoveAnchorable);
@@ -54,6 +55,6 @@ public class AddDutViewModel : BaseViewModel, IDocument
     private async void CreateDutHandler(object? obj)
     {
         await _AppStore.CreateDut(new DUT(DutName, DutDescription));
-        //_closeDialog.Invoke();
+        _closeDialog.Invoke();
     }
 }
