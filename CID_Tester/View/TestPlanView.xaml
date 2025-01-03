@@ -69,7 +69,13 @@
                             <DataTrigger Binding="{Binding ShowParameterTable}" Value="False">
                                 <Setter Property="Content">
                                     <Setter.Value>
-                                        <Button Command="{Binding CreateTestPlanCommand}" Padding="10 5 10 5">Create Test Plan</Button>
+                                        <StackPanel>
+                                            <Button Command="{Binding CreateTestPlanCommand}" Padding="10 5 10 5">Create Test Plan</Button>
+                                            <StackPanel Orientation="Horizontal">
+                                                <ComboBox ItemsSource="{Binding  TestPlanList}" DisplayMemberPath="Description" SelectedItem="{Binding SelectedTestPlan}" />
+                                                <Button Command="{Binding OpenTestPlanCommand}">Open</Button>
+                                            </StackPanel>
+                                        </StackPanel>
                                     </Setter.Value>
                                 </Setter>
                             </DataTrigger>

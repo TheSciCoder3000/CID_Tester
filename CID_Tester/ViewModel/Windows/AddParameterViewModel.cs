@@ -21,6 +21,12 @@ public class AddParameterViewModel : BaseViewModel
         _closeWindow = closeWindowCommand;
         AddCommand = new RelayCommand(AddCommandHanlder);
         CancelCommand = new RelayCommand((object? sender) => closeWindowCommand());
+        DoubleClickCommand = new RelayCommand(DoubleClickHandler);
+    }
+
+    private void DoubleClickHandler(object? obj)
+    {
+        throw new NotImplementedException();
     }
 
     private async void AddCommandHanlder(object? obj)
@@ -81,4 +87,5 @@ public class AddParameterViewModel : BaseViewModel
 
     public ICommand AddCommand { get; }
     public ICommand CancelCommand { get; }
+    public ICommand DoubleClickCommand { get; }
 }

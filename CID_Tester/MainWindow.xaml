@@ -5,11 +5,12 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CID_Tester"
-        xmlns:controls="clr-namespace:CID_Tester.View.Controls"
         xmlns:vm="clr-namespace:CID_Tester.ViewModel"
         xmlns:StyleSelector="clr-namespace:CID_Tester.ViewModel.StyleSelectors"
         xmlns:view="clr-namespace:CID_Tester.View"
         xmlns:windowVm="clr-namespace:CID_Tester.ViewModel.Windows"
+        xmlns:controls="clr-namespace:CID_Tester.View.Controls"
+        xmlns:controlsVm="clr-namespace:CID_Tester.ViewModel.Controls"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800"
         WindowState="Maximized"
@@ -29,6 +30,9 @@
         </DataTemplate>
         <DataTemplate DataType="{x:Type windowVm:AddDutViewModel}">
             <view:AddDutView1 />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type controlsVm:TestParameterPropertiesViewModel}">
+            <controls:TestParameterPropertiesControl />
         </DataTemplate>
 
         <!-- Style for LayoutDocumentItem -->
