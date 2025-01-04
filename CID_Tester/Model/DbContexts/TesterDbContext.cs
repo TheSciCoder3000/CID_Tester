@@ -35,6 +35,7 @@ public class TesterDbContext : DbContext
             .HasData(
                 new TEST_USER()
                 {
+                    UserCode=1,
                     FirstName="John Juvi", 
                     LastName="De Villa", 
                     Email="drjjdevilla2002@gmail.com", 

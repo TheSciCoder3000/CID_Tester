@@ -6,7 +6,7 @@ namespace CID_Tester.Model
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int UserCode { get; }
+        public int UserCode { get; set; }
 
         [Required]
         [Column(TypeName = "nvarchar(50)")]
