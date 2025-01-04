@@ -73,5 +73,14 @@ namespace CID_Tester.Service.DbCreator
         {
             throw new NotImplementedException();
         }
+
+        public async Task UpdateTestParameter(TEST_PARAMETER param)
+        {
+            using (TesterDbContext context = _dbContextFactory.CreateDbContext())
+            {
+                context.Entry(param).State = EntityState.Modified;
+                await context.SaveChangesAsync();
+            }
+        }
     }
 }

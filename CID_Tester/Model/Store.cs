@@ -129,6 +129,12 @@ namespace CID_Tester.Model
             OnTestParameterUpdated?.Invoke(TestPlan.TEST_PARAMETERS);
         }
 
+        public async Task UpdateTestParameter(TEST_PARAMETER testParameter)
+        {
+            await _dbCreator.UpdateTestParameter(testParameter);
+            OnTestParameterUpdated?.Invoke(TestPlan.TEST_PARAMETERS);
+        }
+
         #endregion
 
         #region DUT Functions

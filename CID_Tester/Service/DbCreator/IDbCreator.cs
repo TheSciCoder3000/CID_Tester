@@ -10,6 +10,7 @@ namespace CID_Tester.Service.DbCreator
         Task CreateTestPlan(TEST_PLAN testPlan);
         Task CreateTestParameter(TEST_PARAMETER param);
         Task DeleteTestParameter(TEST_PARAMETER param);
+        Task UpdateTestParameter(TEST_PARAMETER param);
 
     }
 }
