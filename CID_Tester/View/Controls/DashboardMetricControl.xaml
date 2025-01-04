@@ -6,12 +6,6 @@
              xmlns:local="clr-namespace:CID_Tester.View.Controls"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <UserControl.Resources>
-        <Style TargetType="TextBlock">
-            <Setter Property="Foreground" Value="White" />
-        </Style>
-    </UserControl.Resources>
-
     <StackPanel>
 
         <Grid Margin="20, 0">

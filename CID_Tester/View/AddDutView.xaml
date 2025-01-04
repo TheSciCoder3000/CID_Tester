@@ -7,21 +7,16 @@
         xmlns:service="clr-namespace:CID_Tester.Service.Watermark"
         mc:Ignorable="d"
         Title="AddDutView" Height="450" Width="800" Background="#252526">
-    <Window.Resources>
-        <Style TargetType="TextBlock">
-            <Setter Property="Foreground" Value="White" />
-        </Style>
-    </Window.Resources>
     <StackPanel Margin="20">
         <TextBlock FontSize="18" Margin="0 0 0 20">Create New Device</TextBlock>
         <TextBox Text="{Binding DutName, UpdateSourceTrigger=PropertyChanged}" Margin="0 0 0 10">
             <service:WatermarkService.Watermark>
-                <TextBlock>Device name</TextBlock>
+                <TextBlock Style="{StaticResource HintTextBlock}">Device name</TextBlock>
             </service:WatermarkService.Watermark>
         </TextBox>
         <TextBox Text="{Binding DutDescription, UpdateSourceTrigger=PropertyChanged}" Margin="0 0 0 10" Height="150" AcceptsReturn="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto">
             <service:WatermarkService.Watermark>
-                <TextBlock>Description</TextBlock>
+                <TextBlock Style="{StaticResource HintTextBlock}">Description</TextBlock>
             </service:WatermarkService.Watermark>
         </TextBox>
         <Button HorizontalAlignment="Left" Width="100" Command="{Binding AddDutCommand}">
