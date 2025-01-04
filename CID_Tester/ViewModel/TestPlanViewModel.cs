@@ -44,10 +44,22 @@ namespace CID_Tester.ViewModel
             }
         }
 
+        private TEST_PARAMETER _selectedTestParameter;
+        public TEST_PARAMETER SelectedTestParameter
+        {
+            get => _selectedTestParameter;
+            set
+            {
+                _selectedTestParameter = value;
+                onPropertyChanged(nameof(SelectedTestParameter));
+            }
+        }
+
         public ICommand CloseCommand { get; }
         public ICommand CreateTestPlanCommand { get; }
         public ICommand DoubleClickCommand { get; }
         public ICommand AddTestParameterCommand { get; }
+        public ICommand DeleteTestParameterCommand { get; }
         public ICommand OpenTestPlanCommand { get; }
 
         public TestPlanViewModel(Store appStore)
@@ -60,8 +72,11 @@ namespace CID_Tester.ViewModel
             AddTestParameterCommand = new RelayCommand(AddTestParameterHandler);
             TestParameters = CollectionViewSource.GetDefaultView(_AppStore.TestPlan?.TEST_PARAMETERS);
             DoubleClickCommand = new RelayCommand(DoubleClickHandler);
+            DeleteTestParameterCommand = new RelayCommand(DeleteTestParameterHandler);
             OpenTestPlanCommand = new RelayCommand(OpenTestPlanHandler);
         }
+
+        private async void DeleteTestParameterHandler(object? obj) => await _AppStore.DeleteTestParameter(SelectedTestParameter);
 
         private void OpenTestPlanHandler(object? obj)
         {

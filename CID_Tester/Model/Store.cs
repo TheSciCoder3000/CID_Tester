@@ -119,6 +119,12 @@ namespace CID_Tester.Model
             OnTestParameterUpdated?.Invoke(TestPlan.TEST_PARAMETERS);
         }
 
+        public async Task DeleteTestParameter(TEST_PARAMETER testParameter)
+        {
+            await _dbCreator.DeleteTestParameter(testParameter);
+            OnTestParameterUpdated?.Invoke(TestPlan.TEST_PARAMETERS);
+        }
+
         #endregion
 
         #region DUT Functions

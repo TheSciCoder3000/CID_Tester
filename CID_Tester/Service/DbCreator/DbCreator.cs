@@ -44,6 +44,18 @@ namespace CID_Tester.Service.DbCreator
             }
         }
 
+        public async Task DeleteTestParameter(TEST_PARAMETER param)
+        {
+            using (TesterDbContext context = _dbContextFactory.CreateDbContext())
+            {
+                context.Entry(param.TestPlan).State = EntityState.Unchanged;
+
+                context.TEST_PARAMETER.Remove(param);
+
+                await context.SaveChangesAsync();
+            }
+        }
+
         public async Task CreateTestPlan(TEST_PLAN testPlan)
         {
             using (TesterDbContext context = _dbContextFactory.CreateDbContext())
