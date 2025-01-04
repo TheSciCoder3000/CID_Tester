@@ -6,63 +6,14 @@
              xmlns:local="clr-namespace:CID_Tester.View"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <UserControl.Resources>
-        <Style TargetType="TextBlock">
-            <Setter Property="Foreground" Value="White" />
-        </Style>
-        <Style TargetType="DataGrid">
-            <Setter Property="Background" Value="#2E2E2E" />
-            <Setter Property="Foreground" Value="White" />
-            <Setter Property="RowBackground" Value="#3D3D3D" />
-            <Setter Property="AlternatingRowBackground" Value="#2E2E2E" />
-            <Setter Property="SelectionUnit" Value="FullRow" />
-            <Setter Property="SelectionMode" Value="Single" />
-            <Setter Property="HorizontalGridLinesBrush" Value="#444444" />
-            <Setter Property="VerticalGridLinesBrush" Value="#444444" />
-            <Setter Property="BorderBrush" Value="#444444" />
-            <Setter Property="CanUserResizeColumns" Value="False" />
-            <Setter Property="CanUserReorderColumns" Value="False" />
-            <Setter Property="AutoGenerateColumns" Value="False" />
-            <Setter Property="HeadersVisibility" Value="Column" />
-            <Setter Property="IsReadOnly" Value="True" />
-        </Style>
 
-        <Style TargetType="DataGridColumnHeader">
-            <Setter Property="Background" Value="#333333"/>
-            <Setter Property="Foreground" Value="White"/>
-            <Setter Property="Height" Value="30"/>
-            <Setter Property="HorizontalContentAlignment" Value="Center"/>
-            <Setter Property="BorderBrush" Value="#444444"/>
-            <Setter Property="BorderThickness" Value="1"/>
-            <Setter Property="FontWeight" Value="Bold"/>
-        </Style>
-
-        <Style x:Key="DevicesTableRow" TargetType="{x:Type DataGridRow}">
-            <Setter Property="Background" Value="#2E2E2E"/>
-            <Setter Property="Foreground" Value="White"/>
-            <Style.Triggers>
-                <DataTrigger Binding="{Binding IsSelected, RelativeSource={RelativeSource Self}}" Value="True">
-                    <Setter Property="Background" Value="#5A5A5A"/>
-                </DataTrigger>
-            </Style.Triggers>
-        </Style>
-        
-        <Style TargetType="DataGridCell">
-            <Setter Property="Background" Value="#2E2E2E"/>
-            <Setter Property="Foreground" Value="White"/>
-            <Setter Property="BorderBrush" Value="#444444"/>
-            <Style.Triggers>
-                <DataTrigger Binding="{Binding IsSelected, RelativeSource={RelativeSource Self}}" Value="True">
-                    <Setter Property="Background" Value="#5A5A5A"/>
-                </DataTrigger>
-            </Style.Triggers>
-        </Style>
-    </UserControl.Resources>
-    
     <StackPanel Margin="10">
         <TextBlock Margin="0,0,0,10" FontSize="30">Devices Under Testing</TextBlock>
-        <Button Command="{Binding AddDutCommand}">Add Device</Button>
-        <DataGrid ItemsSource="{Binding Devices}" RowStyle="{DynamicResource DevicesTableRow}">
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+            <Button Style="{StaticResource NormalButton}" Margin="0 0 10 0" Command="{Binding AddDutCommand}">Add Device</Button>
+            <Button Style="{StaticResource NormalButton}" Command="{Binding DeleteDutCommand}">Delete Device</Button>
+        </StackPanel>
+        <DataGrid SelectedItem="{Binding SelectedItem}" ItemsSource="{Binding Devices}">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="CODE" Binding="{Binding DutCode}" MinWidth="100" />
                 <DataGridTextColumn Header="Device name" Binding="{Binding DutName}" Width="*" />

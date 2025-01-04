@@ -1,0 +1,36 @@
+﻿<Window x:Class="CID_Tester.View.Windows.AddParameterView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:CID_Tester.View.Windows"
+        mc:Ignorable="d"
+        Title="Parameter Wizard" Height="450" Width="800" Background="#252526">
+    <Window.Resources>
+        <Style TargetType="TextBlock">
+            <Setter Property="Foreground" Value="White" />
+        </Style>
+    </Window.Resources>
+    <StackPanel Margin="10" HorizontalAlignment="Stretch">
+        <TextBlock>Name</TextBlock>
+        <TextBox Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}" />
+
+        <TextBlock Margin="0 10 0 5">Description</TextBlock>
+        <TextBox Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}" Height="70" />
+
+        <StackPanel HorizontalAlignment="Left" >
+            <TextBlock Margin="0 10 0 5">Metric</TextBlock>
+            <TextBox Text="{Binding Metric, UpdateSourceTrigger=PropertyChanged}" Width="100" />
+        </StackPanel>
+
+        <StackPanel HorizontalAlignment="Left" >
+            <TextBlock Margin="0 10 0 5">Target</TextBlock>
+            <TextBox Text="{Binding Target, UpdateSourceTrigger=PropertyChanged}" Width="100" />
+        </StackPanel>
+
+        <StackPanel HorizontalAlignment="Left" Orientation="Horizontal" Margin="0 20" >
+            <Button Style="{StaticResource NormalButton}" Command="{Binding AddCommand}" Margin="0 0 10 0" Padding="15 5">Add</Button>
+            <Button Style="{StaticResource NormalButton}" Command="{Binding CancelCommand}" Padding="15 5">Cancel</Button>
+        </StackPanel>
+    </StackPanel>
+</Window>

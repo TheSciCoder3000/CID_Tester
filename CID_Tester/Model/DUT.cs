@@ -7,19 +7,13 @@ namespace CID_Tester.Model
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int DutCode { get; private set; }
+        public int DutCode { get; set; }
 
-        public string DutName { get; private set; } = null!;
+        public string DutName { get; set; } = null!;
 
-        public string Description { get; private set; } = null!;
+        public string Description { get; set; } = null!;
 
         public ICollection<TEST_PLAN> TEST_PLANS { get; set; } = null!;
-
-        public DUT(string dutName, string description)
-        {
-            DutName = dutName;
-            Description = description;
-        }
 
     }
 }

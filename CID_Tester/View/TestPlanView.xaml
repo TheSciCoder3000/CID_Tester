@@ -4,13 +4,48 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:CID_Tester.View"
+             xmlns:controls="clr-namespace:CID_Tester.View.Controls"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <StackPanel>
-        <TextBlock Text="Test Plan" Foreground="White" />
-        <DataGrid x:Name="myDataGrid1"/>
-        <DataGrid x:Name="myDataGrid2"/>
-        <DataGrid x:Name="myDataGrid3"/>
-        <DataGrid x:Name="myDataGrid4"/>
+    <StackPanel Margin="15">
+        <TextBlock Margin="0,0,0,10" FontSize="30">Devices Under Testing</TextBlock>
+        <StackPanel Orientation="Horizontal" Margin="0 0 0 20">
+            <ContentControl>
+                <ContentControl.Style>
+                    <Style TargetType="ContentControl">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding ShowParameterTable}" Value="False">
+                                <Setter Property="Content">
+                                    <Setter.Value>
+                                        <StackPanel>
+                                            <Button Style="{StaticResource NormalButton}" Command="{Binding CreateTestPlanCommand}" Padding="10 5 10 5">Create Test Plan</Button>
+                                            <StackPanel Orientation="Horizontal">
+                                                <ComboBox ItemsSource="{Binding  TestPlanList}" DisplayMemberPath="Description" SelectedItem="{Binding SelectedTestPlan}" />
+                                                <Button Style="{StaticResource NormalButton}" Command="{Binding OpenTestPlanCommand}">Open</Button>
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </Setter.Value>
+                                </Setter>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </ContentControl.Style>
+            </ContentControl>
+        </StackPanel>
+        <ContentControl>
+            <ContentControl.Style>
+                <Style TargetType="ContentControl">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding ShowParameterTable}" Value="True">
+                            <Setter Property="Content">
+                                <Setter.Value>
+                                    <controls:TestParameterTableControl />
+                                </Setter.Value>
+                            </Setter>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </ContentControl.Style>
+        </ContentControl>
     </StackPanel>
 </UserControl>

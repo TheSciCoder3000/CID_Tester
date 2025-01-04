@@ -1,8 +1,10 @@
-﻿using CID_Tester.Command;
+﻿using CID_Tester.ViewModel.Command;
 using CID_Tester.Model;
 using CID_Tester.View;
+using CID_Tester.ViewModel.Interfaces;
 using System.Windows;
 using System.Windows.Input;
+using CID_Tester.ViewModel.Windows;
 
 namespace CID_Tester.ViewModel
 {
@@ -23,7 +25,19 @@ namespace CID_Tester.ViewModel
             }
         }
 
+        private DUT _selectedItem = null!;
+        public DUT SelectedItem
+        {
+            get => _selectedItem;
+            set
+            {
+                _selectedItem = value;
+                onPropertyChanged(nameof(SelectedItem));
+            }
+        }
+
         public ICommand AddDutCommand { get; }
+        public ICommand DeleteDutCommand { get; }
         public ICommand CloseCommand { get; }
 
         public DevicesViewModel(Store appStore)
@@ -32,11 +46,15 @@ namespace CID_Tester.ViewModel
 
             _AppStore = appStore;
             _AppStore.OnDutUpdated += Load;
+            _AppStore.OnDutDeleted += Load;
 
             CloseCommand = new RelayCommand(CloseCommandHanlder);
             AddDutCommand = new RelayCommand(ShowDutForm);
+            DeleteDutCommand = new RelayCommand(DeleteDutHandler);
             Load();
         }
+
+        private async void DeleteDutHandler(object? obj) => await _AppStore.DeleteDut(SelectedItem);
 
         private void ShowDutForm(object? obj)
         {

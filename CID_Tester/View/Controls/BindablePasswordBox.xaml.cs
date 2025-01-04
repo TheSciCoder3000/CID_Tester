@@ -1,8 +1,9 @@
-﻿using System.Windows;
+﻿
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 
-namespace CID_Tester.Controls
+namespace CID_Tester.View.Controls
 {
     /// <summary>
     /// Interaction logic for BindablePasswordBox.xaml

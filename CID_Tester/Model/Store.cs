@@ -1,8 +1,6 @@
 ﻿using CID_Tester.Service.DbCreator;
 using CID_Tester.Service.DbProvider;
 using CID_Tester.ViewModel;
-using Microsoft.Identity.Client;
-using System.Reflection.Metadata;
 
 namespace CID_Tester.Model
 {
@@ -26,9 +24,13 @@ namespace CID_Tester.Model
 
         public event Action<TEST_USER> OnTestUserUpdated;
 
+        public event Action<IEnumerable<TEST_PARAMETER>> OnTestParameterUpdated;
+
         public event Action<IEnumerable<BaseViewModel>> OnDocumentOpenned;
         public event Action<IEnumerable<BaseViewModel>> OnDocumentClosed;
         public event Action<BaseViewModel> OnActiveDocumentChanged;
+        public event Action<IEnumerable<BaseViewModel>> OnAnchorableAdded;
+        public event Action<IEnumerable<BaseViewModel>> OnAnchorableRemoved;
 
         #endregion
 
@@ -53,11 +55,15 @@ namespace CID_Tester.Model
             {
                 DocumentCollection.Add(document);
                 Documents = DocumentCollection;
-                ActiveDocument = document;
                 OnDocumentOpenned?.Invoke(Documents);
             }
-            ActiveDocument = document;
-            OnActiveDocumentChanged?.Invoke(document);
+            if (ActiveDocument != document)
+            {
+                ActiveDocument = document;
+                OnActiveDocumentChanged?.Invoke(document);
+                ClearAnchorables();
+                OnAnchorableRemoved?.Invoke(Anchorables);
+            }
         }
 
         public void RemoveDocument(BaseViewModel document)
@@ -66,6 +72,67 @@ namespace CID_Tester.Model
             DocumentCollection.Remove(document);
             Documents = DocumentCollection;
             OnDocumentClosed?.Invoke(Documents);
+        }
+
+        public void AddAnchorables(BaseViewModel anchorable)
+        {
+            ICollection<BaseViewModel> AnchorableCollection = Anchorables.ToList();
+            BaseViewModel? ancorableExist = AnchorableCollection.FirstOrDefault(d => d == anchorable);
+
+            if (ancorableExist == null)
+            {
+                AnchorableCollection.Add(anchorable);
+                Anchorables = AnchorableCollection;
+                OnAnchorableAdded?.Invoke(Anchorables);
+            }
+        }
+
+        public void RemoveAnchorable(BaseViewModel anchorable)
+        {
+            ICollection<BaseViewModel> AnchorableCollection = Anchorables.ToList();
+            AnchorableCollection.Remove(anchorable);
+            Anchorables = AnchorableCollection;
+            OnAnchorableRemoved?.Invoke(Anchorables);
+        }
+
+        public void ClearAnchorables()
+        {
+            Anchorables = [];
+        }
+
+        #endregion
+
+        #region Test Plan Function
+
+        public void setTestPlan(TEST_PLAN testPlan)
+        {
+            TestPlan = testPlan;
+            OnTestParameterUpdated?.Invoke(TestPlan.TEST_PARAMETERS);
+        }
+
+        public async Task CreateTestPlan(TEST_PLAN testPlan)
+        {
+            await _dbCreator.CreateTestPlan(testPlan);
+            TestPlan = testPlan;
+            OnTestParameterUpdated?.Invoke(TestPlan.TEST_PARAMETERS);
+        }
+
+        public async Task CreateTestParameter(TEST_PARAMETER testParameter)
+        {
+            await _dbCreator.CreateTestParameter(testParameter);
+            OnTestParameterUpdated?.Invoke(TestPlan.TEST_PARAMETERS);
+        }
+
+        public async Task DeleteTestParameter(TEST_PARAMETER testParameter)
+        {
+            await _dbCreator.DeleteTestParameter(testParameter);
+            OnTestParameterUpdated?.Invoke(TestPlan.TEST_PARAMETERS);
+        }
+
+        public async Task UpdateTestParameter(TEST_PARAMETER testParameter)
+        {
+            await _dbCreator.UpdateTestParameter(testParameter);
+            OnTestParameterUpdated?.Invoke(TestPlan.TEST_PARAMETERS);
         }
 
         #endregion
@@ -90,6 +157,12 @@ namespace CID_Tester.Model
             OnDutCreated?.Invoke(DUTs);
         }
 
+        public async Task DeleteDut(DUT dut)
+        {
+            await _dbCreator.DeleteDUT(dut);
+            LoadDut();
+            OnDutDeleted?.Invoke(DUTs);
+        }
         #endregion
     }
 }
