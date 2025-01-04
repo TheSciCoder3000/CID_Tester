@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace CID_Tester.Migrations
 {
     /// <inheritdoc />
-    public partial class Intial : Migration
+    public partial class Initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -98,6 +98,11 @@ namespace CID_Tester.Migrations
                         principalColumn: "TestCode",
                         onDelete: ReferentialAction.Cascade);
                 });
+
+            migrationBuilder.InsertData(
+                table: "TEST_USER",
+                columns: new[] { "UserCode", "Email", "FirstName", "LastName", "Password", "ProfileImage", "Username" },
+                values: new object[] { 1, "drjjdevilla2002@gmail.com", "John Juvi", "De Villa", "$2a$11$qoIl2jzkPJaUSAwzsv6QberbuzQ/khrBVqRjLN7j/Fi4kOgJIMRHK", "", "neurocoder" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_TEST_PARAMETER_TestCode",

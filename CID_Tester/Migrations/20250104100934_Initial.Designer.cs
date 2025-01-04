@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CID_Tester.Migrations
 {
     [DbContext(typeof(TesterDbContext))]
-    [Migration("20250101152549_Intial")]
-    partial class Intial
+    [Migration("20250104100934_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -147,6 +147,18 @@ namespace CID_Tester.Migrations
                     b.HasKey("UserCode");
 
                     b.ToTable("TEST_USER");
+
+                    b.HasData(
+                        new
+                        {
+                            UserCode = 1,
+                            Email = "drjjdevilla2002@gmail.com",
+                            FirstName = "John Juvi",
+                            LastName = "De Villa",
+                            Password = "$2a$11$qoIl2jzkPJaUSAwzsv6QberbuzQ/khrBVqRjLN7j/Fi4kOgJIMRHK",
+                            ProfileImage = "",
+                            Username = "neurocoder"
+                        });
                 });
 
             modelBuilder.Entity("CID_Tester.Model.TEST_PARAMETER", b =>

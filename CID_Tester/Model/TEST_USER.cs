@@ -6,44 +6,33 @@ namespace CID_Tester.Model
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int UserCode { get; }
+        public int UserCode { get; set; }
 
         [Required]
         [Column(TypeName = "nvarchar(50)")]
-        public string FirstName { get; private set; } = null!;
+        public string FirstName { get; set; } = null!;
 
         [Required]
         [Column(TypeName = "nvarchar(50)")]
-        public string LastName { get; private set; } = null!;
+        public string LastName { get; set; } = null!;
 
         [Required]
         [Column(TypeName = "nvarchar(150)")]
-        public string Email { get; private set; } = null!;
+        public string Email { get; set; } = null!;
 
         [Required]
         [Column(TypeName = "nvarchar(50)")]
-        public string ProfileImage { get; private set; } = null!;
+        public string ProfileImage { get; set; } = null!;
 
         [Required]
         [Column(TypeName = "nvarchar(50)")]
-        public string Username { get; private set; } = null!;
+        public string Username { get; set; } = null!;
 
         [Required]
         [Column(TypeName = "nvarchar(50)")]
-        public string Password { get; private set; } = null!;
+        public string Password { get; set; } = null!;
 
         public ICollection<TEST_PLAN> TEST_PLANS { get; set; } = [];
-
-
-        public TEST_USER(string firstName, string lastName, string email, string profileImage, string username, string password)
-        {
-            FirstName = firstName;
-            LastName = lastName;
-            Email = email;
-            ProfileImage = profileImage;
-            Username = username;
-            Password = password;
-        }
 
         public override string ToString()
         {

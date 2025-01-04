@@ -32,12 +32,13 @@ namespace CID_Tester.ViewModel
             }
         }
 
+        private object _activeDocument;
         public object ActiveDocument
         {
-            get => _AppStore.ActiveDocument;
+            get => _activeDocument;
             set
             {
-                _AppStore.ActiveDocument = value;
+                _activeDocument = value;
                 onPropertyChanged(nameof(ActiveDocument));
             }
         }
@@ -57,7 +58,7 @@ namespace CID_Tester.ViewModel
             _AppStore = new Store(dbProvider, dbCreator, user, []);
             _AppStore.OnDocumentOpenned         += LoadDocuments;
             _AppStore.OnDocumentClosed          += LoadDocuments;
-            _AppStore.OnActiveDocumentChanged   += (activeDocument) => ActiveDocument = activeDocument;
+            _AppStore.OnActiveDocumentChanged   += UpdateActiveDocument;
             _AppStore.OnAnchorableAdded         += LoadAnchorables;
             _AppStore.OnAnchorableRemoved       += LoadAnchorables;   
 
@@ -68,6 +69,8 @@ namespace CID_Tester.ViewModel
             NavigateToResults   = new NavigateCommand(AddDocumentHandler, new ResultsViewModel  (_AppStore));
             NavigateToSettings  = new NavigateCommand(AddDocumentHandler, new ResultsViewModel  (_AppStore));
         }
+
+        private void UpdateActiveDocument(BaseViewModel activeDocument) => ActiveDocument = activeDocument;
 
         private void LoadDocuments(IEnumerable<BaseViewModel> documents) => Documents = documents;
         private void LoadAnchorables(IEnumerable<BaseViewModel> anchorables) => Anchorables = anchorables;

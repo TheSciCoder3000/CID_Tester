@@ -55,11 +55,15 @@ namespace CID_Tester.Model
             {
                 DocumentCollection.Add(document);
                 Documents = DocumentCollection;
-                ActiveDocument = document;
                 OnDocumentOpenned?.Invoke(Documents);
             }
-            ActiveDocument = document;
-            OnActiveDocumentChanged?.Invoke(document);
+            if (ActiveDocument != document)
+            {
+                ActiveDocument = document;
+                OnActiveDocumentChanged?.Invoke(document);
+                ClearAnchorables();
+                OnAnchorableRemoved?.Invoke(Anchorables);
+            }
         }
 
         public void RemoveDocument(BaseViewModel document)
