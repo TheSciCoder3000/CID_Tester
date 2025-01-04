@@ -67,8 +67,12 @@ public class AddTestPlanViewModel : BaseViewModel
 
     private async void CreateTestPlanHandler(object? obj)
     {
-        TEST_PLAN testPlan = new TEST_PLAN(Description, DateTime.Now, CycleNo, 0)
+        TEST_PLAN testPlan = new TEST_PLAN()
         {
+            Description=Description, 
+            Date=DateTime.Now, 
+            CycleNo=CycleNo, 
+            TestTime=0,
             DUT = _appStore.DUTs.FirstOrDefault(dut => dut.DutName == SelectedDevice),
             TEST_USER = _appStore.TestUser
         };

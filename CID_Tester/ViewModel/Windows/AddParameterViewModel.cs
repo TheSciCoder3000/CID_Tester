@@ -33,8 +33,15 @@ public class AddParameterViewModel : BaseViewModel
     {
         if (_AppStore.TestPlan != null)
             await _AppStore.CreateTestParameter(
-                    new TEST_PARAMETER(Name, Description, Metric, 0, Target, 0, "")
+                    new TEST_PARAMETER()
                     {
+                        Name=Name, 
+                        Description=Description, 
+                        Metric= Metric, 
+                        Value=0, 
+                        Target=Target, 
+                        Pass=0, 
+                        Parameters="",
                         TestPlan = _AppStore.TestPlan
                     }
                 );

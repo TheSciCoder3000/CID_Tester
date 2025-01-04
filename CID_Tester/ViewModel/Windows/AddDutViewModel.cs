@@ -54,7 +54,11 @@ public class AddDutViewModel : BaseViewModel, IDocument
 
     private async void CreateDutHandler(object? obj)
     {
-        await _AppStore.CreateDut(new DUT(DutName, DutDescription));
+        await _AppStore.CreateDut(new DUT()
+        {
+            DutName=DutName, 
+            Description=DutDescription
+        });
         _closeDialog.Invoke();
     }
 }
