@@ -18,6 +18,7 @@ namespace CID_Tester.ViewModel
         public string Title { get; }
 
         public bool ShowParameterTable { get; set; } = false;
+
         private ICollection<TEST_PARAMETER>? _parameters = [];
         public ICollectionView? TestParameters
         {

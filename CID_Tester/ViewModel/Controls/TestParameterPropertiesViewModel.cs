@@ -2,6 +2,8 @@
 using CID_Tester.ViewModel.Command;
 using CID_Tester.ViewModel.Interfaces;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Windows;
 using System.Windows.Input;
 
 namespace CID_Tester.ViewModel.Controls;
@@ -9,15 +11,19 @@ namespace CID_Tester.ViewModel.Controls;
 public class TestParameterPropertiesViewModel : BaseViewModel, IDocument
 {
     private readonly Store _AppStore;
+    private readonly TEST_PARAMETER _testParameter;
     public TestParameterPropertiesViewModel(Store appStore, TEST_PARAMETER testParameter)
     {
         _AppStore = appStore;
-        Name = testParameter.Name;
-        SelectedDevice = testParameter.TestPlan.DUT;
-        Metric = testParameter.Metric;
-        Target = testParameter.Target;
+        _testParameter = testParameter;
         Title = "Test Parameter Properties";
         CloseCommand = new RelayCommand(CloseAnchorable);
+        PropertyChanged += ChangeHandler;
+    }
+
+    private async void ChangeHandler(object? sender, PropertyChangedEventArgs e)
+    {
+        await _AppStore.UpdateTestParameter(_testParameter);
     }
 
     private void CloseAnchorable(object? obj)
@@ -25,49 +31,41 @@ public class TestParameterPropertiesViewModel : BaseViewModel, IDocument
         _AppStore.RemoveAnchorable(this);
     }
 
-    private string _name;
     public string Name
     {
-        get => _name;
-        set
-        {
-            _name = value;
+        get => _testParameter.Name;
+        set        {
+            _testParameter.Name = value;
             onPropertyChanged(nameof(Name));
         }
     }
 
-    public ObservableCollection<DUT> Devices => new ObservableCollection<DUT>(_AppStore.DUTs);
-
-    private DUT _selectedDevice;
-    public DUT SelectedDevice
-    {
-        get => _selectedDevice;
-        set
-        {
-            _selectedDevice = value;
-            onPropertyChanged(nameof(SelectedDevice));
-        }
-    }
-
-    private string _metric;
     public string Metric
     {
-        get => _metric;
+        get => _testParameter.Metric;
         set
         {
-            _metric = value;
+            _testParameter.Metric = value;
             onPropertyChanged(nameof(Metric));
         }
     }
 
-    private Decimal _target;
     public Decimal Target
     {
-        get => _target;
+        get => _testParameter.Target;
         set
         {
-            _target = value;
+            _testParameter.Target = value;
             onPropertyChanged(nameof(Target));
+        }
+    }
+
+    public string Description
+    {
+        get => _testParameter.Description;
+        set {
+            _testParameter.Description = value;
+            onPropertyChanged(nameof(Description));
         }
     }
 

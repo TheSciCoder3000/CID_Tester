@@ -6,23 +6,30 @@
              xmlns:local="clr-namespace:CID_Tester.View.Controls"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="250">
-    <StackPanel Margin="10">
-        <TextBlock Margin="0 0 0 20">Main</TextBlock>
-        <StackPanel Margin="20 0 0 10" Orientation="Horizontal">
-            <TextBlock Margin="0 0 10 0" MinWidth="40">Name</TextBlock>
-            <TextBox Text="{Binding Name}" Width="140" />
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel Grid.Row="0" Margin="10">
+            <TextBlock Margin="0 0 0 20">Main</TextBlock>
+            <StackPanel Margin="20 0 0 10" Orientation="Horizontal">
+                <TextBlock Margin="0 0 10 0" MinWidth="40">Name</TextBlock>
+                <TextBox Text="{Binding Name}" Width="140" KeyDown="TextBox_KeyDown" />
+            </StackPanel>
+            <StackPanel Margin="20 0 0 10" Orientation="Horizontal">
+                <TextBlock Margin="0 0 10 0" MinWidth="40">Metric</TextBlock>
+                <TextBox Text="{Binding Metric}" Width="140" KeyDown="TextBox_KeyDown" />
+            </StackPanel>
+            <StackPanel Margin="20 0 0 20" Orientation="Horizontal">
+                <TextBlock Margin="0 0 10 0" Width="40">Target</TextBlock>
+                <TextBox Text="{Binding Target}" Width="140" KeyDown="TextBox_KeyDown" HorizontalAlignment="Stretch" />
+            </StackPanel>
+            <StackPanel Margin="20 0 20 10" Orientation="Vertical">
+                <TextBlock Margin="0 0 10 10" MinWidth="40">Description</TextBlock>
+                <TextBox 
+                    Text="{Binding Description}" 
+                    HorizontalAlignment="Stretch"
+                    AcceptsReturn="True" 
+                    KeyDown="TextBox_KeyDown" 
+                    Height="100"/>
+            </StackPanel>
         </StackPanel>
-        <StackPanel Margin="20 0 0 10" Orientation="Horizontal">
-            <TextBlock Margin="0 0 10 0" MinWidth="40">Device</TextBlock>
-            <ComboBox ItemsSource="{Binding Devices}" DisplayMemberPath="DutName" IsSynchronizedWithCurrentItem="True" SelectedItem="{Binding SelectedDevice, UpdateSourceTrigger=PropertyChanged}" Width="140" />
-        </StackPanel>
-        <StackPanel Margin="20 0 0 10" Orientation="Horizontal">
-            <TextBlock Margin="0 0 10 0" MinWidth="40">Metric</TextBlock>
-            <TextBox Text="{Binding Metric}" Width="140" />
-        </StackPanel>
-        <StackPanel Margin="20 0 0 10" Orientation="Horizontal">
-            <TextBlock Margin="0 0 10 0" MinWidth="40">Target</TextBlock>
-            <TextBox Text="{Binding Target}" Width="140" />
-        </StackPanel>
-    </StackPanel>
+    </ScrollViewer>
 </UserControl>
