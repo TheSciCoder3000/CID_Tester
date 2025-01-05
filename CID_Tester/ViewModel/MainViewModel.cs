@@ -3,6 +3,7 @@ using CID_Tester.Model;
 using CID_Tester.Service.DbCreator;
 using CID_Tester.Service.DbProvider;
 using System.Windows.Input;
+using CID_Tester.ViewModel.Command.Navigation;
 
 namespace CID_Tester.ViewModel
 {
@@ -32,7 +33,7 @@ namespace CID_Tester.ViewModel
             }
         }
 
-        private object _activeDocument;
+        private object _activeDocument = null!;
         public object ActiveDocument
         {
             get => _activeDocument;
@@ -60,20 +61,17 @@ namespace CID_Tester.ViewModel
             _AppStore.OnDocumentClosed          += LoadDocuments;
             _AppStore.OnActiveDocumentChanged   += UpdateActiveDocument;
             _AppStore.OnAnchorableAdded         += LoadAnchorables;
-            _AppStore.OnAnchorableRemoved       += LoadAnchorables;   
+            _AppStore.OnAnchorableRemoved       += LoadAnchorables;
 
             // Initialize Navigation Commands
-            NavigateToTestPlan  = new NavigateCommand(AddDocumentHandler, new TestPlanViewModel (_AppStore));
-            NavigateToDevices   = new NavigateCommand(AddDocumentHandler, new DevicesViewModel  (_AppStore));
-            NavigateToDashboard = new NavigateCommand(AddDocumentHandler, new DashboardViewModel(_AppStore, NavigateToTestPlan));
-            NavigateToResults   = new NavigateCommand(AddDocumentHandler, new ResultsViewModel  (_AppStore));
-            NavigateToSettings  = new NavigateCommand(AddDocumentHandler, new ResultsViewModel  (_AppStore));
+            NavigateToTestPlan  = new NavigateTestPlan(_AppStore);
+            NavigateToDashboard = new NavigateDashboard(_AppStore, NavigateToTestPlan);
+            NavigateToDevices   = new NavigateDevices(_AppStore);
+            NavigateToResults   = new NavigateResults(_AppStore);
         }
 
         private void UpdateActiveDocument(BaseViewModel activeDocument) => ActiveDocument = activeDocument;
-
         private void LoadDocuments(IEnumerable<BaseViewModel> documents) => Documents = documents;
         private void LoadAnchorables(IEnumerable<BaseViewModel> anchorables) => Anchorables = anchorables;
-        private void AddDocumentHandler(BaseViewModel viewModel) => _AppStore.AddDocument(viewModel);
     }
 }

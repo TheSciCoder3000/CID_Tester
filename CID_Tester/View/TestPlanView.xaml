@@ -9,43 +9,6 @@
              d:DesignHeight="450" d:DesignWidth="800">
     <StackPanel Margin="15">
         <TextBlock Margin="0,0,0,10" FontSize="30">Devices Under Testing</TextBlock>
-        <StackPanel Orientation="Horizontal" Margin="0 0 0 20">
-            <ContentControl>
-                <ContentControl.Style>
-                    <Style TargetType="ContentControl">
-                        <Style.Triggers>
-                            <DataTrigger Binding="{Binding ShowParameterTable}" Value="False">
-                                <Setter Property="Content">
-                                    <Setter.Value>
-                                        <StackPanel>
-                                            <Button Style="{StaticResource NormalButton}" Command="{Binding CreateTestPlanCommand}" Padding="10 5 10 5">Create Test Plan</Button>
-                                            <StackPanel Orientation="Horizontal">
-                                                <ComboBox ItemsSource="{Binding  TestPlanList}" DisplayMemberPath="Description" SelectedItem="{Binding SelectedTestPlan}" />
-                                                <Button Style="{StaticResource NormalButton}" Command="{Binding OpenTestPlanCommand}">Open</Button>
-                                            </StackPanel>
-                                        </StackPanel>
-                                    </Setter.Value>
-                                </Setter>
-                            </DataTrigger>
-                        </Style.Triggers>
-                    </Style>
-                </ContentControl.Style>
-            </ContentControl>
-        </StackPanel>
-        <ContentControl>
-            <ContentControl.Style>
-                <Style TargetType="ContentControl">
-                    <Style.Triggers>
-                        <DataTrigger Binding="{Binding ShowParameterTable}" Value="True">
-                            <Setter Property="Content">
-                                <Setter.Value>
-                                    <controls:TestParameterTableControl />
-                                </Setter.Value>
-                            </Setter>
-                        </DataTrigger>
-                    </Style.Triggers>
-                </Style>
-            </ContentControl.Style>
-        </ContentControl>
+        <controls:TestParameterTableControl />
     </StackPanel>
 </UserControl>
