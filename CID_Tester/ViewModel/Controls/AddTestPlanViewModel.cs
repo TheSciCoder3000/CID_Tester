@@ -2,7 +2,7 @@
 using CID_Tester.Model;
 using System.Windows.Input;
 
-namespace CID_Tester.ViewModel.Windows;
+namespace CID_Tester.ViewModel.Controls;
 
 public class AddTestPlanViewModel : BaseViewModel
 {
