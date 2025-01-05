@@ -362,3 +362,5 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+/CID_Tester/DbContexts/TesterDesignTimeDbContextFactory.cs
+/CID_Tester/Model/DbContexts/TesterDesignTimeDbContextFactory.cs

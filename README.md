@@ -12,5 +12,6 @@ Create an **.env** file inside the **CID_Tester** folder for database connection
 ```bash
   DATA_SOURCE=<pc name>\SQLEXPRESS
   DATABASE=<database name>
+  PRODUCTION=[true|false]
 ```
     

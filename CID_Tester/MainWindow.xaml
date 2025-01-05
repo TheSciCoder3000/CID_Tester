@@ -5,11 +5,49 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CID_Tester"
-        xmlns:controls="clr-namespace:CID_Tester.Controls"
+        xmlns:vm="clr-namespace:CID_Tester.ViewModel"
+        xmlns:StyleSelector="clr-namespace:CID_Tester.ViewModel.StyleSelectors"
+        xmlns:view="clr-namespace:CID_Tester.View"
+        xmlns:windowVm="clr-namespace:CID_Tester.ViewModel.Windows"
+        xmlns:controls="clr-namespace:CID_Tester.View.Controls"
+        xmlns:controlsVm="clr-namespace:CID_Tester.ViewModel.Controls"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800"
         WindowState="Maximized"
         UseLayoutRounding="True">
+    <Window.Resources>
+        <DataTemplate DataType="{x:Type vm:DashboardViewModel}">
+            <view:DashboardView />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:DevicesViewModel}">
+            <view:DevicesView />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:TestPlanViewModel}">
+            <view:TestPlanView />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:ResultsViewModel}">
+            <view:ResultsView />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type windowVm:AddDutViewModel}">
+            <view:AddDutView1 />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type controlsVm:TestParameterPropertiesViewModel}">
+            <controls:TestParameterPropertiesControl />
+        </DataTemplate>
+
+        <!-- Style for LayoutDocumentItem -->
+        <Style x:Key="DocumentStyle" TargetType="{x:Type LayoutDocumentItem}">
+            <Setter Property="Title" Value="{Binding Model.Title}" />
+            <Setter Property="CloseCommand" Value="{Binding Model.CloseCommand}" />
+        </Style>
+
+        <!-- Style for LayoutAnchorableItem -->
+        <Style x:Key="AnchorableStyle" TargetType="{x:Type LayoutAnchorableItem}">
+            <Setter Property="Title" Value="{Binding Model.Title}" />
+            <Setter Property="HideCommand" Value="{Binding Model.CloseCommand}" />
+        </Style>
+    </Window.Resources>
+    
     <Grid x:Name="LayoutRoot">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -54,6 +92,9 @@
 
         <DockingManager x:Name="dockManager"
             Grid.Row="1"
+            DocumentsSource="{Binding Documents}"
+            ActiveContent="{Binding ActiveDocument, Mode=TwoWay}"
+            AnchorablesSource="{Binding Anchorables}"
             AllowMixedOrientation="True"
             AutoWindowSizeWhenOpened="True"
             IsVirtualizingAnchorable="True"
@@ -63,10 +104,18 @@
                 <avalonDock:Vs2013DarkTheme />
             </DockingManager.Theme>
 
+            <DockingManager.LayoutItemContainerStyleSelector>
+                <StyleSelector:ItemStyleSelector DocumentStyle="{StaticResource DocumentStyle}" AnchorableStyle="{StaticResource AnchorableStyle}" />
+            </DockingManager.LayoutItemContainerStyleSelector>
+
+            <DockingManager.LayoutUpdateStrategy>
+                <vm:LayoutInitializer />
+            </DockingManager.LayoutUpdateStrategy>
+
             <LayoutRoot>
                 <LayoutPanel Orientation="Horizontal">
                     <LayoutAnchorablePane DockWidth="200">
-                        <LayoutAnchorable x:Name="WinFormsWindow"
+                        <LayoutAnchorable
                             Title="Explorer"
                             CanClose="False"
                             CanHide="False"
@@ -81,20 +130,8 @@
                         <LayoutDocumentPane x:Name="LayoutDocumentPane">
                         </LayoutDocumentPane>
                     </LayoutDocumentPaneGroup>
-
-
-                    <LayoutAnchorablePaneGroup DockWidth="200">
-                        <LayoutAnchorablePane>
-                            <LayoutAnchorable
-                                Title="Tool Window 1"
-                                ContentId="toolWindow1"
-                                Hiding="OnToolWindow1Hiding">
-                            </LayoutAnchorable>
-                            <LayoutAnchorable Title="Tool Window 2" ContentId="toolWindow2">
-                                <TextBlock Text="{Binding FocusedElement}" />
-                            </LayoutAnchorable>
-                        </LayoutAnchorablePane>
-                    </LayoutAnchorablePaneGroup>
+                    
+                    
                 </LayoutPanel>
             </LayoutRoot>
 

@@ -1,15 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations;
 
 namespace CID_Tester.Model
 {
     public class DUT
     {
-        public int DUT_CODE { get; set; }
-        public string DESCRIPTION { get; set; }
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int DutCode { get; set; }
+
+        public string DutName { get; set; } = null!;
+
+        public string Description { get; set; } = null!;
+
+        public ICollection<TEST_PLAN> TEST_PLANS { get; set; } = null!;
 
     }
 }
