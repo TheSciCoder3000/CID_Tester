@@ -19,21 +19,31 @@
                         <Border Background="{TemplateBinding Background}" 
                             BorderBrush="{TemplateBinding BorderBrush}" 
                             BorderThickness="{TemplateBinding BorderThickness}" 
-                            Padding="{TemplateBinding Padding}">
-                            <ContentPresenter HorizontalAlignment="Left" 
-                                          VerticalAlignment="Center" />
+                            Padding="{TemplateBinding Padding}"
+                            TextElement.Foreground="{TemplateBinding Foreground}">
+                            <ContentPresenter HorizontalAlignment="Left" VerticalAlignment="Center">
+                                <ContentPresenter.ContentTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding}" Foreground="{TemplateBinding TextElement.Foreground}" />
+                                    </DataTemplate>
+                                </ContentPresenter.ContentTemplate>
+                            </ContentPresenter>
                         </Border>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
             <Style.Triggers>
-                <!-- Hover Trigger -->
                 <Trigger Property="IsMouseOver" Value="True">
                     <Setter Property="Background">
                         <Setter.Value>
                             <SolidColorBrush Color="White" Opacity="0.1" />
                         </Setter.Value>
                     </Setter>
+                    <Setter Property="Cursor" Value="Hand" />
+                </Trigger>
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter Property="Foreground" Value="Gray" />
+                    <Setter Property="Cursor" Value="No" />
                 </Trigger>
             </Style.Triggers>
         </Style>
@@ -41,29 +51,19 @@
 
     <StackPanel Orientation="Vertical" HorizontalAlignment="Stretch">
         <Button Tag="dashboard" Margin="5" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Center" Command="{Binding NavigateToDashboard}">
-            <StackPanel Orientation="Horizontal">
-                <TextBlock VerticalAlignment="Center" Text="Dashboard" />
-            </StackPanel>
+            Dashboard
         </Button>
         <Button Tag="dashboard" Margin="5" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Center" Command="{Binding NavigateToDevices}">
-            <StackPanel Orientation="Horizontal">
-                <TextBlock VerticalAlignment="Center" Text="Devices" />
-            </StackPanel>
+            Devices
         </Button>
         <Button Tag="plan" Margin="5" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Center" Command="{Binding NavigateToTestPlan}">
-            <StackPanel Orientation="Horizontal">
-                <TextBlock VerticalAlignment="Center" Text="Test Plan" />
-            </StackPanel>
+            Test Plan
         </Button>
         <Button Tag="results" Margin="5" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Center" Command="{Binding NavigateToResults}">
-            <StackPanel Orientation="Horizontal">
-                <TextBlock VerticalAlignment="Center" Text="Results Overview" />
-            </StackPanel>
+            Results Overview
         </Button>
         <Button Tag="settings" Margin="5" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Center" Command="{Binding NavigateToSettings}">
-            <StackPanel Orientation="Horizontal">
-                <TextBlock VerticalAlignment="Center" Text="Settings" />
-            </StackPanel>
+            Settings
         </Button>
     </StackPanel>
 </UserControl>

@@ -11,7 +11,17 @@ namespace CID_Tester.Model
 
         public IEnumerable<DUT> DUTs { get; private set; } = [];
         public TEST_USER TestUser { get; private set; }
-        public TEST_PLAN? TestPlan { get; private set; }
+
+        private TEST_PLAN? _testPlan;
+        public TEST_PLAN? TestPlan
+        {
+            get => _testPlan;
+            set
+            {
+                _testPlan = value;
+                OnTestPlanUpdated?.Invoke(value);
+            }
+        }
         public IEnumerable<BaseViewModel> Documents { get; private set; }
         public object ActiveDocument { get; set; } = null!;
         public IEnumerable<BaseViewModel> Anchorables { get; private set; } = [];
@@ -24,6 +34,7 @@ namespace CID_Tester.Model
 
         public event Action<TEST_USER> OnTestUserUpdated;
 
+        public event Action<TEST_PLAN?> OnTestPlanUpdated;
         public event Action<IEnumerable<TEST_PARAMETER>> OnTestParameterUpdated;
 
         public event Action<IEnumerable<BaseViewModel>> OnDocumentOpenned;
