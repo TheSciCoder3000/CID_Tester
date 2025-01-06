@@ -11,7 +11,7 @@
             <Button Margin="0 0 10 0" Style="{StaticResource NormalButton}" Padding="15 5" Command="{Binding AddTestParameterCommand}">Add</Button>
             <Button Style="{StaticResource NormalButton}" Padding="15 5" Command="{Binding DeleteTestParameterCommand}">Delete</Button>
         </StackPanel>
-        <DataGrid ItemsSource="{Binding TestParameters}" IsSynchronizedWithCurrentItem="True" SelectedItem="{Binding SelectedTestParameter}">
+        <DataGrid ItemsSource="{Binding TestParameters}" SelectedValue="{Binding SelectedTestParameterId, Mode=TwoWay}" SelectedValuePath="ParamCode">
             <DataGrid.InputBindings>
                 <MouseBinding 
                     Gesture="LeftDoubleClick"

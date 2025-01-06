@@ -15,10 +15,18 @@ public class TestParameterPropertiesViewModel : BaseViewModel, IDocument
     public TestParameterPropertiesViewModel(Store appStore, TEST_PARAMETER testParameter)
     {
         _AppStore = appStore;
+        _AppStore.OnTestParameterUpdated += VerifyParameterProperties;
+
         _testParameter = testParameter;
         Title = "Test Parameter Properties";
         CloseCommand = new RelayCommand(CloseAnchorable);
         PropertyChanged += ChangeHandler;
+    }
+
+    private void VerifyParameterProperties(IEnumerable<TEST_PARAMETER> testParameters)
+    {
+        bool parameterExists = testParameters.Contains(_testParameter);
+        if (!parameterExists) CloseCommand.Execute(null);
     }
 
     private async void ChangeHandler(object? sender, PropertyChangedEventArgs e)

@@ -29,14 +29,14 @@ namespace CID_Tester.ViewModel
             }
         }
 
-        private TEST_PARAMETER _selectedTestParameter = null!;
-        public TEST_PARAMETER SelectedTestParameter
+        private TEST_PARAMETER? _selectedTestParameter = null!;
+        public int? SelectedTestParameterId
         {
-            get => _selectedTestParameter;
+            get => _selectedTestParameter?.ParamCode;
             set
             {
-                _selectedTestParameter = value;
-                onPropertyChanged(nameof(SelectedTestParameter));
+                _selectedTestParameter = TestParameters.FirstOrDefault(param => param.ParamCode == value);
+                onPropertyChanged(nameof(SelectedTestParameterId));
             }
         }
 
@@ -58,15 +58,17 @@ namespace CID_Tester.ViewModel
             DeleteTestParameterCommand = new RelayCommand(DeleteTestParameterHandler);
         }
 
-        private async void DeleteTestParameterHandler(object? obj) => await _AppStore.DeleteTestParameter(SelectedTestParameter);
+        private async void DeleteTestParameterHandler(object? obj)
+        {
+            if (_selectedTestParameter != null) await _AppStore.DeleteTestParameter(_selectedTestParameter);
+        }
 
         private void DoubleClickHandler(object? obj)
         {
-            if (obj is TEST_PARAMETER && obj != null)
+            if (_selectedTestParameter != null)
             {
-                TEST_PARAMETER parameter = (TEST_PARAMETER)obj;
                 _AppStore.ClearAnchorables();
-                _AppStore.AddAnchorables(new TestParameterPropertiesViewModel(_AppStore, parameter));
+                _AppStore.AddAnchorables(new TestParameterPropertiesViewModel(_AppStore, _selectedTestParameter));
             }
         }
 
