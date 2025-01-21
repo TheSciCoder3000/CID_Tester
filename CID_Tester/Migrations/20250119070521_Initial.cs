@@ -49,6 +49,7 @@ namespace CID_Tester.Migrations
                 {
                     TestCode = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
+                    Name = table.Column<string>(type: "TEXT", nullable: false),
                     Description = table.Column<string>(type: "TEXT", nullable: false),
                     Date = table.Column<DateTime>(type: "TEXT", nullable: false),
                     CycleNo = table.Column<int>(type: "INTEGER", nullable: false),
@@ -85,7 +86,7 @@ namespace CID_Tester.Migrations
                     Metric = table.Column<string>(type: "TEXT", nullable: false),
                     Value = table.Column<decimal>(type: "TEXT", nullable: false),
                     Target = table.Column<decimal>(type: "TEXT", nullable: false),
-                    Pass = table.Column<int>(type: "INTEGER", nullable: false),
+                    Pass = table.Column<int>(type: "INTEGER", nullable: true),
                     Parameters = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
