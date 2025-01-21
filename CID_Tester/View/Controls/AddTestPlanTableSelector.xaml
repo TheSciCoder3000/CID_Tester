@@ -15,9 +15,10 @@
         <DataGrid Grid.Row="0" ItemsSource="{Binding TestPlans}" SelectedItem="{Binding SelectedTestPlan}">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Id" Binding="{Binding TestCode}" Width="50" />
+                <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="200" />
                 <DataGridTextColumn Header="Description" Binding="{Binding Description}" Width="*" />
                 <DataGridTextColumn Header="Device" Binding="{Binding DUT.DutName}" Width="150" />
-                <DataGridTextColumn Header="Date" Binding="{Binding Date}" Width="150" />
+                <DataGridTextColumn Header="Date" Binding="{Binding Date}" Width="125" />
             </DataGrid.Columns>
         </DataGrid>
         <Border Grid.Row="1" Background="#333334" BorderBrush="#FF5C5C5C" BorderThickness="0,2,0,0">

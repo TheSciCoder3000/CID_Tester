@@ -57,6 +57,12 @@ namespace CID_Tester.Model
 
         #region Document Functions
 
+        public void setActiveDocument(BaseViewModel document)
+        {
+            ActiveDocument = document;
+            OnActiveDocumentChanged?.Invoke(document);
+        }
+
         public void AddDocument(BaseViewModel document)
         {
             ICollection<BaseViewModel> DocumentCollection = Documents.ToList();
@@ -70,8 +76,7 @@ namespace CID_Tester.Model
             }
             if (ActiveDocument != document)
             {
-                ActiveDocument = document;
-                OnActiveDocumentChanged?.Invoke(document);
+                setActiveDocument(document);
                 ClearAnchorables();
                 OnAnchorableRemoved?.Invoke(Anchorables);
             }
