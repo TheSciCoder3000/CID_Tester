@@ -4,6 +4,7 @@ using CID_Tester.Model;
 using CID_Tester.ViewModel.Interfaces;
 using System.Windows.Controls;
 using System.Windows.Input;
+using CID_Tester.View.Controls.Dashboard;
 
 namespace CID_Tester.ViewModel.Document;
 

@@ -2,7 +2,7 @@
 using CID_Tester.Model;
 using System.Windows.Input;
 
-namespace CID_Tester.ViewModel.Controls;
+namespace CID_Tester.ViewModel.Controls.AddTestPlan;
 
 public class AddTestPlanViewModel : BaseViewModel
 {
@@ -79,11 +79,11 @@ public class AddTestPlanViewModel : BaseViewModel
     {
         TEST_PLAN testPlan = new TEST_PLAN()
         {
-            Name=Name,
-            Description=Description, 
-            Date=DateTime.Now, 
-            CycleNo=CycleNo, 
-            TestTime=0,
+            Name = Name,
+            Description = Description,
+            Date = DateTime.Now,
+            CycleNo = CycleNo,
+            TestTime = 0,
             DUT = _appStore.DUTs.FirstOrDefault(dut => dut.DutName == SelectedDevice),
             TEST_USER = _appStore.TestUser
         };

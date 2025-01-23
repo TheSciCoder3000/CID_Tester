@@ -13,14 +13,14 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace CID_Tester.View.Controls
+namespace CID_Tester.View.Controls.AddTestPlan
 {
     /// <summary>
-    /// Interaction logic for AddTestPlanControl.xaml
+    /// Interaction logic for TestPlanForm.xaml
     /// </summary>
-    public partial class AddTestPlanControl : UserControl
+    public partial class TestPlanForm : UserControl
     {
-        public AddTestPlanControl()
+        public TestPlanForm()
         {
             InitializeComponent();
         }

@@ -4,11 +4,11 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:CID_Tester.View.Document"
-             xmlns:controls="clr-namespace:CID_Tester.View.Controls"
+             xmlns:TestPlan="clr-namespace:CID_Tester.View.Controls.TestPlan"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <StackPanel Margin="15">
         <TextBlock Margin="0,0,0,10" FontSize="30">Devices Under Testing</TextBlock>
-        <controls:TestParameterTableControl />
+        <TestPlan:TestParameterTable />
     </StackPanel>
 </UserControl>
