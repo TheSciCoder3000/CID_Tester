@@ -7,32 +7,33 @@
         xmlns:local="clr-namespace:CID_Tester"
         xmlns:vm="clr-namespace:CID_Tester.ViewModel"
         xmlns:StyleSelector="clr-namespace:CID_Tester.ViewModel.StyleSelectors"
-        xmlns:view="clr-namespace:CID_Tester.View"
-        xmlns:windowVm="clr-namespace:CID_Tester.ViewModel.Windows"
+        
+        xmlns:documents="clr-namespace:CID_Tester.View.Document"
+        xmlns:DocVm="clr-namespace:CID_Tester.ViewModel.Document"
+        
+        xmlns:anchorable="clr-namespace:CID_Tester.View.Anchorables"
+        xmlns:AnchVm="clr-namespace:CID_Tester.ViewModel.Anchorables"
+        
         xmlns:controls="clr-namespace:CID_Tester.View.Controls"
-        xmlns:controlsVm="clr-namespace:CID_Tester.ViewModel.Controls"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800"
         WindowState="Maximized"
         UseLayoutRounding="True">
     <Window.Resources>
-        <DataTemplate DataType="{x:Type vm:DashboardViewModel}">
-            <view:DashboardView />
+        <DataTemplate DataType="{x:Type DocVm:DashboardViewModel}">
+            <documents:DashboardView />
         </DataTemplate>
-        <DataTemplate DataType="{x:Type vm:DevicesViewModel}">
-            <view:DevicesView />
+        <DataTemplate DataType="{x:Type DocVm:DevicesViewModel}">
+            <documents:DevicesView />
         </DataTemplate>
-        <DataTemplate DataType="{x:Type vm:TestPlanViewModel}">
-            <view:TestPlanView />
+        <DataTemplate DataType="{x:Type DocVm:TestPlanViewModel}">
+            <documents:TestPlanView />
         </DataTemplate>
-        <DataTemplate DataType="{x:Type vm:ResultsViewModel}">
-            <view:ResultsView />
+        <DataTemplate DataType="{x:Type DocVm:ResultsViewModel}">
+            <documents:ResultsView />
         </DataTemplate>
-        <DataTemplate DataType="{x:Type windowVm:AddDutViewModel}">
-            <view:AddDutView1 />
-        </DataTemplate>
-        <DataTemplate DataType="{x:Type controlsVm:TestParameterPropertiesViewModel}">
-            <controls:TestParameterPropertiesControl />
+        <DataTemplate DataType="{x:Type AnchVm:TestParameterPropertiesViewModel}">
+            <anchorable:TestParameterProperties />
         </DataTemplate>
 
         <!-- Style for LayoutDocumentItem -->
