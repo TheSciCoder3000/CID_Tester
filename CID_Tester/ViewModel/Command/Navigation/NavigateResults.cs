@@ -1,4 +1,5 @@
 ﻿using CID_Tester.Model;
+using CID_Tester.ViewModel.Document;
 using Microsoft.Identity.Client;
 
 namespace CID_Tester.ViewModel.Command.Navigation;

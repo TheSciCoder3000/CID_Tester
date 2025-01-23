@@ -1,5 +1,6 @@
 ﻿using CID_Tester.Model;
 using CID_Tester.View.Windows;
+using CID_Tester.ViewModel.Document;
 using CID_Tester.ViewModel.Windows;
 
 namespace CID_Tester.ViewModel.Command.Navigation;

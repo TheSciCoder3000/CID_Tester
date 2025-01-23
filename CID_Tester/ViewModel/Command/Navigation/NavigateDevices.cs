@@ -1,4 +1,5 @@
 ﻿using CID_Tester.Model;
+using CID_Tester.ViewModel.Document;
 
 namespace CID_Tester.ViewModel.Command.Navigation;
 

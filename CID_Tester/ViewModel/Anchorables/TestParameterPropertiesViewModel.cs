@@ -1,12 +1,10 @@
 ﻿using CID_Tester.Model;
 using CID_Tester.ViewModel.Command;
 using CID_Tester.ViewModel.Interfaces;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Windows;
 using System.Windows.Input;
 
-namespace CID_Tester.ViewModel.Controls;
+namespace CID_Tester.ViewModel.Anchorables;
 
 public class TestParameterPropertiesViewModel : BaseViewModel, IDocument
 {
@@ -42,7 +40,8 @@ public class TestParameterPropertiesViewModel : BaseViewModel, IDocument
     public string Name
     {
         get => _testParameter.Name;
-        set        {
+        set
+        {
             _testParameter.Name = value;
             onPropertyChanged(nameof(Name));
         }
@@ -58,7 +57,7 @@ public class TestParameterPropertiesViewModel : BaseViewModel, IDocument
         }
     }
 
-    public Decimal Target
+    public decimal Target
     {
         get => _testParameter.Target;
         set
@@ -71,7 +70,8 @@ public class TestParameterPropertiesViewModel : BaseViewModel, IDocument
     public string Description
     {
         get => _testParameter.Description;
-        set {
+        set
+        {
             _testParameter.Description = value;
             onPropertyChanged(nameof(Description));
         }
