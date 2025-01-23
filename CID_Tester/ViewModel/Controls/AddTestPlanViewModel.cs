@@ -17,6 +17,16 @@ public class AddTestPlanViewModel : BaseViewModel
             onPropertyChanged(nameof(SelectedDevice));
         }
     }
+    private string _name;
+    public string Name
+    {
+        get => _name;
+        set
+        {
+            _name = value;
+            onPropertyChanged(nameof(Name));
+        }
+    }
     private string _description = null!;
     public string Description
     {
@@ -69,6 +79,7 @@ public class AddTestPlanViewModel : BaseViewModel
     {
         TEST_PLAN testPlan = new TEST_PLAN()
         {
+            Name=Name,
             Description=Description, 
             Date=DateTime.Now, 
             CycleNo=CycleNo, 

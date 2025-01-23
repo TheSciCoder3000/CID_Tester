@@ -1,0 +1,23 @@
+﻿<UserControl x:Class="CID_Tester.View.Controls.AddTestPlanImporter"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:CID_Tester.View.Controls"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <StackPanel Margin="20">
+        <StackPanel Margin="0 20 0 0" Orientation="Horizontal" HorizontalAlignment="Left">
+            <Button Command="{Binding SaveCommand}" Margin="0 0 20 0" Style="{StaticResource NormalButton}">Save</Button>
+            <Button Command="{Binding ImportCommand}" Style="{StaticResource NormalButton}">Import Another</Button>
+        </StackPanel>
+        <DataGrid HorizontalScrollBarVisibility="Disabled" Margin="0 20 0 0" ItemsSource="{Binding TestParameters}">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Name" Binding="{Binding Name}" MinWidth="200" />
+                <DataGridTextColumn Header="Description" Binding="{Binding Description}" MinWidth="100" Width="*" />
+                <DataGridTextColumn Header="Metric" Binding="{Binding Metric}" MaxWidth="100" Width="*" />
+                <DataGridTextColumn Header="Target" Binding="{Binding Target}" MaxWidth="100" Width="*" />
+            </DataGrid.Columns>
+        </DataGrid>
+    </StackPanel>
+</UserControl>

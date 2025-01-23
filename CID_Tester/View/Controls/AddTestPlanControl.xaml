@@ -9,16 +9,20 @@
     <StackPanel Margin="20">
         <TextBlock FontSize="25">Create Test Plan</TextBlock>
         <StackPanel Margin="0 20 0 0" HorizontalAlignment="Left">
+            <TextBlock Margin="0 0 0 10">Name.</TextBlock>
+            <TextBox Width="150" Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}" />
+        </StackPanel>
+        <StackPanel Margin="0 20 0 0" HorizontalAlignment="Left">
             <TextBlock Margin="0 0 0 10">Device:</TextBlock>
             <ComboBox SelectedItem="{Binding SelectedDevice}" ItemsSource="{Binding Devices}" Width="70" />
         </StackPanel>
         <StackPanel Margin="0 20 0 0" HorizontalAlignment="Left">
             <TextBlock Margin="0 0 0 10">Cycle No.</TextBlock>
-            <TextBox Width="70" Text="{Binding CycleNo}" />
+            <TextBox Width="70" Text="{Binding CycleNo, UpdateSourceTrigger=PropertyChanged}" />
         </StackPanel>
         <StackPanel Margin="0 20 0 20">
             <TextBlock Margin="0 0 0 10">Description</TextBlock>
-            <TextBox Padding="5" Height="100" Text="{Binding Description}" />
+            <TextBox Padding="5" Height="100" Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}" />
         </StackPanel>
         <StackPanel Orientation="Horizontal">
             <Button Style="{StaticResource NormalButton}" Command="{Binding CreateCommand}" Padding="15 5 15 5" Margin="0 0 10 0">Create</Button>

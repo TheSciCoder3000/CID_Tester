@@ -58,7 +58,7 @@ namespace CID_Tester.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("Pass")
+                    b.Property<int?>("Pass")
                         .HasColumnType("INTEGER");
 
                     b.Property<decimal>("Target")
@@ -95,6 +95,10 @@ namespace CID_Tester.Migrations
 
                     b.Property<int>("DutCode")
                         .HasColumnType("INTEGER");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
                     b.Property<int>("TestTime")
                         .HasColumnType("INTEGER");

@@ -16,8 +16,8 @@ namespace CID_Tester.Model
         [Required]
         public TEST_PLAN TestPlan { get; set; } = null!;
 
-
-        public string Description { get; set; }
+        [Required]
+        public string Description { get; set; } = null!;
 
         [Required]
         public string Metric { get; set; } = null!;
@@ -28,8 +28,7 @@ namespace CID_Tester.Model
         [Required]
         public decimal Target { get; set; }
 
-        [Required]
-        public int Pass { get; set; }
+        public int? Pass { get; set; }
 
         [Required]
         public string Parameters { get; set; }
