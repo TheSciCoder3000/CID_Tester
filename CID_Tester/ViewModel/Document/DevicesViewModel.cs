@@ -64,7 +64,12 @@ public class DevicesViewModel : BaseViewModel, IDocument
         addDutView.ShowDialog();
     }
 
-    private void CloseCommandHanlder(object? parameter) => _AppStore.RemoveDocument(this);
+    private void CloseCommandHanlder(object? parameter)
+    {
+        _AppStore.OnDutUpdated -= Load;
+        _AppStore.OnDutDeleted -= Load;
+        _AppStore.RemoveDocument(this);
+    }
 
     private async void Load(IEnumerable<DUT>? devices = null)
     {

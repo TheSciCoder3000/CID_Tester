@@ -32,24 +32,34 @@ public class DashboardViewModel : BaseViewModel, IDocument
     public DashboardViewModel(Store appStore, ICommand navigateToTestPlanCommand)
     {
         _AppStore = appStore;
+        _AppStore.OnTestPlanUpdated += LoadTestMetrics;
         NavigateToTestPlanCommand = navigateToTestPlanCommand;
         Title = "Dashboard";
         CloseCommand = new RelayCommand(CloseCommandHanlder);
 
+        LoadTestMetrics(_AppStore.TestPlan);
 
-        if (_AppStore.TestPlan == null)
+    }
+
+    private void LoadTestMetrics(TEST_PLAN? testPlan)
+    {
+        if (testPlan == null)
         {
-            TestPlanStatusControl = new TestPlanStatusControl();
+            TestPlanStatusControl = new TestPlanStatus();
         }
         else
         {
             TestPlanStatusControl = new DashboardMetricControl()
             {
-                DataContext = new DashboardMetricViewModel(_AppStore.TestPlan)
+                DataContext = new DashboardMetricViewModel(testPlan)
             };
         }
     }
 
-    private void CloseCommandHanlder(object? parameter) => _AppStore.RemoveDocument(this);
+    private void CloseCommandHanlder(object? parameter)
+    {
+        _AppStore.OnTestPlanUpdated -= LoadTestMetrics;
+        _AppStore.RemoveDocument(this);
+    }
 
 }

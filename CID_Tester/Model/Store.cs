@@ -63,20 +63,21 @@ namespace CID_Tester.Model
             OnActiveDocumentChanged?.Invoke(document);
         }
 
-        public void AddDocument(BaseViewModel document)
+        public void AddDocument<T>(BaseViewModel document)
         {
             ICollection<BaseViewModel> DocumentCollection = Documents.ToList();
-            BaseViewModel? activeDocument = DocumentCollection.FirstOrDefault(d => d == document);
+            BaseViewModel? activeDocument = DocumentCollection.FirstOrDefault(d => d is T);
 
             if ( activeDocument == null)
             {
                 DocumentCollection.Add(document);
                 Documents = DocumentCollection;
                 OnDocumentOpenned?.Invoke(Documents);
-            }
-            if (ActiveDocument != document)
-            {
                 setActiveDocument(document);
+            }
+            if (ActiveDocument != activeDocument && activeDocument != null)
+            {
+                setActiveDocument(activeDocument);
                 ClearAnchorables();
                 OnAnchorableRemoved?.Invoke(Anchorables);
             }
@@ -123,6 +124,7 @@ namespace CID_Tester.Model
         public void setTestPlan(TEST_PLAN testPlan)
         {
             TestPlan = testPlan;
+            OnTestPlanUpdated?.Invoke(TestPlan);
             OnTestParameterUpdated?.Invoke(TestPlan.TEST_PARAMETERS);
         }
 
@@ -130,6 +132,7 @@ namespace CID_Tester.Model
         {
             await _dbCreator.CreateTestPlan(testPlan);
             TestPlan = testPlan;
+            OnTestPlanUpdated?.Invoke(TestPlan);
             OnTestParameterUpdated?.Invoke(TestPlan.TEST_PARAMETERS);
         }
 

@@ -78,5 +78,9 @@ public class TestPlanViewModel : BaseViewModel, IDocument
 
     private void LoadTestParameters(IEnumerable<TEST_PARAMETER> testParameters) => TestParameters = testParameters.ToList();
 
-    private void CloseCommandHanlder(object? parameter) => _AppStore.RemoveDocument(this);
+    private void CloseCommandHanlder(object? parameter)
+    {
+        _AppStore.OnTestParameterUpdated -= LoadTestParameters;
+        _AppStore.RemoveDocument(this);
+    }
 }
