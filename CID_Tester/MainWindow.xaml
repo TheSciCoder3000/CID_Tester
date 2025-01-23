@@ -7,9 +7,8 @@
         xmlns:local="clr-namespace:CID_Tester"
         xmlns:vm="clr-namespace:CID_Tester.ViewModel"
         xmlns:StyleSelector="clr-namespace:CID_Tester.ViewModel.StyleSelectors"
-        xmlns:view="clr-namespace:CID_Tester.View"
-        xmlns:windowVm="clr-namespace:CID_Tester.ViewModel.Windows"
-        xmlns:controls="clr-namespace:CID_Tester.View.Controls"
+        xmlns:documents="clr-namespace:CID_Tester.View.Document"
+        xmlns:anchorable="clr-namespace:CID_Tester.View.Anchorables"
         xmlns:controlsVm="clr-namespace:CID_Tester.ViewModel.Controls"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800"
@@ -17,22 +16,19 @@
         UseLayoutRounding="True">
     <Window.Resources>
         <DataTemplate DataType="{x:Type vm:DashboardViewModel}">
-            <view:DashboardView />
+            <documents:DashboardView />
         </DataTemplate>
         <DataTemplate DataType="{x:Type vm:DevicesViewModel}">
-            <view:DevicesView />
+            <documents:DevicesView />
         </DataTemplate>
         <DataTemplate DataType="{x:Type vm:TestPlanViewModel}">
-            <view:TestPlanView />
+            <documents:TestPlanView />
         </DataTemplate>
         <DataTemplate DataType="{x:Type vm:ResultsViewModel}">
-            <view:ResultsView />
-        </DataTemplate>
-        <DataTemplate DataType="{x:Type windowVm:AddDutViewModel}">
-            <view:AddDutView1 />
+            <documents:ResultsView />
         </DataTemplate>
         <DataTemplate DataType="{x:Type controlsVm:TestParameterPropertiesViewModel}">
-            <controls:TestParameterPropertiesControl />
+            <anchorable:TestParameterProperties />
         </DataTemplate>
 
         <!-- Style for LayoutDocumentItem -->
