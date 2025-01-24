@@ -44,6 +44,8 @@ namespace CID_Tester.ViewModel
             }
         }
 
+        public ToolbarViewModel toolbarViewModel { get; }
+
         public ICommand NavigateToDashboard { get; } = null!;
         public ICommand NavigateToDevices { get; } = null!;
         public ICommand NavigateToTestPlan { get; } = null!;
@@ -62,6 +64,8 @@ namespace CID_Tester.ViewModel
             _AppStore.OnActiveDocumentChanged   += UpdateActiveDocument;
             _AppStore.OnAnchorableAdded         += LoadAnchorables;
             _AppStore.OnAnchorableRemoved       += LoadAnchorables;
+
+            toolbarViewModel = new ToolbarViewModel(_AppStore);
 
             // Initialize Navigation Commands
             NavigateToTestPlan  = new NavigateTestPlan(_AppStore);
