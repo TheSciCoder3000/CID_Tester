@@ -16,6 +16,7 @@
         xmlns:AnchVm="clr-namespace:CID_Tester.ViewModel.Anchorables"
         
         xmlns:controls="clr-namespace:CID_Tester.View.Controls"
+        xmlns:icon="clr-namespace:CID_Tester.View.Icons"
         
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800"
@@ -166,81 +167,9 @@
                 </Button>
                 <ComboBox ItemsSource="{Binding TestPlans}" SelectedItem="{Binding SelectedTestPlan}" DisplayMemberPath="Name" Margin="5 0" Style="{DynamicResource ComboBoxStyle1}" MinWidth="150" />
                 <Separator Background="#757575" />
-                <Button ToolTip="Start" Command="{Binding StartTestCommand}" Style="{StaticResource IconButton}" Margin="3 0" Padding="2.5">
-                    <Rectangle Width="16 " Height="16">
-                        <Rectangle.Resources>
-                            <SolidColorBrush x:Key="canvas" Opacity="0" />
-                            <SolidColorBrush x:Key="light-green" Color="#0aad0a" Opacity="1" />
-                        </Rectangle.Resources>
-                        <Rectangle.Fill>
-                            <DrawingBrush Stretch="Uniform">
-                                <DrawingBrush.Drawing>
-                                    <DrawingGroup>
-                                        <DrawingGroup>
-                                            <GeometryDrawing Brush="{DynamicResource canvas}" Geometry="F1M16,16H0V0H16Z" />
-                                        </DrawingGroup>
-                                        <DrawingGroup>
-                                            <GeometryDrawing Brush="{DynamicResource light-green}" Geometry="F1M3.777,1.084,3,1.5v12l.777.416,9-6V7.084Z" />
-                                        </DrawingGroup>
-                                    </DrawingGroup>
-                                </DrawingBrush.Drawing>
-                            </DrawingBrush>
-                        </Rectangle.Fill>
-                    </Rectangle>
-                </Button>
-                <Button ToolTip="Pause" Command="{Binding PauseTestCommand}" Style="{StaticResource IconButton}" Margin="3 0" Padding="2.5">
-                    <Rectangle Width="14" Height="14">
-                        <Rectangle.Resources>
-                            <SolidColorBrush x:Key="canvas" Opacity="0" />
-                            <SolidColorBrush x:Key="light-defaultgrey" Color="white" Opacity="1" />
-                            <System:Double x:Key="cls-1">0.75</System:Double>
-                        </Rectangle.Resources>
-                        <Rectangle.Fill>
-                            <DrawingBrush Stretch="Uniform">
-                                <DrawingBrush.Drawing>
-                                    <DrawingGroup>
-                                        <DrawingGroup>
-                                            <GeometryDrawing Brush="{DynamicResource canvas}" Geometry="F1M16,16H0V0H16Z" />
-                                        </DrawingGroup>
-                                        <DrawingGroup>
-                                            <DrawingGroup Opacity="{DynamicResource cls-1}">
-                                                <GeometryDrawing Brush="{DynamicResource light-defaultgrey}" Geometry="F1M6.5,3.5v9h-3v-9Z" />
-                                                <GeometryDrawing Brush="{DynamicResource light-defaultgrey}" Geometry="F1M12.5,3.5v9h-3v-9Z" />
-                                            </DrawingGroup>
-                                            <GeometryDrawing Brush="{DynamicResource light-defaultgrey}" Geometry="F1M12.5,3h-3L9,3.5v9l.5.5h3l.5-.5v-9ZM12,12H10V4h2ZM6.5,3h-3L3,3.5v9l.5.5h3l.5-.5v-9ZM6,12H4V4H6Z" />
-                                        </DrawingGroup>
-                                    </DrawingGroup>
-                                </DrawingBrush.Drawing>
-                            </DrawingBrush>
-                        </Rectangle.Fill>
-                    </Rectangle>
-                </Button>
-                <Button ToolTip="Stop" Command="{Binding StopTestCommand}" Style="{StaticResource IconButton}" Margin="3 0" Padding="2.5">
-                    <Rectangle Width="16" Height="16">
-                        <Rectangle.Resources>
-                            <SolidColorBrush x:Key="canvas" Opacity="0" />
-                            <SolidColorBrush x:Key="light-red" Color="#c50b17" Opacity="1" />
-                            <System:Double x:Key="cls-1">0.75</System:Double>
-                        </Rectangle.Resources>
-                        <Rectangle.Fill>
-                            <DrawingBrush Stretch="Uniform">
-                                <DrawingBrush.Drawing>
-                                    <DrawingGroup>
-                                        <DrawingGroup>
-                                            <GeometryDrawing Brush="{DynamicResource canvas}" Geometry="F1M16,16H0V0H16Z" />
-                                        </DrawingGroup>
-                                        <DrawingGroup>
-                                            <DrawingGroup Opacity="{DynamicResource cls-1}">
-                                                <GeometryDrawing Brush="{DynamicResource light-red}" Geometry="F1M12.5,3.5v9h-9v-9Z" />
-                                                <GeometryDrawing Brush="{DynamicResource light-red}" Geometry="F1M12.5,3h-9L3,3.5v9l.5.5h9l.5-.5v-9ZM12,12H4V4h8Z" />
-                                            </DrawingGroup>
-                                        </DrawingGroup>
-                                    </DrawingGroup>
-                                </DrawingBrush.Drawing>
-                            </DrawingBrush>
-                        </Rectangle.Fill>
-                    </Rectangle>
-                </Button>
+                <icon:Play Command="{Binding PlayTestCommand}" />
+                <icon:Pause Command="{Binding PauseTestCommand}" />
+                <icon:Stop Command="{Binding StopTestCommand}" />
             </ToolBar>
         </ToolBarPanel>
 

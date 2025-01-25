@@ -1,0 +1,67 @@
+﻿<UserControl x:Class="CID_Tester.View.Icons.Stop"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:CID_Tester.View.Icons"
+             mc:Ignorable="d" 
+             d:DesignHeight="30" d:DesignWidth="30">
+    <Button ToolTip="Pause" Command="{Binding Command, RelativeSource={RelativeSource AncestorType=UserControl}}" Style="{StaticResource IconButton}" Margin="3 0" Padding="2.5" Background="Transparent" BorderBrush="Transparent">
+        <Viewbox Width="16 " Height="16" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:System="clr-namespace:System;assembly=mscorlib">
+            <Rectangle Width="16 " Height="16">
+                <Rectangle.Resources>
+                    <SolidColorBrush x:Key="canvas" Opacity="0" />
+                    <SolidColorBrush x:Key="light-red" Color="#c50b17" Opacity="1" />
+                    <SolidColorBrush x:Key="disabled-gray" Color="Gray" Opacity="0.6" />
+                    <System:Double x:Key="cls-1">0.75</System:Double>
+                    
+                    <DrawingBrush x:Key="Stop.Enabled" Stretch="None">
+                        <DrawingBrush.Drawing>
+                            <DrawingGroup>
+                                <DrawingGroup x:Name="canvas">
+                                    <GeometryDrawing Brush="{DynamicResource canvas}" Geometry="F1M16,16H0V0H16Z" />
+                                </DrawingGroup>
+                                <DrawingGroup x:Name="level_1">
+                                    <DrawingGroup Opacity="{DynamicResource cls-1}">
+                                        <GeometryDrawing Brush="{DynamicResource light-red}" Geometry="F1M12.5,3.5v9h-9v-9Z" />
+                                    </DrawingGroup>
+                                    <GeometryDrawing Brush="{DynamicResource light-red}" Geometry="F1M12.5,3h-9L3,3.5v9l.5.5h9l.5-.5v-9ZM12,12H4V4h8Z" />
+                                </DrawingGroup>
+                            </DrawingGroup>
+                        </DrawingBrush.Drawing>
+                    </DrawingBrush>
+
+                    <DrawingBrush x:Key="Stop.Disabled" Stretch="None">
+                        <DrawingBrush.Drawing>
+                            <DrawingGroup>
+                                <DrawingGroup>
+                                    <GeometryDrawing Brush="{DynamicResource canvas}" Geometry="F1M16,16H0V0H16Z" />
+                                </DrawingGroup>
+                                <DrawingGroup>
+                                    <DrawingGroup Opacity="{DynamicResource cls-1}">
+                                        <GeometryDrawing Brush="{DynamicResource disabled-gray}" Geometry="F1M12.5,3.5v9h-9v-9Z" />
+                                    </DrawingGroup>
+                                    <GeometryDrawing Brush="{DynamicResource disabled-gray}" Geometry="F1M12.5,3h-9L3,3.5v9l.5.5h9l.5-.5v-9ZM12,12H4V4h8Z" />
+                                </DrawingGroup>
+                            </DrawingGroup>
+                        </DrawingBrush.Drawing>
+                    </DrawingBrush>
+                </Rectangle.Resources>
+                <Rectangle.Style>
+                    <Style TargetType="Rectangle">
+                        <Style.Triggers>
+                            <!-- Change the DrawingBrush when Button is Disabled -->
+                            <DataTrigger Binding="{Binding IsEnabled, RelativeSource={RelativeSource AncestorType=Button}}" Value="False">
+                                <Setter Property="Fill" Value="{StaticResource Stop.Disabled}" />
+                            </DataTrigger>
+                            <!-- Use normal DrawingBrush when Button is enabled -->
+                            <DataTrigger Binding="{Binding IsEnabled, RelativeSource={RelativeSource AncestorType=Button}}" Value="True">
+                                <Setter Property="Fill" Value="{StaticResource Stop.Enabled}" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Rectangle.Style>
+            </Rectangle>
+        </Viewbox>
+    </Button>
+</UserControl>
