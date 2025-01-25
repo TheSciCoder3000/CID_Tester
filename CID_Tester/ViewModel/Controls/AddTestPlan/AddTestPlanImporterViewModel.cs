@@ -53,7 +53,7 @@ public class AddTestPlanImporterViewModel : BaseViewModel
         if (openFileDialog.ShowDialog() == true)
         {
             readExcelFile(openFileDialog.FileName);
-            ((RelayCommand)SaveCommand).RaiseCanExecuteChanged();
+            onPropertyChanged(nameof(TestParameters));
         }
     }
 
