@@ -1,0 +1,70 @@
+﻿<UserControl x:Class="CID_Tester.View.Icons.Pause"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:CID_Tester.View.Icons"
+             mc:Ignorable="d" 
+             d:DesignHeight="30" d:DesignWidth="30">
+    <Button ToolTip="Stop" Command="{Binding Command, RelativeSource={RelativeSource AncestorType=UserControl}}" Style="{StaticResource IconButton}" Background="Transparent" BorderBrush="Transparent" Margin="3 0" Padding="2.5">
+        <Viewbox Width="16 " Height="16" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:System="clr-namespace:System;assembly=mscorlib">
+            <Rectangle Width="16 " Height="16">
+                <Rectangle.Resources>
+                    <SolidColorBrush x:Key="canvas" Opacity="0" />
+                    <SolidColorBrush x:Key="light-defaultgrey" Color="white" Opacity="1" />
+                    <SolidColorBrush x:Key="disabled-gray" Color="Gray" Opacity="0.6" />
+                    <System:Double x:Key="cls-1">0.75</System:Double>
+                    
+                    <DrawingBrush x:Key="Pause.Enabled" Stretch="None">
+                        <DrawingBrush.Drawing>
+                            <DrawingGroup>
+                                <DrawingGroup x:Name="canvas">
+                                    <GeometryDrawing Brush="{DynamicResource canvas}" Geometry="F1M16,16H0V0H16Z" />
+                                </DrawingGroup>
+                                <DrawingGroup x:Name="level_1">
+                                    <DrawingGroup Opacity="{DynamicResource cls-1}">
+                                        <GeometryDrawing Brush="{DynamicResource light-defaultgrey}" Geometry="F1M6.5,3.5v9h-3v-9Z" />
+                                        <GeometryDrawing Brush="{DynamicResource light-defaultgrey}" Geometry="F1M12.5,3.5v9h-3v-9Z" />
+                                    </DrawingGroup>
+                                    <GeometryDrawing Brush="{DynamicResource light-defaultgrey}" Geometry="F1M12.5,3h-3L9,3.5v9l.5.5h3l.5-.5v-9ZM12,12H10V4h2ZM6.5,3h-3L3,3.5v9l.5.5h3l.5-.5v-9ZM6,12H4V4H6Z" />
+                                </DrawingGroup>
+                            </DrawingGroup>
+                        </DrawingBrush.Drawing>
+                    </DrawingBrush>
+
+                    <DrawingBrush x:Key="Pause.Disabled" Stretch="None">
+                        <DrawingBrush.Drawing>
+                            <DrawingGroup>
+                                <DrawingGroup>
+                                    <GeometryDrawing Brush="{DynamicResource canvas}" Geometry="F1M16,16H0V0H16Z" />
+                                </DrawingGroup>
+                                <DrawingGroup>
+                                    <DrawingGroup Opacity="{DynamicResource cls-1}">
+                                        <GeometryDrawing Brush="{DynamicResource disabled-gray}" Geometry="F1M6.5,3.5v9h-3v-9Z" />
+                                        <GeometryDrawing Brush="{DynamicResource disabled-gray}" Geometry="F1M12.5,3.5v9h-3v-9Z" />
+                                    </DrawingGroup>
+                                    <GeometryDrawing Brush="{DynamicResource disabled-gray}" Geometry="F1M12.5,3h-3L9,3.5v9l.5.5h3l.5-.5v-9ZM12,12H10V4h2ZM6.5,3h-3L3,3.5v9l.5.5h3l.5-.5v-9ZM6,12H4V4H6Z" />
+                                </DrawingGroup>
+                            </DrawingGroup>
+                        </DrawingBrush.Drawing>
+                    </DrawingBrush>
+                </Rectangle.Resources>
+                
+                <Rectangle.Style>
+                    <Style TargetType="Rectangle">
+                        <Style.Triggers>
+                            <!-- Change the DrawingBrush when Button is Disabled -->
+                            <DataTrigger Binding="{Binding IsEnabled, RelativeSource={RelativeSource AncestorType=Button}}" Value="False">
+                                <Setter Property="Fill" Value="{StaticResource Pause.Disabled}" />
+                            </DataTrigger>
+                            <!-- Use normal DrawingBrush when Button is enabled -->
+                            <DataTrigger Binding="{Binding IsEnabled, RelativeSource={RelativeSource AncestorType=Button}}" Value="True">
+                                <Setter Property="Fill" Value="{StaticResource Pause.Enabled}" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Rectangle.Style>
+            </Rectangle>
+        </Viewbox>
+    </Button>
+</UserControl>

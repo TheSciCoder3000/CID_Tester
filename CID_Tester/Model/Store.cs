@@ -4,11 +4,28 @@ using CID_Tester.ViewModel;
 
 namespace CID_Tester.Model
 {
+    public enum TestingMode
+    {
+        Start,
+        Pause,
+        Stop
+    }
+
     public class Store
     {
         private readonly IDbProvider _dbProvider;
         private readonly IDbCreator _dbCreator;
 
+        private TestingMode _testing = TestingMode.Stop;
+        public TestingMode Testing
+        {
+            get => _testing;
+            set
+            {
+                _testing = value;
+                OnTesting?.Invoke(value);
+            }
+        }
         public IEnumerable<DUT> DUTs { get; private set; } = [];
         public TEST_USER TestUser { get; private set; }
 
@@ -43,6 +60,8 @@ namespace CID_Tester.Model
         public event Action<IEnumerable<BaseViewModel>> OnAnchorableAdded;
         public event Action<IEnumerable<BaseViewModel>> OnAnchorableRemoved;
 
+        public event Action<TestingMode> OnTesting;
+
         #endregion
 
         public Store(IDbProvider dbProvider, IDbCreator dbCreator, TEST_USER testUser, IEnumerable<BaseViewModel> documents)
@@ -54,6 +73,13 @@ namespace CID_Tester.Model
 
             LoadDut();
         }
+
+        #region Testing Functions
+        public bool canTest
+        {
+            get => (TestPlan != null || TestPlan?.TEST_PARAMETERS.Count > 0);
+        }
+        #endregion
 
         #region Document Functions
 

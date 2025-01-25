@@ -45,6 +45,7 @@ public class TestPlanViewModel : BaseViewModel, IDocument
     {
         _AppStore = appStore;
         _AppStore.OnTestParameterUpdated += LoadTestParameters;
+        LoadTestParameters(_AppStore.TestPlan!.TEST_PARAMETERS);
 
         Title = "Test Plan";
         CloseCommand = new RelayCommand(CloseCommandHanlder);

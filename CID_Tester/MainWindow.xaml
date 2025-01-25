@@ -4,6 +4,7 @@
         xmlns:avalonDock="https://github.com/Dirkster99/AvalonDock"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:System="clr-namespace:System;assembly=mscorlib"
         xmlns:local="clr-namespace:CID_Tester"
         xmlns:vm="clr-namespace:CID_Tester.ViewModel"
         xmlns:StyleSelector="clr-namespace:CID_Tester.ViewModel.StyleSelectors"
@@ -15,6 +16,8 @@
         xmlns:AnchVm="clr-namespace:CID_Tester.ViewModel.Anchorables"
         
         xmlns:controls="clr-namespace:CID_Tester.View.Controls"
+        xmlns:icon="clr-namespace:CID_Tester.View.Icons"
+        
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800"
         WindowState="Maximized"
@@ -47,14 +50,27 @@
             <Setter Property="Title" Value="{Binding Model.Title}" />
             <Setter Property="HideCommand" Value="{Binding Model.CloseCommand}" />
         </Style>
+        <Style x:Key="ComboBoxStyle1" TargetType="{x:Type ComboBox}">
+            <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}"/>
+            <Setter Property="Background" Value="#292930"/>
+            <Setter Property="BorderBrush" Value="{StaticResource ComboBox.Static.Border}"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto"/>
+            <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto"/>
+            <Setter Property="Padding" Value="6,3,5,3"/>
+            <Setter Property="ScrollViewer.CanContentScroll" Value="true"/>
+            <Setter Property="ScrollViewer.PanningMode" Value="Both"/>
+            <Setter Property="Stylus.IsFlicksEnabled" Value="False"/>
+            <Setter Property="Template" Value="{StaticResource ComboBoxTemplate}"/>
+        </Style>
     </Window.Resources>
-    
     <Grid x:Name="LayoutRoot">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        
         <Menu Grid.Row="0" Background="#404040" Foreground="#f0f0f0">
             <MenuItem Header="Edit">
                 <MenuItem Command="Undo" />
@@ -91,8 +107,21 @@
             </MenuItem>
         </Menu>
 
+        <ToolBarPanel DataContext="{Binding toolbarViewModel}" Grid.Row="1" ClipToBounds="True" Background="#404040">
+            <ToolBar Background="#404040" Padding="0 3" Loaded="ToolBar_Loaded">
+                <icon:TestPlanFormBtn Command="{Binding AddTestPlanCommand}" />
+                <icon:TestImporterBtn Command="{Binding ImportTestPlanCommand}" />
+                <ComboBox IsEnabled="{Binding NotLocked}" ItemsSource="{Binding TestPlans}" SelectedItem="{Binding SelectedTestPlan}" DisplayMemberPath="Name" Margin="5 0" Style="{DynamicResource ComboBoxStyle1}" MinWidth="150" />
+                <Separator Background="#757575" />
+                <icon:Play Command="{Binding PlayTestCommand}" />
+                <icon:Pause Command="{Binding PauseTestCommand}" />
+                <icon:Stop Command="{Binding StopTestCommand}" />
+            </ToolBar>
+        </ToolBarPanel>
+
+
         <DockingManager x:Name="dockManager"
-            Grid.Row="1"
+            Grid.Row="2"
             DocumentsSource="{Binding Documents}"
             ActiveContent="{Binding ActiveDocument, Mode=TwoWay}"
             AnchorablesSource="{Binding Anchorables}"
