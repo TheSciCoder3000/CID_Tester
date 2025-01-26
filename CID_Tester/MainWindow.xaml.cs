@@ -3,6 +3,7 @@ using AvalonDock.Layout.Serialization;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace CID_Tester
 {
@@ -103,18 +104,27 @@ namespace CID_Tester
 
         }
 
+        private bool mRestoreIfMove = false;
         private void CustomTitleBar_MinimizeClick(object sender, RoutedEventArgs e) => WindowState = WindowState.Minimized;
 
-        private void CustomTitleBar_MaximizeClick(object sender, RoutedEventArgs e)
-        {
-            if (WindowState == WindowState.Maximized) WindowState = WindowState.Normal;
-            else WindowState = WindowState.Maximized;
-        }
+        private void CustomTitleBar_MaximizeClick(object sender, RoutedEventArgs e) => AdjustWindowSize();
 
         private void CustomTitleBar_CloseClick(object sender, RoutedEventArgs e) => Application.Current.Shutdown();
 
+        private void CustomTitleBar_MouseUp(object sender, MouseButtonEventArgs e) => mRestoreIfMove = false;
+
         private void CustomTitleBar_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
+            if (e.ClickCount == 2)
+            {
+                AdjustWindowSize();
+                return;
+            }
+            else if (WindowState == WindowState.Maximized)
+            {
+                mRestoreIfMove = true;
+                return;
+            }
             DragMove();
         }
 
@@ -127,6 +137,35 @@ namespace CID_Tester
             else
             {
                 WindowBorder.BorderThickness = new System.Windows.Thickness(0);
+            }
+        }
+
+        private void AdjustWindowSize()
+        {
+            if (WindowState == WindowState.Maximized) WindowState = WindowState.Normal;
+            else WindowState = WindowState.Maximized;
+        }
+
+        private void CustomTitleBar_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (mRestoreIfMove)
+            {
+                mRestoreIfMove = false;
+
+                double percentHorizontal = e.GetPosition(this).X / ActualWidth;
+                double targetHorizontal = RestoreBounds.Width * percentHorizontal;
+
+                double percentVertical = e.GetPosition(this).Y / ActualHeight;
+                double targetVertical = RestoreBounds.Height * percentVertical;
+
+                WindowState = WindowState.Normal;
+
+                Point lMousePosition = Mouse.GetPosition(this);
+
+                Left = lMousePosition.X - targetHorizontal;
+                Top = lMousePosition.Y - targetVertical;
+
+                DragMove();
             }
         }
     }

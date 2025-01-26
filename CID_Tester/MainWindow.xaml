@@ -84,11 +84,13 @@
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
             <controls:CustomTitleBar
-            MouseLeftButtonDown="CustomTitleBar_MouseLeftButtonDown"
-            MinimizeClick="CustomTitleBar_MinimizeClick" 
-            MaximizeClick="CustomTitleBar_MaximizeClick" 
-            CloseClick="CustomTitleBar_CloseClick" 
-            Grid.Row="0" />
+                MouseMove="CustomTitleBar_MouseMove"
+                MouseUp="CustomTitleBar_MouseUp"
+                MouseLeftButtonDown="CustomTitleBar_MouseLeftButtonDown"
+                MinimizeClick="CustomTitleBar_MinimizeClick" 
+                MaximizeClick="CustomTitleBar_MaximizeClick" 
+                CloseClick="CustomTitleBar_CloseClick" 
+                Grid.Row="0" />
 
             <ToolBarPanel DataContext="{Binding toolbarViewModel}" Grid.Row="1" ClipToBounds="True" Background="#404040">
                 <ToolBar Background="#404040" Padding="0 3" Loaded="ToolBar_Loaded">
