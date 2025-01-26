@@ -21,7 +21,10 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800"
         WindowState="Maximized"
-        UseLayoutRounding="True">
+        UseLayoutRounding="True"
+        WindowStyle="None"
+        Background="Transparent"
+        SizeChanged="Window_SizeChanged">
     <Window.Resources>
         <DataTemplate DataType="{x:Type DocVm:DashboardViewModel}">
             <documents:DashboardView />
@@ -65,62 +68,42 @@
             <Setter Property="Template" Value="{StaticResource ComboBoxTemplate}"/>
         </Style>
     </Window.Resources>
-    <Grid x:Name="LayoutRoot">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
-        <Menu Grid.Row="0" Background="#404040" Foreground="#f0f0f0">
-            <MenuItem Header="Edit">
-                <MenuItem Command="Undo" />
-                <MenuItem Command="Redo" />
-                <Separator />
-                <MenuItem Command="Cut" />
-                <MenuItem Command="Copy" />
-                <MenuItem Command="Paste" />
-            </MenuItem>
-            <MenuItem Header="Layout">
-                <MenuItem Header="Save">
-                    <MenuItem Click="OnSaveLayout" Header="Layout_1" />
-                    <MenuItem Click="OnSaveLayout" Header="Layout_2" />
-                    <MenuItem Click="OnSaveLayout" Header="Layout_3" />
-                    <MenuItem Click="OnSaveLayout" Header="Layout_4" />
-                    <MenuItem Click="OnSaveLayout" Header="Layout_5" />
-                </MenuItem>
-                <MenuItem Header="Load">
-                    <MenuItem Click="OnLoadLayout" Header="Layout_1" />
-                    <MenuItem Click="OnLoadLayout" Header="Layout_2" />
-                    <MenuItem Click="OnLoadLayout" Header="Layout_3" />
-                    <MenuItem Click="OnLoadLayout" Header="Layout_4" />
-                    <MenuItem Click="OnLoadLayout" Header="Layout_5" />
-                </MenuItem>
-                <MenuItem Click="OnDumpToConsole" Header="Dump To Console" />
-                <MenuItem Click="OnUnloadManager" Header="Unload Manager" />
-                <MenuItem Click="OnLoadManager" Header="Load Manager" />
-                <MenuItem Click="OnShowHeader" Header="Show header" />
-            </MenuItem>
-            <MenuItem Header="Tools">
-                <MenuItem Click="OnShowWinformsWindow" Header="WinForms Window" />
-                <MenuItem Click="OnShowToolWindow1" Header="Tool Window1" />
-                <MenuItem Click="OnNewFloatingWindow" Header="New floating window" />
-            </MenuItem>
-        </Menu>
+    <WindowChrome.WindowChrome>
+        <WindowChrome     
+            CaptionHeight="1"  
+            CornerRadius="10"
+            ResizeBorderThickness="4"         
+            GlassFrameThickness="0">
+        </WindowChrome>
+    </WindowChrome.WindowChrome>
+    <Border x:Name="WindowBorder" CornerRadius="8" BorderBrush="#404040" BorderThickness="0" Padding="6" Background="#404040">
+        <Grid x:Name="LayoutRoot">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="30" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <controls:CustomTitleBar
+            MouseLeftButtonDown="CustomTitleBar_MouseLeftButtonDown"
+            MinimizeClick="CustomTitleBar_MinimizeClick" 
+            MaximizeClick="CustomTitleBar_MaximizeClick" 
+            CloseClick="CustomTitleBar_CloseClick" 
+            Grid.Row="0" />
 
-        <ToolBarPanel DataContext="{Binding toolbarViewModel}" Grid.Row="1" ClipToBounds="True" Background="#404040">
-            <ToolBar Background="#404040" Padding="0 3" Loaded="ToolBar_Loaded">
-                <icon:TestPlanFormBtn Command="{Binding AddTestPlanCommand}" />
-                <icon:TestImporterBtn Command="{Binding ImportTestPlanCommand}" />
-                <ComboBox IsEnabled="{Binding NotLocked}" ItemsSource="{Binding TestPlans}" SelectedItem="{Binding SelectedTestPlan}" DisplayMemberPath="Name" Margin="5 0" Style="{DynamicResource ComboBoxStyle1}" MinWidth="150" />
-                <Separator Background="#757575" />
-                <icon:Play Command="{Binding PlayTestCommand}" />
-                <icon:Pause Command="{Binding PauseTestCommand}" />
-                <icon:Stop Command="{Binding StopTestCommand}" />
-            </ToolBar>
-        </ToolBarPanel>
+            <ToolBarPanel DataContext="{Binding toolbarViewModel}" Grid.Row="1" ClipToBounds="True" Background="#404040">
+                <ToolBar Background="#404040" Padding="0 3" Loaded="ToolBar_Loaded">
+                    <icon:TestPlanFormBtn Command="{Binding AddTestPlanCommand}" />
+                    <icon:TestImporterBtn Command="{Binding ImportTestPlanCommand}" />
+                    <ComboBox IsEnabled="{Binding NotLocked}" ItemsSource="{Binding TestPlans}" SelectedItem="{Binding SelectedTestPlan}" DisplayMemberPath="Name" Margin="5 0" Style="{DynamicResource ComboBoxStyle1}" MinWidth="150" />
+                    <Separator Background="#757575" />
+                    <icon:Play Command="{Binding PlayTestCommand}" />
+                    <icon:Pause Command="{Binding PauseTestCommand}" />
+                    <icon:Stop Command="{Binding StopTestCommand}" />
+                </ToolBar>
+            </ToolBarPanel>
 
 
-        <DockingManager x:Name="dockManager"
+            <DockingManager x:Name="dockManager"
             Grid.Row="2"
             DocumentsSource="{Binding Documents}"
             ActiveContent="{Binding ActiveDocument, Mode=TwoWay}"
@@ -130,41 +113,42 @@
             IsVirtualizingAnchorable="True"
             IsVirtualizingDocument="True">
 
-            <DockingManager.Theme>
-                <avalonDock:Vs2013DarkTheme />
-            </DockingManager.Theme>
+                <DockingManager.Theme>
+                    <avalonDock:Vs2013DarkTheme />
+                </DockingManager.Theme>
 
-            <DockingManager.LayoutItemContainerStyleSelector>
-                <StyleSelector:ItemStyleSelector DocumentStyle="{StaticResource DocumentStyle}" AnchorableStyle="{StaticResource AnchorableStyle}" />
-            </DockingManager.LayoutItemContainerStyleSelector>
+                <DockingManager.LayoutItemContainerStyleSelector>
+                    <StyleSelector:ItemStyleSelector DocumentStyle="{StaticResource DocumentStyle}" AnchorableStyle="{StaticResource AnchorableStyle}" />
+                </DockingManager.LayoutItemContainerStyleSelector>
 
-            <DockingManager.LayoutUpdateStrategy>
-                <vm:LayoutInitializer />
-            </DockingManager.LayoutUpdateStrategy>
+                <DockingManager.LayoutUpdateStrategy>
+                    <vm:LayoutInitializer />
+                </DockingManager.LayoutUpdateStrategy>
 
-            <LayoutRoot>
-                <LayoutPanel Orientation="Horizontal">
-                    <LayoutAnchorablePane DockWidth="200">
-                        <LayoutAnchorable
+                <LayoutRoot>
+                    <LayoutPanel Orientation="Horizontal">
+                        <LayoutAnchorablePane DockWidth="200">
+                            <LayoutAnchorable
                             Title="Explorer"
                             CanClose="False"
                             CanHide="False"
                             ContentId="WinFormsWindow"
                             ToolTip="My WinForms Tool">
-                            <controls:NavigationControl x:Name="navigationBar" HorizontalAlignment="Stretch" VerticalAlignment="Top" />
-                        </LayoutAnchorable>
-                    </LayoutAnchorablePane>
+                                <controls:NavigationControl x:Name="navigationBar" HorizontalAlignment="Stretch" VerticalAlignment="Top" />
+                            </LayoutAnchorable>
+                        </LayoutAnchorablePane>
 
 
-                    <LayoutDocumentPaneGroup>
-                        <LayoutDocumentPane x:Name="LayoutDocumentPane">
-                        </LayoutDocumentPane>
-                    </LayoutDocumentPaneGroup>
-                    
-                    
-                </LayoutPanel>
-            </LayoutRoot>
+                        <LayoutDocumentPaneGroup>
+                            <LayoutDocumentPane x:Name="LayoutDocumentPane">
+                            </LayoutDocumentPane>
+                        </LayoutDocumentPaneGroup>
 
-        </DockingManager>
-    </Grid>
+
+                    </LayoutPanel>
+                </LayoutRoot>
+
+            </DockingManager>
+        </Grid>
+    </Border>
 </Window>

@@ -103,5 +103,31 @@ namespace CID_Tester
 
         }
 
+        private void CustomTitleBar_MinimizeClick(object sender, RoutedEventArgs e) => WindowState = WindowState.Minimized;
+
+        private void CustomTitleBar_MaximizeClick(object sender, RoutedEventArgs e)
+        {
+            if (WindowState == WindowState.Maximized) WindowState = WindowState.Normal;
+            else WindowState = WindowState.Maximized;
+        }
+
+        private void CustomTitleBar_CloseClick(object sender, RoutedEventArgs e) => Application.Current.Shutdown();
+
+        private void CustomTitleBar_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            DragMove();
+        }
+
+        private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            if (this.WindowState == WindowState.Maximized)
+            {
+                WindowBorder.BorderThickness = new System.Windows.Thickness(2);
+            }
+            else
+            {
+                WindowBorder.BorderThickness = new System.Windows.Thickness(0);
+            }
+        }
     }
 }
