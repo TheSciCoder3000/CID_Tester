@@ -49,7 +49,7 @@ public partial class DashboardMetricControl : UserControl
 
             TextBlock text = new TextBlock
             {
-                Text = (test.Pass == 1) ? "PASS" : "FAIL",
+                Text = (test.Pass == true) ? "PASS" : "FAIL",
                 FontWeight = FontWeights.Bold,
                 Padding = new Thickness(10),
                 Foreground = Brushes.White,
@@ -60,7 +60,7 @@ public partial class DashboardMetricControl : UserControl
             {
                 Child = text,
                 Padding = new Thickness(5),
-                Background = (test.Pass == 1) ? Brushes.Green : Brushes.Red
+                Background = (test.Pass == true) ? Brushes.Green : Brushes.Red
             };
             Grid.SetRow(border, row_count);
             Grid.SetColumn(border, 4);

@@ -1,11 +1,5 @@
 ﻿using CID_Tester.Model;
 using CID_Tester.ViewModel.Command;
-using Microsoft.Identity.Client;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace CID_Tester.ViewModel.Windows;
@@ -38,9 +32,7 @@ public class AddParameterViewModel : BaseViewModel
                         Name=Name, 
                         Description=Description, 
                         Metric= Metric, 
-                        Value=0, 
                         Target=Target, 
-                        Pass=0, 
                         Parameters="",
                         TestPlan = _AppStore.TestPlan
                     }

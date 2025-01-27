@@ -22,13 +22,12 @@ namespace CID_Tester.Model
         [Required]
         public string Metric { get; set; } = null!;
 
-        [Required]
-        public decimal Value { get; set; }
+        public decimal? Value { get; set; }
 
         [Required]
         public decimal Target { get; set; }
 
-        public int? Pass { get; set; }
+        public bool? Pass { get; set; }
 
         [Required]
         public string Parameters { get; set; }
