@@ -4,32 +4,18 @@ namespace CID_Tester.ViewModel
 {
     public class DashboardMetricViewModel : BaseViewModel
     {
-        private string _dutName = null!;
-        public string DUTName
-        {
-            get { return _dutName; }
-            set
-            {
-                _dutName = value;
-                onPropertyChanged(nameof(DUTName));
-            }
-        }
+        private readonly Store _AppStore;
+        public string DUTName { get => _AppStore.TestPlan!.DUT.DutName; }
+        public string DUTDescription { get => _AppStore.TestPlan!.DUT.Description; }
+        public string TotalNumberTests { get => $"{_AppStore.TestPlan!.TEST_PARAMETERS.Count} tests"; }
+        public string TestsPassed { get => $"{_AppStore.TestPlan!.TEST_PARAMETERS.Where(par => par.Pass == true).Count()} PASSED"; }
+        public string TestsFailed { get => $"{_AppStore.TestPlan!.TEST_PARAMETERS.Where(par => par.Pass == true).Count()} FAILED"; }
+        public string TestStatus { get => $"{_AppStore.Testing}"; }
 
-        private string _dutDescription = null!;
-        public string DUTDescription
+        public DashboardMetricViewModel(Store appStore)
         {
-            get { return _dutDescription; }
-            set
-            {
-                _dutDescription = value;
-                onPropertyChanged(nameof(DUTDescription));
-            }
-        }
-
-        public DashboardMetricViewModel(TEST_PLAN testPlan)
-        {
-            DUTName = testPlan.DUT.Description;
-            DUTDescription = testPlan.DUT.Description;
+            _AppStore = appStore;
+            _AppStore.OnTesting += (TestingMode _) => onPropertyChanged(nameof(TestStatus));
         }
     }
 }

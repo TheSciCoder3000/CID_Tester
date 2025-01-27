@@ -51,7 +51,7 @@ public class DashboardViewModel : BaseViewModel, IDocument
         {
             TestPlanStatusControl = new DashboardMetricControl()
             {
-                DataContext = new DashboardMetricViewModel(testPlan)
+                DataContext = new DashboardMetricViewModel(_AppStore)
             };
         }
     }

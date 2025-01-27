@@ -23,25 +23,25 @@
                 <StackPanel Orientation="Vertical" Margin="15">
                     <TextBlock Text="{Binding DUTName}" FontSize="16" />
                     <TextBlock Text="{Binding DUTDescription}" FontSize="13" Foreground="#60ffffff" Margin="0,5" />
-                    <TextBlock Text="Test Pending" FontSize="13" Margin="0,40,0,0" VerticalAlignment="Stretch" TextAlignment="Right" Foreground="Red" />
+                    <TextBlock Text="{Binding TestStatus, UpdateSourceTrigger=PropertyChanged}" FontSize="13" Margin="0,40,0,0" VerticalAlignment="Stretch" TextAlignment="Right" Foreground="Red" />
                 </StackPanel>
             </Border>
 
             <Border CornerRadius="7" Background="#2D2D30" Grid.Column="2">
                 <Grid Margin="10" VerticalAlignment="Center" HorizontalAlignment="Center">
-                    <TextBlock FontSize="15" Text="{Binding TotalNumberTests}" TextAlignment="Center" FontWeight="Bold" />
+                    <TextBlock FontSize="20" Text="{Binding TotalNumberTests}" TextAlignment="Center" FontWeight="Bold" />
                 </Grid>
             </Border>
 
             <Border CornerRadius="7" Background="#2D2D30" Grid.Column="4">
                 <Grid Margin="10" VerticalAlignment="Center" HorizontalAlignment="Center">
-                    <TextBlock FontSize="20" Foreground="#1FB151" Text="0 PASSED" FontWeight="Bold" TextAlignment="Center" />
+                    <TextBlock FontSize="20" Foreground="#1FB151" Text="{Binding TestsPassed}" FontWeight="Bold" TextAlignment="Center" />
                 </Grid>
             </Border>
 
             <Border CornerRadius="7" Background="#2D2D30" Grid.Column="6">
                 <Grid Margin="10" VerticalAlignment="Center" HorizontalAlignment="Center">
-                    <TextBlock FontSize="20" Foreground="#FF6B00" FontWeight="Bold" Text="0 FAILED" TextAlignment="Center" />
+                    <TextBlock FontSize="20" Foreground="#FF6B00" FontWeight="Bold" Text="{Binding TestsFailed}" TextAlignment="Center" />
                 </Grid>
             </Border>
         </Grid>
