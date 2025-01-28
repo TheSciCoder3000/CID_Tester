@@ -23,7 +23,23 @@
                 <StackPanel Orientation="Vertical" Margin="15">
                     <TextBlock Text="{Binding DUTName}" FontSize="16" />
                     <TextBlock Text="{Binding DUTDescription}" FontSize="13" Foreground="#60ffffff" Margin="0,5" />
-                    <TextBlock Text="{Binding TestStatus, UpdateSourceTrigger=PropertyChanged}" FontSize="13" Margin="0,40,0,0" VerticalAlignment="Stretch" TextAlignment="Right" Foreground="Red" />
+                    <TextBlock Text="{Binding TestStatus, UpdateSourceTrigger=PropertyChanged}" FontSize="13" Margin="0,40,0,0" VerticalAlignment="Stretch" TextAlignment="Right">
+                        <TextBlock.Style>
+                            <Style TargetType="TextBlock">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding Text, RelativeSource={RelativeSource Self}}" Value="Testing In Progress">
+                                        <Setter Property="Foreground" Value="Green" />
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding Text, RelativeSource={RelativeSource Self}}" Value="Testing on Hold">
+                                        <Setter Property="Foreground" Value="Orange" />
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding Text, RelativeSource={RelativeSource Self}}" Value="Testing Stopped">
+                                        <Setter Property="Foreground" Value="Red" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBlock.Style>
+                    </TextBlock>
                 </StackPanel>
             </Border>
 

@@ -10,7 +10,18 @@ namespace CID_Tester.ViewModel
         public string TotalNumberTests { get => $"{_AppStore.TestPlan!.TEST_PARAMETERS.Count} tests"; }
         public string TestsPassed { get => $"{_AppStore.TestPlan!.TEST_PARAMETERS.Where(par => par.Pass == true).Count()} PASSED"; }
         public string TestsFailed { get => $"{_AppStore.TestPlan!.TEST_PARAMETERS.Where(par => par.Pass == true).Count()} FAILED"; }
-        public string TestStatus { get => $"{_AppStore.Testing}"; }
+        public string TestStatus
+        {
+            get
+            {
+                switch (_AppStore.Testing)
+                {
+                    case TestingMode.Start: return "Testing In Progress";
+                    case TestingMode.Pause: return "Testing on Hold";
+                    default: return "Testing Stopped";
+                }
+            }
+        }
 
         public DashboardMetricViewModel(Store appStore)
         {
