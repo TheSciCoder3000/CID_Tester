@@ -4,62 +4,94 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:CID_Tester.View.Icons"
-             mc:Ignorable="d" d:DesignWidth="30" d:DesignHeight="30">
-    <Button ToolTip="Start" Command="{Binding Command, RelativeSource={RelativeSource AncestorType=UserControl}}" Style="{StaticResource IconButton}" Background="Transparent" BorderBrush="Transparent" Margin="3 0" Padding="2.5">
+             mc:Ignorable="d" d:DesignWidth="100" d:DesignHeight="31">
+    <Button HorizontalContentAlignment="Left" ToolTip="Start" Command="{Binding Command, RelativeSource={RelativeSource AncestorType=UserControl}}" BorderBrush="Transparent" Margin="3 0">
         <Button.Content>
-            <Viewbox Width="16" Height="16">
-                <Rectangle Width="16" Height="16">
-                    <Rectangle.Resources>
-                        <!-- Brushes for different states -->
-                        <SolidColorBrush x:Key="canvas" Opacity="0" />
-                        <SolidColorBrush x:Key="light-green" Color="#1f801f" Opacity="1" />
-                        <SolidColorBrush x:Key="disabled-color" Color="Gray" Opacity="0.6" />
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                <Viewbox Width="16" Height="16">
+                    <Rectangle Width="16" Height="16">
+                        <Rectangle.Resources>
+                            <!-- Brushes for different states -->
+                            <SolidColorBrush x:Key="canvas" Opacity="0" />
+                            <SolidColorBrush x:Key="light-green" Color="#1f801f" Opacity="1" />
+                            <SolidColorBrush x:Key="disabled-color" Color="Gray" Opacity="0.6" />
 
-                        <!-- DrawingBrush for normal state -->
-                        <DrawingBrush x:Key="NormalBrush" Stretch="None">
-                            <DrawingBrush.Drawing>
-                                <DrawingGroup>
-                                    <DrawingGroup x:Name="canvas">
-                                        <GeometryDrawing Brush="{DynamicResource canvas}" Geometry="F1M16,16H0V0H16Z" />
+                            <!-- DrawingBrush for normal state -->
+                            <DrawingBrush x:Key="NormalBrush" Stretch="None">
+                                <DrawingBrush.Drawing>
+                                    <DrawingGroup>
+                                        <DrawingGroup x:Name="canvas">
+                                            <GeometryDrawing Brush="{DynamicResource canvas}" Geometry="F1M16,16H0V0H16Z" />
+                                        </DrawingGroup>
+                                        <DrawingGroup x:Name="level_1">
+                                            <GeometryDrawing Brush="{DynamicResource light-green}" Geometry="F1M3.777,1.084,3,1.5v12l.777.416,9-6V7.084Z" />
+                                        </DrawingGroup>
                                     </DrawingGroup>
-                                    <DrawingGroup x:Name="level_1">
-                                        <GeometryDrawing Brush="{DynamicResource light-green}" Geometry="F1M3.777,1.084,3,1.5v12l.777.416,9-6V7.084Z" />
-                                    </DrawingGroup>
-                                </DrawingGroup>
-                            </DrawingBrush.Drawing>
-                        </DrawingBrush>
+                                </DrawingBrush.Drawing>
+                            </DrawingBrush>
 
-                        <!-- DrawingBrush for disabled state -->
-                        <DrawingBrush x:Key="DisabledBrush" Stretch="None">
-                            <DrawingBrush.Drawing>
-                                <DrawingGroup>
-                                    <DrawingGroup x:Name="canv">
-                                        <GeometryDrawing Brush="{DynamicResource canvas}" Geometry="F1M16,16H0V0H16Z" />
+                            <!-- DrawingBrush for disabled state -->
+                            <DrawingBrush x:Key="DisabledBrush" Stretch="None">
+                                <DrawingBrush.Drawing>
+                                    <DrawingGroup>
+                                        <DrawingGroup x:Name="canv">
+                                            <GeometryDrawing Brush="{DynamicResource canvas}" Geometry="F1M16,16H0V0H16Z" />
+                                        </DrawingGroup>
+                                        <DrawingGroup x:Name="leve">
+                                            <GeometryDrawing Brush="{DynamicResource disabled-color}" Geometry="F1M3.777,1.084,3,1.5v12l.777.416,9-6V7.084Z" />
+                                        </DrawingGroup>
                                     </DrawingGroup>
-                                    <DrawingGroup x:Name="leve">
-                                        <GeometryDrawing Brush="{DynamicResource disabled-color}" Geometry="F1M3.777,1.084,3,1.5v12l.777.416,9-6V7.084Z" />
-                                    </DrawingGroup>
-                                </DrawingGroup>
-                            </DrawingBrush.Drawing>
-                        </DrawingBrush>
-                    </Rectangle.Resources>
+                                </DrawingBrush.Drawing>
+                            </DrawingBrush>
+                        </Rectangle.Resources>
 
-                    <Rectangle.Style>
-                        <Style TargetType="Rectangle">
+                        <Rectangle.Style>
+                            <Style TargetType="Rectangle">
+                                <Style.Triggers>
+                                    <!-- Change the DrawingBrush when Button is Disabled -->
+                                    <DataTrigger Binding="{Binding IsEnabled, RelativeSource={RelativeSource AncestorType=Button}}" Value="False">
+                                        <Setter Property="Fill" Value="{StaticResource DisabledBrush}" />
+                                    </DataTrigger>
+                                    <!-- Use normal DrawingBrush when Button is enabled -->
+                                    <DataTrigger Binding="{Binding IsEnabled, RelativeSource={RelativeSource AncestorType=Button}}" Value="True">
+                                        <Setter Property="Fill" Value="{StaticResource NormalBrush}" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Rectangle.Style>
+                    </Rectangle>
+                </Viewbox>
+                <!--<TextBlock Text="{Binding ButtonText, RelativeSource={RelativeSource AncestorType=UserControl}}" />-->
+                <TextBlock x:Name="iconText" Text="{Binding ButtonText, RelativeSource={RelativeSource AncestorType=UserControl}}">
+                    <TextBlock.Style>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="Foreground" Value="White" />
                             <Style.Triggers>
-                                <!-- Change the DrawingBrush when Button is Disabled -->
-                                <DataTrigger Binding="{Binding IsEnabled, RelativeSource={RelativeSource AncestorType=Button}}" Value="False">
-                                    <Setter Property="Fill" Value="{StaticResource DisabledBrush}" />
+                                <DataTrigger Binding="{Binding Text, RelativeSource={RelativeSource Self}}" Value="Start">
+                                    <Setter Property="Margin" Value="10 0 0 0" />
                                 </DataTrigger>
-                                <!-- Use normal DrawingBrush when Button is enabled -->
-                                <DataTrigger Binding="{Binding IsEnabled, RelativeSource={RelativeSource AncestorType=Button}}" Value="True">
-                                    <Setter Property="Fill" Value="{StaticResource NormalBrush}" />
+                                <DataTrigger Binding="{Binding IsEnabled, RelativeSource={RelativeSource AncestorType=Button}}" Value="False">
+                                    <Setter Property="Foreground" Value="#808080" />
                                 </DataTrigger>
                             </Style.Triggers>
                         </Style>
-                    </Rectangle.Style>
-                </Rectangle>
-            </Viewbox>
+                    </TextBlock.Style>
+                </TextBlock>
+            </StackPanel>
         </Button.Content>
+        <Button.Style>
+            <Style TargetType="Button" BasedOn="{StaticResource IconButton}">
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding Text, ElementName=iconText}" Value="Start">
+                        <Setter Property="Background" Value="#404040" />
+                        <Setter Property="Padding" Value="10 3" />
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding Text, ElementName=iconText}" Value="">
+                        <Setter Property="Background" Value="Transparent" />
+                        <Setter Property="Padding" Value="2.5" />
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+        </Button.Style>
     </Button>
 </UserControl>

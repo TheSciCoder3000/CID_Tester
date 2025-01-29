@@ -34,6 +34,10 @@ public class DashboardViewModel : BaseViewModel, IDocument
     public ICommand NavigateToTestPlanCommand { get; }
     public ICommand CloseCommand { get; }
 
+    public RelayCommand StartTestCommand => new RelayCommand(execute => PlayTestHandller(), canExecute => canPlay());
+    public RelayCommand PauseTestCommand => new RelayCommand(execute => PauseTestHandler(), canExecute => canPause());
+    public RelayCommand StopTestCommand => new RelayCommand(execute => StopTestHandler(), canExecute => canStop());
+
     public DashboardViewModel(Store appStore, ICommand navigateToTestPlanCommand)
     {
         _AppStore = appStore;
@@ -46,6 +50,17 @@ public class DashboardViewModel : BaseViewModel, IDocument
         LoadTestMetrics(_AppStore.TestPlan);
 
     }
+
+    #region Relay Command Handlers
+    private void PlayTestHandller() => _AppStore.Testing = TestingMode.Start;
+    private bool canPlay() => _AppStore.canTest && _AppStore.Testing != TestingMode.Start;
+    private void StopTestHandler() => _AppStore.Testing = TestingMode.Stop;
+
+    private void PauseTestHandler() => _AppStore.Testing = TestingMode.Pause;
+    private bool canPause() => _AppStore.canTest && _AppStore.Testing == TestingMode.Start;
+    private bool canStop() => _AppStore.canTest && (_AppStore.Testing == TestingMode.Start || _AppStore.Testing == TestingMode.Pause);
+
+    #endregion
 
     #region Open Test Plan Commands
     private void ImportTestPlan(object? obj)

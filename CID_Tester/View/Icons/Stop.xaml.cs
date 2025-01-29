@@ -20,4 +20,9 @@ public partial class Stop : UserControl
         set => SetValue(CommandProperty, value);
     }
 
+    public static readonly DependencyProperty ShowButtonTextProperty =
+        DependencyProperty.Register("ShowButtonText", typeof(bool), typeof(Stop), new PropertyMetadata(false));
+
+    public string ButtonText { get => (bool)GetValue(ShowButtonTextProperty) ? "Stop" : ""; }
+    public string ShowButtonText { set => SetValue(ShowButtonTextProperty, value); }
 }

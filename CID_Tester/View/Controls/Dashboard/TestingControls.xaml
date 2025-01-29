@@ -1,0 +1,16 @@
+﻿<UserControl x:Class="CID_Tester.View.Controls.Dashboard.TestingControls"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:CID_Tester.View.Controls.Dashboard"
+             xmlns:icons="clr-namespace:CID_Tester.View.Icons"
+             d:Background="#2D2D30"
+             mc:Ignorable="d" 
+             d:DesignHeight="100" d:DesignWidth="100">
+    <StackPanel Margin="0 10">
+        <icons:Play Command="{Binding StartTestCommand}" ShowButtonText="True" />
+        <icons:Pause Margin="0 5 0 5 " Command="{Binding PauseTestCommand}" ShowButtonText="True" />
+        <icons:Stop Command="{Binding StopTestCommand}" ShowButtonText="True" />
+    </StackPanel>
+</UserControl>

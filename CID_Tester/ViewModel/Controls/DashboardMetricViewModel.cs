@@ -1,4 +1,6 @@
 ﻿using CID_Tester.Model;
+using CID_Tester.ViewModel.Command;
+using System.CodeDom.Compiler;
 
 namespace CID_Tester.ViewModel
 {
@@ -22,6 +24,8 @@ namespace CID_Tester.ViewModel
                 }
             }
         }
+
+        
 
         public DashboardMetricViewModel(Store appStore)
         {
