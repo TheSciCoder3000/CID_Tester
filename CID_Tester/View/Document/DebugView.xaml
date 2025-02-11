@@ -1,0 +1,46 @@
+﻿<UserControl xmlns:oxy="http://oxyplot.org/wpf"  x:Class="CID_Tester.View.Document.DebugView"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:CID_Tester.View.Document"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      >
+
+    <StackPanel Orientation="Vertical">
+        <StackPanel Margin="20" VerticalAlignment="Stretch">
+            <Border CornerRadius="7" Background="#2D2D30">
+                <StackPanel Orientation="Vertical" Margin="20">
+                    <StackPanel Orientation="Vertical" >
+                        <StackPanel Orientation="Horizontal" Margin="0,7,0,0">
+                            <TextBlock Text="OSCILLOSCOPE: " FontWeight="Bold" FontSize="22" HorizontalAlignment="Center" />
+                            <TextBlock Text="{Binding OscName}" VerticalAlignment="Center" FontSize="15" Margin="10,0,0,0" />
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Margin="10,17,0,20">
+                            <TextBlock Text="Wave Form: " FontWeight="Bold" FontSize="15" HorizontalAlignment="Center" />
+                            <ComboBox FontSize="15" Margin="10,0,0,0">
+                                <ComboBoxItem Content="Sine" IsSelected="True"></ComboBoxItem>
+                                <ComboBoxItem Content="Square"></ComboBoxItem>
+                                <ComboBoxItem Content="Triangle"></ComboBoxItem>
+                            </ComboBox>
+                        </StackPanel>
+                        <StackPanel Orientation="Vertical">
+                            <ScrollViewer Height="200" Name="Scroll">
+                                <TextBox VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Name="Output" Background="White" FontSize="15" Foreground="Black" VerticalScrollBarVisibility="Auto" TextWrapping="Wrap" IsReadOnly="True" Text="{Binding ConsoleString, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" TextChanged="Output_TextChanged" />
+                            </ScrollViewer>
+                        </StackPanel>
+                        <Button Background="Transparent" HorizontalAlignment="Left" Margin="0 10" Command="{Binding CaptureMeasurement}" Click="Button_Click">
+                            <Border CornerRadius="7" Background="Green" Padding="15 6">
+                                <TextBlock Text="Get Reading"/>
+                            </Border>
+                        </Button>
+                    </StackPanel>
+
+                </StackPanel>
+            </Border>
+        </StackPanel>
+
+        <ContentControl Content="{Binding TestPlanStatusControl}" />
+    </StackPanel>
+</UserControl>

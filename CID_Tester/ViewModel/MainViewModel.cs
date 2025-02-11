@@ -51,6 +51,7 @@ namespace CID_Tester.ViewModel
         public ICommand NavigateToTestPlan { get; } = null!;
         public ICommand NavigateToResults { get; } = null!;
         public ICommand NavigateToSettings { get; } = null!;
+        public ICommand NavigateToDebug { get; } = null!;
 
         public ICommand AddDutCommand { get; } = null!;
         public ICommand CloseCommand { get; } = null!;
@@ -72,6 +73,7 @@ namespace CID_Tester.ViewModel
             NavigateToDashboard = new NavigateDashboard(_AppStore, NavigateToTestPlan);
             NavigateToDevices   = new NavigateDevices(_AppStore);
             NavigateToResults   = new NavigateResults(_AppStore);
+            NavigateToDebug = new NavigateDebug(_AppStore);
         }
 
         private void UpdateActiveDocument(BaseViewModel activeDocument) => ActiveDocument = activeDocument;

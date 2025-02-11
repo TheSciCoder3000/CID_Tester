@@ -30,6 +30,6 @@ public partial class ResultsView : UserControl
         //pdf.NavigateToString("https://google.com");
         pdf.Source = new Uri("https://www.google.com");
 
-        Debug.WriteLine(new Uri(sample));
+        //Debug.WriteLine(new Uri(sample));
     }
 }

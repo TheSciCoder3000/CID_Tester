@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using System.Diagnostics;
 using CID_Tester.ViewModel;
 using Microsoft.EntityFrameworkCore;
 using CID_Tester.Service.DbProvider;
@@ -19,6 +20,7 @@ namespace CID_Tester
 
         public App()
         {
+            
             DotNetEnv.Env.TraversePath().Load();
             _testerDbContextFactory = new TesterDbContextFactory(DotNetEnv.Env.GetString("CONNECTION_STRING"));
             _dbProvider = new DbProvider(_testerDbContextFactory);
