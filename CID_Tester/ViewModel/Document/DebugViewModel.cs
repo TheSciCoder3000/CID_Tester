@@ -8,7 +8,7 @@ using CID_Tester.ViewModel.Windows;
 using System.Diagnostics;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-
+using CID_Tester.ViewModel.DebugSDK;
 namespace CID_Tester.ViewModel.Document;
 
 public class DebugViewModel : BaseViewModel, IDocument, INotifyPropertyChanged
@@ -16,6 +16,8 @@ public class DebugViewModel : BaseViewModel, IDocument, INotifyPropertyChanged
     private readonly Store _AppStore;
 
     public event PropertyChangedEventHandler PropertyChanged;
+
+    private PS2000 Oscilloscope;
     public string Title { get; }
 
     private string _ConsoleString;
@@ -33,8 +35,9 @@ public class DebugViewModel : BaseViewModel, IDocument, INotifyPropertyChanged
     public ICommand CloseCommand { get; }
     public ICommand CaptureMeasurement { get; }
 
-    public DebugViewModel(Store appStore)
+    public DebugViewModel(Store appStore, PS2000 oscilloscope)
     {
+        Oscilloscope = oscilloscope;
         _AppStore = appStore;
         Title = "Debug";
         CloseCommand = new RelayCommand(CloseCommandHanlder);
@@ -46,8 +49,12 @@ public class DebugViewModel : BaseViewModel, IDocument, INotifyPropertyChanged
 
     private void CaptureMeasurementHandler(object? obj)
     {
-        Debug.WriteLine(ConsoleString);
-        ConsoleString += "Start" + Environment.NewLine;
+
+        foreach (var data in Oscilloscope.Captured.Target)
+        {
+            Debug.WriteLine(data);
+        }
+
     }
 
     protected void OnPropertyChanged([CallerMemberName] string name = null)

@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using CID_Tester.Service.DbProvider;
 using CID_Tester.Service.DbCreator;
 using CID_Tester.Model.DbContexts;
+using CID_Tester.ViewModel.DebugSDK;
 
 namespace CID_Tester
 {
@@ -49,6 +50,13 @@ namespace CID_Tester
             login.ShowDialog();
 
 
+        }
+
+        private void Application_Exit(object sender, ExitEventArgs e)
+        {
+            short handle = 0;
+            Imports.Stop(handle);
+            Debug.WriteLine(handle);
         }
     }
 
