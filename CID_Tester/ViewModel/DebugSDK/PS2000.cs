@@ -29,7 +29,12 @@ using System.Text;
 using System.Threading;
 using System.Diagnostics;
 using System.Reflection.Metadata;
-
+using CID_Tester.ViewModel.Document;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
+using OxyPlot.Series;
+using OxyPlot;
 namespace CID_Tester.ViewModel.DebugSDK
 {
     struct ChannelSettings
@@ -67,12 +72,34 @@ namespace CID_Tester.ViewModel.DebugSDK
 
     public class PS2000
     {
-        private readonly short _handle;
+
+        private DebugViewModel _DebugVM;
+        public DebugViewModel DebugVM
+        {
+            get { return _DebugVM; }
+            set
+            {
+                _DebugVM = value;
+                // Call OnPropertyChanged whenever the property is updated
+                OnPropertyChanged();
+                Debug.WriteLine(value);
+            }
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        protected void OnPropertyChanged([CallerMemberName] string name = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+        }
+
+
+        private DebugViewModel ProgramConsole;
         public const int BUFFER_SIZE = 1024;
         public const int SINGLE_SCOPE = 1;
         public const int DUAL_SCOPE = 2;
         public const int MAX_CHANNELS = 4;
         public const int COMPATIBLE_STREAMING_MAX_SAMPLES = 60000;
+
         public PinnedArray<int> Captured;
 
         short _timebase = 8;
@@ -151,7 +178,7 @@ namespace CID_Tester.ViewModel.DebugSDK
         {
             for (int i = 0; i < _channelCount; i++) // set channels to most recent settings
             {
-                Imports.SetChannel(_handle, (Imports.Channel)i,
+                Imports.SetChannel(handle, (Imports.Channel)i,
                                    _channelSettings[i].enabled,
                                    _channelSettings[i].DCcoupled,
                                    _channelSettings[i].range);
@@ -164,7 +191,7 @@ namespace CID_Tester.ViewModel.DebugSDK
          *
          * Convert an 16-bit ADC count into millivolts
          ****************************************************************************/
-        public int adc_to_mv(int raw, int ch)
+        public long adc_to_mv(int raw, int ch)
         {
             return raw * inputRanges[ch] / Imports.PS2000_MAX_VALUE;
         }
@@ -197,6 +224,10 @@ namespace CID_Tester.ViewModel.DebugSDK
             short timeUnit = 0;
             int timeIndisposed;
             short status = 0;
+            var lineSeries = new LineSeries();
+
+            lineSeries.Points.Add(new DataPoint(0, 5000));
+            lineSeries.Points.Add(new DataPoint(0, -5000));
 
             // Buffer to hold time data
 
@@ -217,11 +248,12 @@ namespace CID_Tester.ViewModel.DebugSDK
 
             do
             {
-                status = Imports.GetTimebase(_handle, _timebase, sampleCount, out timeInterval, out timeUnit, _oversample, out maxSamples);
+                status = Imports.GetTimebase(handle, _timebase, sampleCount, out timeInterval, out timeUnit, _oversample, out maxSamples);
 
                 if (status != 1)
                 {
                     Debug.WriteLine("Selected timebase {0} could not be used\n", _timebase);
+                    Print("Selected timebase " + _timebase + " could not be used\n");
                     _timebase++;
                 }
 
@@ -229,17 +261,18 @@ namespace CID_Tester.ViewModel.DebugSDK
             while (status == 0);
 
             Debug.WriteLine("Timebase: {0}\toversample:{1}\n", _timebase, _oversample);
+            Print("Timebase: " + _timebase + "\toversample:" + _oversample + "\n");
 
             /* Start the device collecting, then wait for completion*/
 
-            Imports.RunBlock(_handle, sampleCount, _timebase, _oversample, out timeIndisposed);
+            Imports.RunBlock(handle, sampleCount, _timebase, _oversample, out timeIndisposed);
 
-            Debug.WriteLine("Waiting for data...Press a key to abort");
             short ready = 0;
 
-            if (Console.KeyAvailable)
+            while (ready == 0)
             {
-                Console.ReadKey(true); // Clear the key
+                ready = Imports.Isready(handle);
+                Thread.Sleep(1);
             }
 
             if (ready > 0)
@@ -247,44 +280,53 @@ namespace CID_Tester.ViewModel.DebugSDK
 
                 short overflow;
 
-                Imports.GetTimesAndValues(_handle, pinnedTimes, pinned[0], pinned[1], null, null, out overflow, timeUnit, sampleCount);
+                Imports.GetTimesAndValues(handle, pinnedTimes, pinned[0], pinned[1], null, null, out overflow, timeUnit, sampleCount);
 
                 /* Print out the first 10 readings, converting the readings to mV if required */
-                Debug.WriteLine(text + "\n");
+                Debug.WriteLine(text + '\n');
 
                 for (int ch = 0; ch < _channelCount; ch++)
                 {
                     if (_channelSettings[ch].enabled == 1)
                     {
-                        Debug.Write("Channel {0}\t", ('A' + ch).ToString());
+                        Debug.Write("Channel " + (char)('A' + ch) + "\t");
+                        Print("Channel " + (char)('A' + ch) + '\t');
                     }
                 }
 
-                Debug.WriteLine("\n");
+                Debug.WriteLine('\n');
+                Print("" + '\n');
 
-                for (int i = offset; i < offset + 10; i++)
+                for (int i = offset; i < offset + 100; i++)
                 {
                     for (int ch = 0; ch < _channelCount; ch++)
                     {
                         if (_channelSettings[ch].enabled == 1)
                         {
-                            Debug.Write("{0,8}\t", adc_to_mv(pinned[ch].Target[i], (int)_channelSettings[ch].range).ToString());
+                            long y = adc_to_mv(pinned[ch].Target[i], (int)_channelSettings[ch].range);
+                            int x = pinnedTimes.Target[i];
+
+                            Debug.Write(x.ToString() + '\t');
+                            Print(x.ToString() + '\t');
+                            Print(y.ToString() + '\t');
+
+                            lineSeries.Points.Add(new DataPoint(x / 100, y));
                         }
 
                     }
-
                     Debug.WriteLine(Environment.NewLine);
+                    Print("" + '\n');
                 }
 
-                PrintBlockFile(Math.Min(sampleCount, BUFFER_SIZE), pinnedTimes);
-                Captured = pinnedTimes;
+                //PrintBlockFile(Math.Min(sampleCount, BUFFER_SIZE), pinnedTimes);
             }
             else
             {
-                Debug.WriteLine("Data collection aborted");
+                Console.WriteLine("Data collection aborted");
             }
 
-            Imports.Stop(_handle);
+            AddData(lineSeries);
+            Imports.Stop(handle);
 
         }
 
@@ -404,14 +446,14 @@ namespace CID_Tester.ViewModel.DebugSDK
                     }
                 }
 
-                Imports.ps2000_run_streaming_ns(_handle, sampleInterval, Imports.ReportedTimeUnits.MicroSeconds, _MaxSamples, autoStop,
+                Imports.ps2000_run_streaming_ns(handle, sampleInterval, Imports.ReportedTimeUnits.MicroSeconds, _MaxSamples, autoStop,
                                                 noOfSamplesPerAggregate, _OverViewBufferSize);
 
                 while (!_autoStop && !Console.KeyAvailable && !_appBufferFull)
                 {
-                    Imports.ps2000_get_streaming_last_values(_handle, StreamingCallback);
+                    Imports.ps2000_get_streaming_last_values(handle, StreamingCallback);
 
-                    status = Imports.OverviewBufferStatus(_handle, out previousBufferOverrun);
+                    status = Imports.OverviewBufferStatus(handle, out previousBufferOverrun);
 
                     if (previousBufferOverrun > 0)
                     {
@@ -434,7 +476,7 @@ namespace CID_Tester.ViewModel.DebugSDK
                     }
                 }
 
-                Imports.Stop(_handle);
+                Imports.Stop(handle);
 
                 if (_totalSampleCount > appBufferSize)
                 {
@@ -479,14 +521,14 @@ namespace CID_Tester.ViewModel.DebugSDK
                     }
                 }
 
-                status = Imports.ps2000_run_streaming(_handle, sampleInterval_ms, maxSamples, windowed);
+                status = Imports.ps2000_run_streaming(handle, sampleInterval_ms, maxSamples, windowed);
 
                 // Wait before attempting to retrieve data
                 Thread.Sleep(100);
 
                 while (!Console.KeyAvailable)
                 {
-                    no_of_samples = Imports.GetValues(_handle, pinned[0], pinned[1], null, null, out overflow, BUFFER_SIZE);
+                    no_of_samples = Imports.GetValues(handle, pinned[0], pinned[1], null, null, out overflow, BUFFER_SIZE);
 
                     if (no_of_samples > 0)
                     {
@@ -520,7 +562,7 @@ namespace CID_Tester.ViewModel.DebugSDK
                     }
                 }
 
-                Imports.Stop(_handle);
+                Imports.Stop(handle);
 
                 for (int i = 0; i < _channelCount; i++)
                 {
@@ -577,14 +619,14 @@ namespace CID_Tester.ViewModel.DebugSDK
         {
             short status = 0;
 
-            status = Imports.SetTriggerChannelProperties(_handle, channelProperties, nChannelProperties, autoTriggerMs);
+            status = Imports.SetTriggerChannelProperties(handle, channelProperties, nChannelProperties, autoTriggerMs);
 
             if (status == 0)
             {
                 return status;
             }
 
-            status = Imports.SetTriggerChannelConditions(_handle, triggerConditions, nTriggerConditions);
+            status = Imports.SetTriggerChannelConditions(handle, triggerConditions, nTriggerConditions);
 
             if (status == 0)
             {
@@ -600,7 +642,7 @@ namespace CID_Tester.ViewModel.DebugSDK
             }
 
 
-            status = Imports.SetTriggerChannelDirections(_handle,
+            status = Imports.SetTriggerChannelDirections(handle,
                                                               directions[(int)Imports.Channel.ChannelA],
                                                               directions[(int)Imports.Channel.ChannelB],
                                                               directions[(int)Imports.Channel.ChannelC],
@@ -612,7 +654,7 @@ namespace CID_Tester.ViewModel.DebugSDK
                 return status;
             }
 
-            status = Imports.SetTriggerDelay(_handle, delay, 0);
+            status = Imports.SetTriggerDelay(handle, delay, 0);
 
             if (status == 0)
             {
@@ -624,7 +666,7 @@ namespace CID_Tester.ViewModel.DebugSDK
                 pwq = new Pwq(null, 0, Imports.ThresholdDirection.None, 0, 0, Imports.PulseWidthType.None);
             }
 
-            status = Imports.SetPulseWidthQualifier(_handle, pwq.conditions,
+            status = Imports.SetPulseWidthQualifier(handle, pwq.conditions,
                                                     pwq.nConditions, pwq.direction,
                                                     pwq.lower, pwq.upper, pwq.type);
 
@@ -643,7 +685,7 @@ namespace CID_Tester.ViewModel.DebugSDK
             Debug.WriteLine("Data is written to disk file ({0})", BlockFile);
             Debug.WriteLine("Press a key to start...");
             Debug.WriteLine(Environment.NewLine);
-            WaitForKey();
+
 
             SetDefaults();
 
@@ -693,7 +735,7 @@ namespace CID_Tester.ViewModel.DebugSDK
                                     (int)_channelSettings[(int)Imports.Channel.ChannelA].range));
 
             Debug.WriteLine("Press a key to start...");
-            WaitForKey();
+
 
             SetDefaults();
 
@@ -716,7 +758,7 @@ namespace CID_Tester.ViewModel.DebugSDK
             Debug.WriteLine("Data is written to disk file ({0})", StreamFile);
             Debug.WriteLine("Press a key to start...");
             Debug.WriteLine(Environment.NewLine);
-            WaitForKey();
+
 
             SetDefaults();
 
@@ -762,7 +804,7 @@ namespace CID_Tester.ViewModel.DebugSDK
             Debug.WriteLine("Data is written to disk file ({0})", StreamFile);
 
             Debug.WriteLine("Press a key to start...");
-            WaitForKey();
+
 
             SetDefaults();
 
@@ -785,7 +827,7 @@ namespace CID_Tester.ViewModel.DebugSDK
             Debug.WriteLine("Data is written to disk file ({0})", StreamFile);
             Debug.WriteLine("Press a key to start...");
             Debug.WriteLine(Environment.NewLine);
-            WaitForKey();
+
 
             SetDefaults();
 
@@ -799,6 +841,7 @@ namespace CID_Tester.ViewModel.DebugSDK
         ****************************************************************************/
         public void GetDeviceInfo()
         {
+            Print("---------------------------DEVICE INFO---------------------------" + '\n');
             _firstRange = Imports.Range.Range_50MV;
             _lastRange = Imports.Range.Range_20V;
             _channelCount = DUAL_SCOPE;
@@ -816,30 +859,32 @@ namespace CID_Tester.ViewModel.DebugSDK
 
             StringBuilder line = new StringBuilder(80);
 
-            if (_handle >= 0)
+            if (handle >= 0)
             {
 
                 for (short i = 0; i < description.Length; i++)
                 {
-                    Imports.GetUnitInfo(_handle, line, 80, i);
+                    Imports.GetUnitInfo(handle, line, 80, i);
 
-                    if (i == 3)
-                    {
+                    //if (i == 3)
+                    //{
 
-                        if ((_channelCount = Convert.ToInt16(line[1]) - 48) == 1)
-                        {
-                            _firstRange = Imports.Range.Range_100MV;
-                        }
-                        else if (Convert.ToInt16(line[3]) - 48 >= 3) // 2203, 2204, 2204A, 2205 and 2205A models
-                        {
-                            _hasFastStreaming = true;
-                        }
+                    //    if ((_channelCount = Convert.ToInt16(line[1]) - 48) == 1)
+                    //    {
+                    //        _firstRange = Imports.Range.Range_100MV;
+                    //    }
+                    //    else if (Convert.ToInt16(line[3]) - 48 >= 3) // 2203, 2204, 2204A, 2205 and 2205A models
+                    //    {
+                    //        _hasFastStreaming = true;
+                    //    }
 
-                    }
+                    //}
 
                     if (i != 6)
                     {
                         Debug.WriteLine("{0}: {1}", description[i], line);
+
+                        Print(description[i] + " : " + line + '\n' + '\n');
                     }
                 }
 
@@ -922,7 +967,7 @@ namespace CID_Tester.ViewModel.DebugSDK
 
             for (short i = 0; i < Imports.PS2200_MAX_TIMEBASE; i++)
             {
-                status = Imports.GetTimebase(_handle, i, BUFFER_SIZE, out timeInterval, out timeunit, _oversample, out maxSamples);
+                status = Imports.GetTimebase(handle, i, BUFFER_SIZE, out timeInterval, out timeunit, _oversample, out maxSamples);
 
                 if (status == 1)
                 {
@@ -961,7 +1006,7 @@ namespace CID_Tester.ViewModel.DebugSDK
 
             do
             {
-                status = Imports.GetTimebase(_handle, _timebase, BUFFER_SIZE, out timeInterval, out timeunit, _oversample, out maxSamples);
+                status = Imports.GetTimebase(handle, _timebase, BUFFER_SIZE, out timeInterval, out timeunit, _oversample, out maxSamples);
 
                 if (status == 0)
                 {
@@ -1022,7 +1067,7 @@ namespace CID_Tester.ViewModel.DebugSDK
         public void Run()
         {
             // setup devices
-            GetDeviceInfo();
+
             _timebase = 1;
 
             _channelSettings = new ChannelSettings[MAX_CHANNELS];
@@ -1035,64 +1080,64 @@ namespace CID_Tester.ViewModel.DebugSDK
             }
 
             // main loop - read key and call routine
-            char ch = ' ';
+            //char ch = ' ';
 
-            while (ch != 'X')
-            {
-                DisplaySettings();
+            //while (ch != 'X')
+            //{
+            //    DisplaySettings();
 
-                Debug.WriteLine("");
-                Debug.WriteLine("B - Immediate Block              V - Set voltages");
-                Debug.WriteLine("T - Triggered Block              I - Set timebase");
-                Debug.WriteLine("S - Streaming                    W - Triggered Fast Streaming");
-                Debug.WriteLine("F - Fast Streaming");
-                Debug.WriteLine("                                 X - Exit");
-                Debug.WriteLine("Operation:");
+            //    Debug.WriteLine("");
+            //    Debug.WriteLine("B - Immediate Block              V - Set voltages");
+            //    Debug.WriteLine("T - Triggered Block              I - Set timebase");
+            //    Debug.WriteLine("S - Streaming                    W - Triggered Fast Streaming");
+            //    Debug.WriteLine("F - Fast Streaming");
+            //    Debug.WriteLine("                                 X - Exit");
+            //    Debug.WriteLine("Operation:");
 
-                ch = char.ToUpper(Console.ReadKey(true).KeyChar);
+            //    ch = char.ToUpper(Console.ReadKey(true).KeyChar);
 
-                Debug.WriteLine("\n");
+            //    Debug.WriteLine("\n");
 
-                switch (ch)
-                {
-                    case 'B':
-                        CollectBlockImmediate();
-                        break;
+            //    switch (ch)
+            //    {
+            //        case 'B':
+            //            CollectBlockImmediate();
+            //            break;
 
-                    case 'T':
-                        CollectBlockTriggered();
-                        break;
+            //        case 'T':
+            //            CollectBlockTriggered();
+            //            break;
 
-                    case 'V':
-                        SetVoltages();
-                        break;
+            //        case 'V':
+            //            SetVoltages();
+            //            break;
 
-                    case 'I':
-                        SetTimebase();
-                        break;
+            //        case 'I':
+            //            SetTimebase();
+            //            break;
 
-                    case 'S':
-                        Stream();
-                        break;
+            //        case 'S':
+            //            Stream();
+            //            break;
 
-                    case 'F':
+            //        case 'F':
 
-                        FastStream();
-                        break;
+            //            FastStream();
+            //            break;
 
-                    case 'W':
-                        TriggeredFastStream();
-                        break;
+            //        case 'W':
+            //            TriggeredFastStream();
+            //            break;
 
-                    case 'X':
-                        /* Handled by outer loop */
-                        break;
+            //        case 'X':
+            //            /* Handled by outer loop */
+            //            break;
 
-                    default:
-                        Debug.WriteLine("Invalid operation");
-                        break;
-                }
-            }
+            //        default:
+            //            Debug.WriteLine("Invalid operation");
+            //            break;
+            //    }
+            //}
         }
 
         public void Start()
@@ -1102,12 +1147,11 @@ namespace CID_Tester.ViewModel.DebugSDK
             {
                 Debug.WriteLine("Unable to open device");
                 Debug.WriteLine("Error code : {0}", handle);
-                WaitForKey();
+
             }
             else
             {
                 Debug.WriteLine("Device opened successfully\n");
-
 
             }
         }
@@ -1115,6 +1159,19 @@ namespace CID_Tester.ViewModel.DebugSDK
         public void Stop()
         {
             Imports.CloseUnit(handle);
+        }
+
+        private void Print(string text)
+        {
+            _DebugVM.ConsoleString += text;
+        }
+
+        private void AddData(LineSeries lineSeries)
+        {
+            //_DebugVM.OscDisplay.Series.Add(lineSeries);
+            PlotModel model = new PlotModel();
+            model.Series.Add(lineSeries);
+            _DebugVM.OscDisplay = model;
         }
 
     }

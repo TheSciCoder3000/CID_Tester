@@ -68,10 +68,10 @@ namespace CID_Tester.ViewModel
             _AppStore.OnAnchorableAdded         += LoadAnchorables;
             _AppStore.OnAnchorableRemoved       += LoadAnchorables;
 
+            toolbarViewModel = new ToolbarViewModel(_AppStore);
+
             Oscilloscope = new PS2000();
             Oscilloscope.Start();
-
-            toolbarViewModel = new ToolbarViewModel(_AppStore);
 
             // Initialize Navigation Commands
             NavigateToTestPlan  = new NavigateTestPlan(_AppStore);
@@ -79,6 +79,8 @@ namespace CID_Tester.ViewModel
             NavigateToDevices   = new NavigateDevices(_AppStore);
             NavigateToResults   = new NavigateResults(_AppStore);
             NavigateToDebug = new NavigateDebug(_AppStore, Oscilloscope);
+
+
         }
 
         private void UpdateActiveDocument(BaseViewModel activeDocument) => ActiveDocument = activeDocument;

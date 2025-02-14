@@ -10,6 +10,8 @@ public class NavigateDebug(Store appStore, PS2000 oscilloscope) : CommandBase
 
     public override void Execute(object? parameter)
     {
-        _AppStore.AddDocument<DebugViewModel>(new DebugViewModel(appStore, oscilloscope));
+        DebugViewModel viewModel = new DebugViewModel(appStore, oscilloscope);
+        oscilloscope.DebugVM = viewModel;
+        _AppStore.AddDocument<DebugViewModel>(viewModel);
     }
 }

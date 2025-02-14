@@ -16,7 +16,7 @@ namespace CID_Tester.ViewModel
         public event EventHandler? ClosingRequest;
         public ICommand LoginCommand { get; }
 
-        private string _username = null!;
+        private string _username = "neurocoder";
         public string Username
         {
             get
@@ -30,7 +30,7 @@ namespace CID_Tester.ViewModel
             }
         }
 
-        private string _password = null!;
+        private string _password = "password";
         public string Password
         {
             get

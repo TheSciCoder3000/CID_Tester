@@ -9,6 +9,8 @@ using System.Diagnostics;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using CID_Tester.ViewModel.DebugSDK;
+using OxyPlot;
+using OxyPlot.Series;
 namespace CID_Tester.ViewModel.Document;
 
 public class DebugViewModel : BaseViewModel, IDocument, INotifyPropertyChanged
@@ -28,12 +30,26 @@ public class DebugViewModel : BaseViewModel, IDocument, INotifyPropertyChanged
         {
             _ConsoleString = value;
             // Call OnPropertyChanged whenever the property is updated
+            Debug.WriteLine(value);
+            OnPropertyChanged();
+        }
+    }
+
+    private PlotModel _OscDisplay;
+    public PlotModel OscDisplay
+    {
+        get { return _OscDisplay; }
+        set
+        {
+            _OscDisplay = value;
+            // Call OnPropertyChanged whenever the property is updated
             OnPropertyChanged();
         }
     }
 
     public ICommand CloseCommand { get; }
     public ICommand CaptureMeasurement { get; }
+    public ICommand GetInfo { get; }
 
     public DebugViewModel(Store appStore, PS2000 oscilloscope)
     {
@@ -42,18 +58,27 @@ public class DebugViewModel : BaseViewModel, IDocument, INotifyPropertyChanged
         Title = "Debug";
         CloseCommand = new RelayCommand(CloseCommandHanlder);
         CaptureMeasurement = new RelayCommand(CaptureMeasurementHandler);
-        ConsoleString = "Starting&#x0a;";
+        GetInfo = new RelayCommand(GetInfoHandler);
+        ConsoleString = "Starting...\n";
+
+        OscDisplay = new PlotModel();
+
     }
 
     private void CloseCommandHanlder(object? parameter) => _AppStore.RemoveDocument(this);
 
     private void CaptureMeasurementHandler(object? obj)
     {
+        
+        
+        Oscilloscope.Run();
+        Oscilloscope.CollectBlockImmediate();
 
-        foreach (var data in Oscilloscope.Captured.Target)
-        {
-            Debug.WriteLine(data);
-        }
+    }
+
+    private void GetInfoHandler(object? obj)
+    {
+        Oscilloscope.GetDeviceInfo();
 
     }
 

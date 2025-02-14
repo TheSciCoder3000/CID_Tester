@@ -14,7 +14,7 @@
                 <StackPanel Orientation="Vertical" Margin="20">
                     <StackPanel Orientation="Vertical" >
                         <StackPanel Orientation="Horizontal" Margin="0,7,0,0">
-                            <TextBlock Text="OSCILLOSCOPE: " FontWeight="Bold" FontSize="22" HorizontalAlignment="Center" />
+                            <TextBlock Text="OSCILLOSCOPE" FontWeight="Bold" FontSize="22" HorizontalAlignment="Center" />
                             <TextBlock Text="{Binding OscName}" VerticalAlignment="Center" FontSize="15" Margin="10,0,0,0" />
                         </StackPanel>
                         <StackPanel Orientation="Horizontal" Margin="10,17,0,20">
@@ -25,16 +25,35 @@
                                 <ComboBoxItem Content="Triangle"></ComboBoxItem>
                             </ComboBox>
                         </StackPanel>
+                        <StackPanel Orientation="Vertical" HorizontalAlignment="Stretch" Margin="42">
+                            <oxy:PlotView  Height="300" VerticalAlignment="Stretch" Model="{Binding OscDisplay, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                        </StackPanel>
                         <StackPanel Orientation="Vertical">
                             <ScrollViewer Height="200" Name="Scroll">
                                 <TextBox VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Name="Output" Background="White" FontSize="15" Foreground="Black" VerticalScrollBarVisibility="Auto" TextWrapping="Wrap" IsReadOnly="True" Text="{Binding ConsoleString, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" TextChanged="Output_TextChanged" />
                             </ScrollViewer>
                         </StackPanel>
-                        <Button Background="Transparent" HorizontalAlignment="Left" Margin="0 10" Command="{Binding CaptureMeasurement}" Click="Button_Click">
-                            <Border CornerRadius="7" Background="Green" Padding="15 6">
-                                <TextBlock Text="Get Reading"/>
-                            </Border>
-                        </Button>
+                        <Grid Width="250" HorizontalAlignment="Left">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition />
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition />
+                            </Grid.RowDefinitions>
+
+                            <Button Background="Transparent" Grid.Column="0"  HorizontalAlignment="Left" Margin="0 10" Command="{Binding CaptureMeasurement}" Click="Button_Click">
+                                <Border CornerRadius="7" Background="Green" Padding="15 6">
+                                    <TextBlock Text="Get Reading"/>
+                                </Border>
+                            </Button>
+                            <Button Background="Transparent" Grid.Column="1" HorizontalAlignment="Left" Margin="0 10" Command="{Binding GetInfo}" Click="Button_Click">
+                                <Border CornerRadius="7" Background="Green" Padding="15 6">
+                                    <TextBlock Text="Oscilloscope Info"/>
+                                </Border>
+                            </Button>
+                        </Grid>
+                        
                     </StackPanel>
 
                 </StackPanel>

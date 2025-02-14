@@ -49,6 +49,7 @@
     <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.2903.40" />
     <PackageReference Include="OxyPlot.Wpf" Version="2.2.0" />
     <PackageReference Include="PDFsharp" Version="6.1.1" />
+    <PackageReference Include="PicoSDK" Version="0.1.4" />
   </ItemGroup>
 
   <ItemGroup>
