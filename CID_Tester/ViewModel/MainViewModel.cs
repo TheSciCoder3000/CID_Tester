@@ -12,6 +12,7 @@ namespace CID_Tester.ViewModel
     {
         private readonly Store _AppStore;
         private PS2000 Oscilloscope;
+        private PS2000SigGen SigGen;
 
         private IEnumerable<BaseViewModel> _documents = [];
         public IEnumerable<BaseViewModel> Documents
@@ -71,6 +72,7 @@ namespace CID_Tester.ViewModel
             toolbarViewModel = new ToolbarViewModel(_AppStore);
 
             Oscilloscope = new PS2000();
+            SigGen = new PS2000SigGen();
             Oscilloscope.Start();
 
             // Initialize Navigation Commands
@@ -78,7 +80,7 @@ namespace CID_Tester.ViewModel
             NavigateToDashboard = new NavigateDashboard(_AppStore, NavigateToTestPlan);
             NavigateToDevices   = new NavigateDevices(_AppStore);
             NavigateToResults   = new NavigateResults(_AppStore);
-            NavigateToDebug = new NavigateDebug(_AppStore, Oscilloscope);
+            NavigateToDebug = new NavigateDebug(_AppStore, Oscilloscope, SigGen);
 
 
         }

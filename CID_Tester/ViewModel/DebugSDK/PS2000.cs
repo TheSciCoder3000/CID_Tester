@@ -94,7 +94,7 @@ namespace CID_Tester.ViewModel.DebugSDK
 
 
         private DebugViewModel ProgramConsole;
-        public const int BUFFER_SIZE = 1024;
+        public const int BUFFER_SIZE = 1024 * 7;
         public const int SINGLE_SCOPE = 1;
         public const int DUAL_SCOPE = 2;
         public const int MAX_CHANNELS = 4;
@@ -226,8 +226,8 @@ namespace CID_Tester.ViewModel.DebugSDK
             short status = 0;
             var lineSeries = new LineSeries();
 
-            lineSeries.Points.Add(new DataPoint(0, 5000));
-            lineSeries.Points.Add(new DataPoint(0, -5000));
+            lineSeries.Points.Add(new DataPoint(0, 200));
+            lineSeries.Points.Add(new DataPoint(0, -200));
 
             // Buffer to hold time data
 
@@ -299,18 +299,21 @@ namespace CID_Tester.ViewModel.DebugSDK
 
                 for (int i = offset; i < offset + 100; i++)
                 {
+
+                    long y = adc_to_mv(pinned[0].Target[i], (int)_channelSettings[0].range);
+                    int x = pinnedTimes.Target[i];
+
+                    //Debug.Write(x.ToString() + '\t');
+                    Print(x.ToString() + '\t');
+                    Print(y.ToString() + '\t');
+
+                    lineSeries.Points.Add(new DataPoint(x / 100, y));
+
                     for (int ch = 0; ch < _channelCount; ch++)
                     {
                         if (_channelSettings[ch].enabled == 1)
                         {
-                            long y = adc_to_mv(pinned[ch].Target[i], (int)_channelSettings[ch].range);
-                            int x = pinnedTimes.Target[i];
-
-                            Debug.Write(x.ToString() + '\t');
-                            Print(x.ToString() + '\t');
-                            Print(y.ToString() + '\t');
-
-                            lineSeries.Points.Add(new DataPoint(x / 100, y));
+                            
                         }
 
                     }
@@ -327,7 +330,6 @@ namespace CID_Tester.ViewModel.DebugSDK
 
             AddData(lineSeries);
             Imports.Stop(handle);
-
         }
 
         /// <summary>
@@ -394,7 +396,10 @@ namespace CID_Tester.ViewModel.DebugSDK
         {
             short status = 0;
             short previousBufferOverrun = 0;
+            var lineSeries = new LineSeries();
 
+            lineSeries.Points.Add(new DataPoint(0, 2000));
+            lineSeries.Points.Add(new DataPoint(0, -2000));
             //Check if fast streaming has been selected and if device is compatible        
             if (!_hasFastStreaming && faststreaming)
             {
@@ -526,40 +531,46 @@ namespace CID_Tester.ViewModel.DebugSDK
                 // Wait before attempting to retrieve data
                 Thread.Sleep(100);
 
-                while (!Console.KeyAvailable)
+                no_of_samples = Imports.GetValues(handle, pinned[0], pinned[1], null, null, out overflow, BUFFER_SIZE);
+
+                if (no_of_samples > 0)
                 {
-                    no_of_samples = Imports.GetValues(handle, pinned[0], pinned[1], null, null, out overflow, BUFFER_SIZE);
+                    previousTotal = totalSamples;
+                    totalSamples = totalSamples + (uint)no_of_samples;
 
-                    if (no_of_samples > 0)
+                    Debug.WriteLine("Collected {0} samples, total: {1}", no_of_samples, totalSamples);
+
+                    // Build Body
+                    for (int i = 0; i < no_of_samples; i++)
                     {
-                        previousTotal = totalSamples;
-                        totalSamples = totalSamples + (uint)no_of_samples;
+                        sb.AppendFormat("{0,-10}", (previousTotal + i) * sampleInterval_ms);
 
-                        Debug.WriteLine("Collected {0} samples, total: {1}", no_of_samples, totalSamples);
-
-                        // Build Body
-                        for (int i = 0; i < no_of_samples; i++)
+                        for (int ch = 0; ch < _channelCount; ch++)
                         {
-                            sb.AppendFormat("{0,-10}", (previousTotal + i) * sampleInterval_ms);
 
-                            for (int ch = 0; ch < _channelCount; ch++)
+                            if (Convert.ToBoolean(_channelSettings[ch].enabled))
                             {
+                                sb.AppendFormat("{0,-10} {1,-10} {2,-10}",
+                                                "Ch" + (char)('A' + ch),
+                                                pinned[ch].Target[i],
+                                                adc_to_mv(pinned[ch].Target[i], (int)_channelSettings[ch].range));
 
-                                if (Convert.ToBoolean(_channelSettings[ch].enabled))
-                                {
-                                    sb.AppendFormat("{0,-10} {1,-10} {2,-10}",
-                                                    "Ch" + (char)('A' + ch),
-                                                    pinned[ch].Target[i],
-                                                    adc_to_mv(pinned[ch].Target[i], (int)_channelSettings[ch].range));
-                                }
+                                long y = adc_to_mv(pinned[ch].Target[i], (int)_channelSettings[ch].range);
+                                int x = i;
+
+                                //Debug.Write(x.ToString() + '\t');
+                                Print(x.ToString() + '\t');
+                                Print(y.ToString() + '\t');
+
+                                lineSeries.Points.Add(new DataPoint(x / 100, y));
                             }
-
-                            sb.AppendLine();
                         }
 
-                        // Wait for 100 milliseconds
-                        Thread.Sleep(100);
+                        sb.AppendLine();
                     }
+
+                    // Wait for 100 milliseconds
+                    Thread.Sleep(100);
                 }
 
                 Imports.Stop(handle);
@@ -573,17 +584,12 @@ namespace CID_Tester.ViewModel.DebugSDK
                 }
             }
 
-            if (Console.KeyAvailable)
-            {
-                Console.ReadKey(true); // Clear the key  
-            }
-
-            // Print contents to file
-            using (TextWriter writer = new StreamWriter(StreamFile, false))
-            {
-                writer.Write(sb.ToString());
-                writer.Close();
-            }
+            //// Print contents to file
+            //using (TextWriter writer = new StreamWriter(StreamFile, false))
+            //{
+            //    writer.Write(sb.ToString());
+            //    writer.Close();
+            //}
         }
 
         /****************************************************************************
@@ -842,9 +848,6 @@ namespace CID_Tester.ViewModel.DebugSDK
         public void GetDeviceInfo()
         {
             Print("---------------------------DEVICE INFO---------------------------" + '\n');
-            _firstRange = Imports.Range.Range_50MV;
-            _lastRange = Imports.Range.Range_20V;
-            _channelCount = DUAL_SCOPE;
 
             string[] description = {
                                        "Driver Version    ",
@@ -895,7 +898,7 @@ namespace CID_Tester.ViewModel.DebugSDK
         /****************************************************************************
          * Select input voltage ranges for channels A and B
          ****************************************************************************/
-        public void SetVoltages()
+        public void SetVoltages(uint voltage)
         {
             bool valid = false;
 
@@ -918,17 +921,9 @@ namespace CID_Tester.ViewModel.DebugSDK
 
                 do
                 {
-                    try
-                    {
-                        Debug.WriteLine("Channel {0}:", (char)('A' + ch));
-                        range = uint.Parse(Console.ReadLine());
-                        valid = true;
-                    }
-                    catch (FormatException)
-                    {
-                        valid = false;
-                        Debug.WriteLine("\nEnter numeric values only");
-                    }
+                    Debug.WriteLine("Channel {0}:", (char)('A' + ch));
+                    range = voltage;
+                    valid = true;
 
                 } while (range != 99 && (range < (uint)_firstRange || range > (uint)_lastRange) || !valid);
 
@@ -954,7 +949,7 @@ namespace CID_Tester.ViewModel.DebugSDK
          * Select _timebase, set _oversample to on and time units as nano seconds
          *
          ****************************************************************************/
-        public void SetTimebase()
+        public void SetTimebase(short time)
         {
             int timeInterval;
             int maxSamples;
@@ -978,11 +973,10 @@ namespace CID_Tester.ViewModel.DebugSDK
 
             do
             {
-                Debug.WriteLine("\nSpecify timebase index:");
 
                 try
                 {
-                    _timebase = short.Parse(Console.ReadLine());
+                    _timebase = time;
 
                     if (_timebase < 0 || _timebase > maxTimebaseIndex)
                     {
@@ -1069,7 +1063,9 @@ namespace CID_Tester.ViewModel.DebugSDK
             // setup devices
 
             _timebase = 1;
-
+            _firstRange = Imports.Range.Range_50MV;
+            _lastRange = Imports.Range.Range_20V;
+            _channelCount = DUAL_SCOPE;
             _channelSettings = new ChannelSettings[MAX_CHANNELS];
 
             for (int i = 0; i < _channelCount; i++)
