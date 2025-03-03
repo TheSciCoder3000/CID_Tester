@@ -1,4 +1,5 @@
-﻿using CID_Tester.Model;
+﻿using CID_Tester.Exceptions;
+using CID_Tester.Model;
 using CID_Tester.Model.DbContexts;
 using Microsoft.EntityFrameworkCore;
 
@@ -69,9 +70,13 @@ namespace CID_Tester.Service.DbCreator
             }
         }
 
-        public Task CreateUser(TEST_USER user)
+        public async Task CreateUser(TEST_USER user)
         {
-            throw new NotImplementedException();
+            using (TesterDbContext context = _dbContextFactory.CreateDbContext())
+            {
+                context.TEST_USER.Add(user);
+                await context.SaveChangesAsync();
+            }
         }
 
         public async Task UpdateTestParameter(TEST_PARAMETER param)
