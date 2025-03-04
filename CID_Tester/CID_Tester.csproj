@@ -54,7 +54,8 @@
     <Resource Include="images\exit.png" />
     <Resource Include="images\logo.png" />
     <Resource Include="images\profile.jpg" />
-    <Content Include="PDF\Sample.pdf">
+	<Resource Include="images\temp-profile.png" />
+	<Content Include="PDF\Sample.pdf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

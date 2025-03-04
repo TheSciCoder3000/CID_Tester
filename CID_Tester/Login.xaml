@@ -63,7 +63,7 @@
                                 <TextBlock Text="Site No." VerticalAlignment="Center" FontSize="12" Foreground="White"/>
                             </StackPanel>
                             <StackPanel Orientation="Vertical" Margin="0,2,0,17">
-                                <TextBlock Margin="0 15 0 10">
+                                <TextBlock Margin="0 15 0 10" Foreground="White">
                                     Don't have an account? 
                                     <Hyperlink Command="{Binding CreateAccountCommand}">Create an account</Hyperlink>
                                 </TextBlock>
