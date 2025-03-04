@@ -8,7 +8,7 @@
         mc:Ignorable="d"
         Title="AddDutView" Height="450" Width="800" Background="#252526">
     <StackPanel Margin="20">
-        <TextBlock FontSize="18" Margin="0 0 0 20">Create New Device</TextBlock>
+        <TextBlock FontSize="18" Margin="0 0 0 20" Foreground="White">Create New Device</TextBlock>
         <TextBox Text="{Binding DutName, UpdateSourceTrigger=PropertyChanged}" Margin="0 0 0 10">
             <service:WatermarkService.Watermark>
                 <TextBlock Style="{StaticResource HintTextBlock}">Device name</TextBlock>

@@ -118,7 +118,7 @@ internal class RegisterViewModel : BaseViewModel
         Login login = new Login();
         vm.ClosingRequest += (sender, e) => login.Close();
         login.DataContext = vm;
-        login.ShowDialog();
+        login.Show();
         ClosingRequest?.Invoke(obj, EventArgs.Empty);
     }
 
