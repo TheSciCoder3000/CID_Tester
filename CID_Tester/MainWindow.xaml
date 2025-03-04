@@ -53,20 +53,6 @@
             <Setter Property="Title" Value="{Binding Model.Title}" />
             <Setter Property="HideCommand" Value="{Binding Model.CloseCommand}" />
         </Style>
-        <Style x:Key="ComboBoxStyle1" TargetType="{x:Type ComboBox}">
-            <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}"/>
-            <Setter Property="Background" Value="#292930"/>
-            <Setter Property="BorderBrush" Value="{StaticResource ComboBox.Static.Border}"/>
-            <Setter Property="Foreground" Value="White"/>
-            <Setter Property="BorderThickness" Value="1"/>
-            <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto"/>
-            <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto"/>
-            <Setter Property="Padding" Value="6,3,5,3"/>
-            <Setter Property="ScrollViewer.CanContentScroll" Value="true"/>
-            <Setter Property="ScrollViewer.PanningMode" Value="Both"/>
-            <Setter Property="Stylus.IsFlicksEnabled" Value="False"/>
-            <Setter Property="Template" Value="{StaticResource ComboBoxTemplate}"/>
-        </Style>
     </Window.Resources>
     <WindowChrome.WindowChrome>
         <WindowChrome     
@@ -114,6 +100,11 @@
             AutoWindowSizeWhenOpened="True"
             IsVirtualizingAnchorable="True"
             IsVirtualizingDocument="True">
+                <DockingManager.Resources>
+                    <Style TargetType="TextBlock">
+                        <Setter Property="Foreground" Value="White" />
+                    </Style>
+                </DockingManager.Resources>
 
                 <DockingManager.Theme>
                     <avalonDock:Vs2013DarkTheme />

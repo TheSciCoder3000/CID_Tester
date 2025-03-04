@@ -5,10 +5,11 @@ using CID_Tester.ViewModel.Interfaces;
 using System.Windows.Controls;
 using System.Windows.Input;
 using CID_Tester.View.Controls.Dashboard;
-using Microsoft.Identity.Client;
 using CID_Tester.View.Windows;
 using CID_Tester.ViewModel.Windows;
 using CID_Tester.ViewModel.Controls.AddTestPlan;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
 
 namespace CID_Tester.ViewModel.Document;
 
@@ -19,6 +20,7 @@ public class DashboardViewModel : BaseViewModel, IDocument
     public string Title { get; set; }
     public string Fullname { get { return _AppStore.TestUser.ToString(); } }
 
+    private ImageSource _userProfile;
     private UserControl _testPlanStatusControl = null!;
     public UserControl TestPlanStatusControl
     {
@@ -34,6 +36,14 @@ public class DashboardViewModel : BaseViewModel, IDocument
     public ICommand NavigateToTestPlanCommand { get; }
     public ICommand CloseCommand { get; }
 
+    public ImageSource UserProfile
+    {
+        get
+        {
+            if (_AppStore.TestUser.ProfileImage == "") return new BitmapImage(new Uri("pack://application:,,,/CID_Tester;component/images/temp-profile.png"));
+            return new BitmapImage(new Uri(_AppStore.TestUser.ProfileImage));
+        }
+    }
     public RelayCommand StartTestCommand => new RelayCommand(execute => PlayTestHandller(), canExecute => canPlay());
     public RelayCommand PauseTestCommand => new RelayCommand(execute => PauseTestHandler(), canExecute => canPause());
     public RelayCommand StopTestCommand => new RelayCommand(execute => StopTestHandler(), canExecute => canStop());

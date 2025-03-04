@@ -62,7 +62,7 @@ namespace CID_Tester.ViewModel
             Register register = new Register();
             vm.ClosingRequest += (sender, e) => register.Close();
             register.DataContext = vm;
-            register.ShowDialog();
+            register.Show();
             ClosingRequest?.Invoke(this, EventArgs.Empty);
         }
 
