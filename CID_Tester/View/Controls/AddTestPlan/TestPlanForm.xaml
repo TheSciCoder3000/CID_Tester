@@ -7,21 +7,21 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <StackPanel Margin="20">
-        <TextBlock FontSize="25">Create Test Plan</TextBlock>
+        <TextBlock Style="{StaticResource NormalText}" FontSize="25">Create Test Plan</TextBlock>
         <StackPanel Margin="0 20 0 0" HorizontalAlignment="Left">
-            <TextBlock Margin="0 0 0 10">Name.</TextBlock>
+            <TextBlock Style="{StaticResource NormalText}" Margin="0 0 0 10">Name.</TextBlock>
             <TextBox Width="150" Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}" />
         </StackPanel>
         <StackPanel Margin="0 20 0 0" HorizontalAlignment="Left">
-            <TextBlock Margin="0 0 0 10">Device:</TextBlock>
-            <ComboBox SelectedItem="{Binding SelectedDevice}" ItemsSource="{Binding Devices}" Width="70" />
+            <TextBlock Style="{StaticResource NormalText}" Margin="0 0 0 10">Device:</TextBlock>
+            <ComboBox Style="{StaticResource ComboBoxStyle1}" SelectedItem="{Binding SelectedDevice}" ItemsSource="{Binding Devices}" Width="70" />
         </StackPanel>
         <StackPanel Margin="0 20 0 0" HorizontalAlignment="Left">
-            <TextBlock Margin="0 0 0 10">Cycle No.</TextBlock>
+            <TextBlock Style="{StaticResource NormalText}" Margin="0 0 0 10">Cycle No.</TextBlock>
             <TextBox Width="70" Text="{Binding CycleNo, UpdateSourceTrigger=PropertyChanged}" />
         </StackPanel>
         <StackPanel Margin="0 20 0 20">
-            <TextBlock Margin="0 0 0 10">Description</TextBlock>
+            <TextBlock Style="{StaticResource NormalText}" Margin="0 0 0 10">Description</TextBlock>
             <TextBox Padding="5" Height="100" Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}" />
         </StackPanel>
         <StackPanel Orientation="Horizontal">

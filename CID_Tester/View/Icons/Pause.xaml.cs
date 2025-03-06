@@ -19,4 +19,10 @@ public partial class Pause : UserControl
         get => (ICommand)GetValue(CommandProperty);
         set => SetValue(CommandProperty, value);
     }
+
+    public static readonly DependencyProperty ShowButtonTextProperty =
+        DependencyProperty.Register("ShowButtonText", typeof(bool), typeof(Pause), new PropertyMetadata(false));
+
+    public string ButtonText { get => (bool)GetValue(ShowButtonTextProperty) ? "Pause" : ""; }
+    public string ShowButtonText { set => SetValue(ShowButtonTextProperty, value); }
 }

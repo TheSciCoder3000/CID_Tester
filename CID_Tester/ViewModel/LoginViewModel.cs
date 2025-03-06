@@ -15,6 +15,7 @@ namespace CID_Tester.ViewModel
 
         public event EventHandler? ClosingRequest;
         public ICommand LoginCommand { get; }
+        public ICommand CreateAccountCommand { get; }
 
         private string _username = null!;
         public string Username
@@ -51,7 +52,18 @@ namespace CID_Tester.ViewModel
             UserLoginCommand command = new UserLoginCommand(this);
             command.LoginRequestEvent += async (sender, e) => await LoginRequestEventHandler();
             LoginCommand = command;
+            CreateAccountCommand = new RelayCommand(OpenRegisterWindow);
             
+        }
+
+        private void OpenRegisterWindow(object? obj)
+        {
+            RegisterViewModel vm = new RegisterViewModel(_dbProvider, _dbCreator);
+            Register register = new Register();
+            vm.ClosingRequest += (sender, e) => register.Close();
+            register.DataContext = vm;
+            register.Show();
+            ClosingRequest?.Invoke(this, EventArgs.Empty);
         }
 
         private async Task LoginRequestEventHandler()

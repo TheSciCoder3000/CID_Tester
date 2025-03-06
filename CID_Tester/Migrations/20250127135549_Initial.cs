@@ -84,9 +84,9 @@ namespace CID_Tester.Migrations
                     TestCode = table.Column<int>(type: "INTEGER", nullable: false),
                     Description = table.Column<string>(type: "TEXT", nullable: false),
                     Metric = table.Column<string>(type: "TEXT", nullable: false),
-                    Value = table.Column<decimal>(type: "TEXT", nullable: false),
+                    Value = table.Column<decimal>(type: "TEXT", nullable: true),
                     Target = table.Column<decimal>(type: "TEXT", nullable: false),
-                    Pass = table.Column<int>(type: "INTEGER", nullable: true),
+                    Pass = table.Column<bool>(type: "INTEGER", nullable: true),
                     Parameters = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
