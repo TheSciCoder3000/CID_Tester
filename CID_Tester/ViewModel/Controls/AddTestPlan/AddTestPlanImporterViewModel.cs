@@ -100,6 +100,7 @@ public class AddTestPlanImporterViewModel : BaseViewModel
                     string rIn = worksheet.Cells[row, 4].Text;
                     string rF = worksheet.Cells[row, 5].Text;
                     var (target, unit) = parseRawTarget(worksheet.Cells[row, 6].Text);
+                    string parameters = ParseParameterToString(worksheet, row);
 
                     _testPlan.TEST_PARAMETERS.Add(new TEST_PARAMETER()
                     {
@@ -107,7 +108,7 @@ public class AddTestPlanImporterViewModel : BaseViewModel
                         Description = $"Inverting={inv},\nNon-Inverting={nonInv},\nRin={rIn},\nRF={rF}",
                         Metric = unit,
                         Target = (decimal)target,
-                        Parameters = ""
+                        Parameters = parameters
                     });
                 }
 
@@ -140,6 +141,21 @@ public class AddTestPlanImporterViewModel : BaseViewModel
                 MessageBox.Show("Error in parsing Excel file, please check the format");
             }
         }
+    }
+
+    private string ParseParameterToString(ExcelWorksheet worksheet, int row)
+    {
+        Dictionary<string, bool> RelayColumnPairs = new Dictionary<string, bool>();
+
+        // generate RelayColumnPairs data
+        for (int col = 8; col <= 23; col++)
+        {
+            string relayName = worksheet.Cells[10, col].Text;
+            bool relayState = worksheet.Cells[row, col].Text == "ON";
+            RelayColumnPairs.Add(relayName, relayState);
+        }
+
+        return string.Join(", ", RelayColumnPairs.Select(pair => $"{pair.Key}={pair.Value}"));
     }
 
     private (float target, string unit) parseRawTarget(string text)
