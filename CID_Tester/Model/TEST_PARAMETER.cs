@@ -30,7 +30,7 @@ namespace CID_Tester.Model
         public bool? Pass { get; set; }
 
         [Required]
-        public string Parameters { get; set; }
+        public string Parameters { get; set; } = null!;
 
     }
 }
