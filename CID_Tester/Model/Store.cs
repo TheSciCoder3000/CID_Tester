@@ -100,12 +100,12 @@ namespace CID_Tester.Model
                 Documents = DocumentCollection;
                 OnDocumentOpenned?.Invoke(Documents);
                 setActiveDocument(document);
+                ClearAnchorables();
             }
             if (ActiveDocument != activeDocument && activeDocument != null)
             {
                 setActiveDocument(activeDocument);
                 ClearAnchorables();
-                OnAnchorableRemoved?.Invoke(Anchorables);
             }
         }
 
@@ -115,6 +115,7 @@ namespace CID_Tester.Model
             DocumentCollection.Remove(document);
             Documents = DocumentCollection;
             OnDocumentClosed?.Invoke(Documents);
+            ClearAnchorables();
         }
 
         public void AddAnchorables(BaseViewModel anchorable)
@@ -141,6 +142,7 @@ namespace CID_Tester.Model
         public void ClearAnchorables()
         {
             Anchorables = [];
+            OnAnchorableRemoved?.Invoke(Anchorables);
         }
 
         #endregion
