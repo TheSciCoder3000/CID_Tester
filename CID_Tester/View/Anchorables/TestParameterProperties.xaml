@@ -4,14 +4,49 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:CID_Tester.View.Anchorables"
+             xmlns:anchorablesVm="clr-namespace:CID_Tester.ViewModel.Anchorables"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="250">
     <UserControl.Resources>
         <Style TargetType='TextBlock'>
             <Setter Property="Foreground" Value="White"/>
         </Style>
+
+        <DataTemplate DataType="{x:Type anchorablesVm:ParametersItemViewModel}">
+            <Button Content="{Binding RelayName}" Command="{Binding ToggleRelayStateCommand}">
+                <Button.Style>
+                    <Style TargetType="Button">
+                        <Setter Property="Background" Value="Red" />
+                        <Setter Property="Padding" Value="0 3" />
+                        <Setter Property="Margin" Value="0 0 0 5" />
+                        <Setter Property="Foreground" Value="White" />
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="Button">
+                                    <Border Name="border" BorderThickness="0" Margin="{TemplateBinding Margin}" BorderBrush="Black" Padding="{TemplateBinding Padding}" Background="{TemplateBinding Background}">
+                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                    </Border>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter Property="Opacity" Value="0.8" />
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding IsRelayOn}" Value="True">
+                                <Setter Property="Background" Value="Green" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+            </Button>
+        </DataTemplate>
+        <BooleanToVisibilityConverter x:Key="VisibilityConverter" />
     </UserControl.Resources>
-    <ScrollViewer VerticalScrollBarVisibility="Auto">
+    
+    <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="0 0 0 20">
         <StackPanel Grid.Row="0" Margin="10">
             <TextBlock Margin="0 0 0 20">Main</TextBlock>
             <StackPanel Margin="20 0 0 10" Orientation="Horizontal">
@@ -34,6 +69,19 @@
                 AcceptsReturn="True" 
                 KeyDown="TextBox_KeyDown" 
                 Height="100"/>
+            </StackPanel>
+            <StackPanel Margin="20 10 20 10">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0" Margin="0 0 10 10">Parameters</TextBlock>
+                    <TextBlock Grid.Column="1" HorizontalAlignment="Right">
+                        <Hyperlink Command="{Binding ToggleDisplayParameters}">Show All</Hyperlink>
+                    </TextBlock>
+                </Grid>
+                <ItemsControl Visibility="{Binding ShowParameters, Converter={StaticResource VisibilityConverter}, Mode=TwoWay}" ItemsSource="{Binding ParameterItems}" />
             </StackPanel>
         </StackPanel>
     </ScrollViewer>

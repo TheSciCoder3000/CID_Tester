@@ -1,7 +1,9 @@
 ﻿using CID_Tester.Model;
 using CID_Tester.ViewModel.Command;
 using CID_Tester.ViewModel.Interfaces;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Windows.Input;
 
 namespace CID_Tester.ViewModel.Anchorables;
@@ -10,6 +12,8 @@ public class TestParameterPropertiesViewModel : BaseViewModel, IDocument
 {
     private readonly Store _AppStore;
     private readonly TEST_PARAMETER _testParameter;
+
+    public ObservableCollection<ParametersItemViewModel> ParameterItems { get; set; } = new ObservableCollection<ParametersItemViewModel>();
     public TestParameterPropertiesViewModel(Store appStore, TEST_PARAMETER testParameter)
     {
         _AppStore = appStore;
@@ -19,6 +23,27 @@ public class TestParameterPropertiesViewModel : BaseViewModel, IDocument
         Title = "Test Parameter Properties";
         CloseCommand = new RelayCommand(CloseAnchorable);
         PropertyChanged += ChangeHandler;
+        ParseParameters(testParameter.Parameters);
+
+        ToggleDisplayParameters = new RelayCommand((obj) => ShowParameters = !ShowParameters);
+    }
+
+    private void ParseParameters(string parameters)
+    {
+        string[] parametersArray = parameters.Split(", ");
+        foreach (var parameter in parametersArray)
+        {
+            ParameterItems.Add(new ParametersItemViewModel(parameter, UpdateParameters));
+        }
+    }
+
+    private async void UpdateParameters(string RelayName, bool RelayState)
+    {
+        string[] parameterArray = _testParameter.Parameters.Split(", ");
+        int parameterIndx = parameterArray.ToList().FindIndex(r => r.Contains(RelayName));
+        parameterArray[parameterIndx] = $"{RelayName}={RelayState}";
+        _testParameter.Parameters = string.Join(", ", parameterArray);
+        await _AppStore.UpdateTestParameter(_testParameter);
     }
 
     private void VerifyParameterProperties(IEnumerable<TEST_PARAMETER> testParameters)
@@ -77,7 +102,19 @@ public class TestParameterPropertiesViewModel : BaseViewModel, IDocument
         }
     }
 
+    private bool _showParameters = false;
+    public bool ShowParameters
+    {
+        get => _showParameters;
+        set
+        {
+            _showParameters = value;
+            onPropertyChanged(nameof(ShowParameters));
+        }
+    }
+
     public string Title { get; }
 
     public ICommand CloseCommand { get; }
+    public ICommand ToggleDisplayParameters { get; }
 }
