@@ -1,4 +1,5 @@
-﻿using CID_Tester.Service.DbCreator;
+﻿using CID_Tester.Exceptions;
+using CID_Tester.Service.DbCreator;
 using CID_Tester.Service.DbProvider;
 using CID_Tester.ViewModel;
 
@@ -45,22 +46,22 @@ namespace CID_Tester.Model
 
         #region Events
 
-        public event Action<IEnumerable<DUT>> OnDutCreated;
-        public event Action<IEnumerable<DUT>> OnDutUpdated;
-        public event Action<IEnumerable<DUT>> OnDutDeleted;
+        public event Action<IEnumerable<DUT>>? OnDutCreated;
+        public event Action<IEnumerable<DUT>>? OnDutUpdated;
+        public event Action<IEnumerable<DUT>>? OnDutDeleted;
 
-        public event Action<TEST_USER> OnTestUserUpdated;
+        public event Action<TEST_USER>? OnTestUserUpdated;
 
-        public event Action<TEST_PLAN?> OnTestPlanUpdated;
-        public event Action<IEnumerable<TEST_PARAMETER>> OnTestParameterUpdated;
+        public event Action<TEST_PLAN?>? OnTestPlanUpdated;
+        public event Action<IEnumerable<TEST_PARAMETER>>? OnTestParameterUpdated;
 
-        public event Action<IEnumerable<BaseViewModel>> OnDocumentOpenned;
-        public event Action<IEnumerable<BaseViewModel>> OnDocumentClosed;
-        public event Action<BaseViewModel> OnActiveDocumentChanged;
-        public event Action<IEnumerable<BaseViewModel>> OnAnchorableAdded;
-        public event Action<IEnumerable<BaseViewModel>> OnAnchorableRemoved;
+        public event Action<IEnumerable<BaseViewModel>>? OnDocumentOpenned;
+        public event Action<IEnumerable<BaseViewModel>>? OnDocumentClosed;
+        public event Action<BaseViewModel>? OnActiveDocumentChanged;
+        public event Action<IEnumerable<BaseViewModel>>? OnAnchorableAdded;
+        public event Action<IEnumerable<BaseViewModel>>? OnAnchorableRemoved;
 
-        public event Action<TestingMode> OnTesting;
+        public event Action<TestingMode>? OnTesting;
 
         #endregion
 
@@ -166,18 +167,21 @@ namespace CID_Tester.Model
 
         public async Task CreateTestParameter(TEST_PARAMETER testParameter)
         {
+            if (TestPlan == null) throw new TestParameterException("Cannot CREATE test parameter if test plan is null");
             await _dbCreator.CreateTestParameter(testParameter);
             OnTestParameterUpdated?.Invoke(TestPlan.TEST_PARAMETERS);
         }
 
         public async Task DeleteTestParameter(TEST_PARAMETER testParameter)
         {
+            if (TestPlan == null) throw new TestParameterException("Cannot DELETE test parameter if test plan is null");
             await _dbCreator.DeleteTestParameter(testParameter);
             OnTestParameterUpdated?.Invoke(TestPlan.TEST_PARAMETERS);
         }
 
         public async Task UpdateTestParameter(TEST_PARAMETER testParameter)
         {
+            if (TestPlan == null) throw new TestParameterException("Cannot UPDATE test parameter if test plan is null");
             await _dbCreator.UpdateTestParameter(testParameter);
             OnTestParameterUpdated?.Invoke(TestPlan.TEST_PARAMETERS);
         }
