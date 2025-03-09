@@ -43,6 +43,7 @@
     <PackageReference Include="PDFsharp" Version="6.1.1" />
     <PackageReference Include="PicoSDK" Version="0.1.4" />
     <PackageReference Include="ScottPlot.WPF" Version="5.0.54" />
+    <PackageReference Include="System.IO.Ports" Version="9.0.2" />
   </ItemGroup>
 
   <ItemGroup>
