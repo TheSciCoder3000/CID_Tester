@@ -3,6 +3,7 @@ using System;
 using CID_Tester.Model.DbContexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CID_Tester.Migrations
 {
     [DbContext(typeof(TesterDbContext))]
-    partial class TesterDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250309044303_TestParameterType")]
+    partial class TestParameterType
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.0");

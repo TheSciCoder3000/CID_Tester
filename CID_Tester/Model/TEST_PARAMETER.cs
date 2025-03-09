@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel;
 
 namespace CID_Tester.Model
 {
@@ -12,6 +13,9 @@ namespace CID_Tester.Model
 
         [Required]
         public string Name { get; set; } = null!;
+
+        [Required]
+        public string Type { get; set; } = null!;
 
         [Required]
         public TEST_PLAN TestPlan { get; set; } = null!;
