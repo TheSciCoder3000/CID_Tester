@@ -31,6 +31,10 @@ public class TesterDbContext : DbContext
             .HasForeignKey("TestCode")
             .IsRequired();
 
+        modelBuilder.Entity<TEST_PARAMETER>()
+            .Property(param => param.Type)
+            .HasDefaultValue("DC");
+
         modelBuilder.Entity<TEST_USER>()
             .HasData(
                 new TEST_USER()
