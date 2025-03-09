@@ -65,5 +65,8 @@
         <Button Tag="settings" Margin="5" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Center" Command="{Binding NavigateToSettings}">
             Settings
         </Button>
+        <Button Tag="settings" Margin="5" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Center" Command="{Binding NavigateToDebug}">
+            Debug
+        </Button>
     </StackPanel>
 </UserControl>
