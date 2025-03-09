@@ -33,8 +33,8 @@ using CID_Tester.ViewModel.Document;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using OxyPlot.Series;
-using OxyPlot;
+using ScottPlot.WPF;
+using ScottPlot.Colormaps;
 namespace CID_Tester.ViewModel.DebugSDK
 {
     struct ChannelSettings
@@ -102,7 +102,7 @@ namespace CID_Tester.ViewModel.DebugSDK
 
         public PinnedArray<int> Captured;
 
-        short _timebase = 8;
+        short _timebase = 0;
         short _oversample = 1;
         short handle = 0;
         bool _hasFastStreaming = false;
@@ -224,12 +224,13 @@ namespace CID_Tester.ViewModel.DebugSDK
             short timeUnit = 0;
             int timeIndisposed;
             short status = 0;
-            var lineSeries = new LineSeries();
-
-            lineSeries.Points.Add(new DataPoint(0, 200));
-            lineSeries.Points.Add(new DataPoint(0, -200));
+            ScottPlot.TickGenerators.NumericManual tickGen = new();
+            //_DebugVM.OscDisplay.Plot.Clear();
+            //_DebugVM.Logger.Clear();
 
             // Buffer to hold time data
+
+
 
             int[] times = new int[sampleCount];
             PinnedArray<int> pinnedTimes = new PinnedArray<int>(times);
@@ -259,6 +260,11 @@ namespace CID_Tester.ViewModel.DebugSDK
 
             }
             while (status == 0);
+
+
+
+            
+
 
             Debug.WriteLine("Timebase: {0}\toversample:{1}\n", _timebase, _oversample);
             Print("Timebase: " + _timebase + "\toversample:" + _oversample + "\n");
@@ -297,7 +303,7 @@ namespace CID_Tester.ViewModel.DebugSDK
                 Debug.WriteLine('\n');
                 Print("" + '\n');
 
-                for (int i = offset; i < offset + 100; i++)
+                for (int i = 0; i < _DebugVM.Values.Length; i++)
                 {
 
                     long y = adc_to_mv(pinned[0].Target[i], (int)_channelSettings[0].range);
@@ -307,16 +313,13 @@ namespace CID_Tester.ViewModel.DebugSDK
                     Print(x.ToString() + '\t');
                     Print(y.ToString() + '\t');
 
-                    lineSeries.Points.Add(new DataPoint(x / 100, y));
+                    _DebugVM.Values[i] = (y);
+                    tickGen.AddMajor(i, "");
 
-                    for (int ch = 0; ch < _channelCount; ch++)
-                    {
-                        if (_channelSettings[ch].enabled == 1)
-                        {
-                            
-                        }
+                    //_DebugVM.Values[i] = Math.Sin(i * 1 + 2);
 
-                    }
+                    //_DebugVM.Streamer.ViewWipeRight();
+
                     Debug.WriteLine(Environment.NewLine);
                     Print("" + '\n');
                 }
@@ -328,7 +331,10 @@ namespace CID_Tester.ViewModel.DebugSDK
                 Console.WriteLine("Data collection aborted");
             }
 
-            AddData(lineSeries);
+
+            _DebugVM.OscDisplay.Plot.Axes.Bottom.TickGenerator = tickGen;
+
+            UpdateData();
             Imports.Stop(handle);
         }
 
@@ -396,10 +402,6 @@ namespace CID_Tester.ViewModel.DebugSDK
         {
             short status = 0;
             short previousBufferOverrun = 0;
-            var lineSeries = new LineSeries();
-
-            lineSeries.Points.Add(new DataPoint(0, 2000));
-            lineSeries.Points.Add(new DataPoint(0, -2000));
             //Check if fast streaming has been selected and if device is compatible        
             if (!_hasFastStreaming && faststreaming)
             {
@@ -562,7 +564,6 @@ namespace CID_Tester.ViewModel.DebugSDK
                                 Print(x.ToString() + '\t');
                                 Print(y.ToString() + '\t');
 
-                                lineSeries.Points.Add(new DataPoint(x / 100, y));
                             }
                         }
 
@@ -1062,7 +1063,7 @@ namespace CID_Tester.ViewModel.DebugSDK
         {
             // setup devices
 
-            _timebase = 1;
+            _timebase = 0;
             _firstRange = Imports.Range.Range_50MV;
             _lastRange = Imports.Range.Range_20V;
             _channelCount = DUAL_SCOPE;
@@ -1162,12 +1163,11 @@ namespace CID_Tester.ViewModel.DebugSDK
             _DebugVM.ConsoleString += text;
         }
 
-        private void AddData(LineSeries lineSeries)
+        private void UpdateData()
         {
             //_DebugVM.OscDisplay.Series.Add(lineSeries);
-            PlotModel model = new PlotModel();
-            model.Series.Add(lineSeries);
-            _DebugVM.OscDisplay = model;
+            _DebugVM.OscDisplay.Plot.Axes.AutoScale();
+            _DebugVM.OscDisplay.Refresh();
         }
 
     }

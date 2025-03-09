@@ -4,9 +4,18 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:CID_Tester.View.Document"
+      xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+      xmlns:ScottPlot="clr-namespace:ScottPlot.WPF;assembly=ScottPlot.WPF"
       mc:Ignorable="d" 
       d:DesignHeight="964.689" d:DesignWidth="764.299"
+      Unloaded="UserControl_Unloaded"   
       >
+
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Unloaded">
+            <i:InvokeCommandAction Command="{Binding CloseCommand}" />
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
 
     <StackPanel Orientation="Vertical" Margin="0,0,0,-183">
         <StackPanel Margin="20" VerticalAlignment="Stretch">
@@ -15,11 +24,10 @@
                     <StackPanel Orientation="Vertical" >
                         <StackPanel Orientation="Horizontal" Margin="0,7,0,0">
                             <TextBlock Text="OSCILLOSCOPE" FontWeight="Bold" FontSize="22" HorizontalAlignment="Center" />
-                            <TextBlock Text="{Binding OscName}" VerticalAlignment="Center" FontSize="15" Margin="10,0,0,0" />
                         </StackPanel>
 
                         <StackPanel Orientation="Vertical" HorizontalAlignment="Stretch" Margin="42">
-                            <oxy:PlotView  Height="300" VerticalAlignment="Stretch" Model="{Binding OscDisplay, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                            <ContentControl MinHeight="300" MinWidth="300" Content="{Binding OscDisplay, Mode=OneTime}"/>
                         </StackPanel>
                         <Grid Width="250" HorizontalAlignment="Left">
                             <Grid.ColumnDefinitions>

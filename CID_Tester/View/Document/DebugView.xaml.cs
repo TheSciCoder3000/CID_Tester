@@ -3,6 +3,8 @@ using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using CID_Tester.ViewModel.Document;
+using OxyPlot;
+using OxyPlot.Wpf;
 
 namespace CID_Tester.View.Document;
 
@@ -11,7 +13,7 @@ public partial class DebugView : UserControl
     public DebugView()
     {
         InitializeComponent();
-        
+
     }
 
     private void Button_Click(object sender, RoutedEventArgs e)
@@ -28,5 +30,11 @@ public partial class DebugView : UserControl
     {
         var textBox = sender as TextBox;
         e.Handled = Regex.IsMatch(e.Text, "[^0-9]+");
+    }
+
+    private void UserControl_Unloaded(object sender, RoutedEventArgs e)
+    {
+        //Osc.Model = null;
+        Debug.WriteLine("Reset Model");
     }
 }

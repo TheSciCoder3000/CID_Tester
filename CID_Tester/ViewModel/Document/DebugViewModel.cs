@@ -9,8 +9,9 @@ using System.Diagnostics;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using CID_Tester.ViewModel.DebugSDK;
-using OxyPlot;
-using OxyPlot.Series;
+using ScottPlot.WPF;
+using ScottPlot.Plottables;
+using ScottPlot;
 namespace CID_Tester.ViewModel.Document;
 
 public class DebugViewModel : BaseViewModel, IDocument, INotifyPropertyChanged
@@ -35,8 +36,8 @@ public class DebugViewModel : BaseViewModel, IDocument, INotifyPropertyChanged
         }
     }
 
-    private PlotModel _OscDisplay;
-    public PlotModel OscDisplay
+    private WpfPlot _OscDisplay;
+    public WpfPlot OscDisplay
     {
         get { return _OscDisplay; }
         set
@@ -46,6 +47,21 @@ public class DebugViewModel : BaseViewModel, IDocument, INotifyPropertyChanged
             OnPropertyChanged();
         }
     }
+
+    private DataStreamer _Streamer;
+    public DataStreamer Streamer
+    {
+        get { return _Streamer; }
+        set
+        {
+            _Streamer = value;
+            // Call OnPropertyChanged whenever the property is updated
+            OnPropertyChanged();
+        }
+    }
+
+    public double[] Values = new double[100];
+
 
     private int _signalType;
     public int signalType
@@ -100,9 +116,32 @@ public class DebugViewModel : BaseViewModel, IDocument, INotifyPropertyChanged
     public ICommand GetInfo { get; }
     public ICommand StartSigGen { get; }
     public ICommand StopSigGen { get; }
+    public ICommand Loaded { get; }
 
     public DebugViewModel(Store appStore, PS2000 oscilloscope, PS2000SigGen sigGen)
     {
+        OscDisplay = new WpfPlot();
+        OscDisplay.Plot.Add.Signal(Values);
+        ScottPlot.TickGenerators.NumericManual tickGen = new();
+
+        ScottPlot.AxisPanels.Experimental.LeftAxisWithSubtitle customAxisY = new()
+        {
+            LabelText = "VOLTAGES",
+            SubLabelText = "All units are in mV",
+        };
+
+        OscDisplay.Plot.Axes.Remove(OscDisplay.Plot.Axes.Left);
+        OscDisplay.Plot.Axes.AddLeftAxis(customAxisY);
+
+        for (int i = 0; i < Values.Length; i++)
+        {
+            tickGen.AddMajor(i, "");
+        }
+
+        OscDisplay.Plot.Axes.Bottom.TickLabelStyle.Rotation = -45;
+        OscDisplay.Plot.Axes.Bottom.TickLabelStyle.Alignment = Alignment.MiddleRight;
+
+
         Oscilloscope = oscilloscope;
         SigGen = sigGen;
         _AppStore = appStore;
@@ -116,26 +155,26 @@ public class DebugViewModel : BaseViewModel, IDocument, INotifyPropertyChanged
         // Signal Generator
         StartSigGen = new RelayCommand(StartSigGenHandler);
         StopSigGen = new RelayCommand(StopSigGenHandler);
+        Loaded = new RelayCommand(LoadedHandler);
         signalType = 0;
         frequency = 1000;
         p2pVoltage = 2000;
         offsetVoltage = 0;
 
-
-        ConsoleString = "Starting...\n";
-
-        OscDisplay = new PlotModel();
-
     }
 
-    private void CloseCommandHanlder(object? parameter) => _AppStore.RemoveDocument(this);
+    private void CloseCommandHanlder(object? parameter)
+    {
+        _AppStore.RemoveDocument(this);
+    }
 
     private void CaptureMeasurementHandler(object? obj)
     {
         Oscilloscope.Run();
-        Oscilloscope.SetTimebase(12);
+        Oscilloscope.SetTimebase(8);
         Oscilloscope.SetVoltages(8);
         Oscilloscope.CollectBlockImmediate();
+
         //Oscilloscope.Stream();
 
     }
@@ -145,6 +184,12 @@ public class DebugViewModel : BaseViewModel, IDocument, INotifyPropertyChanged
         Oscilloscope.GetDeviceInfo();
         Oscilloscope.DisplaySettings();
 
+    }
+
+    private void LoadedHandler(object? obj)
+    {
+        //OscDisplay = new PlotModel();
+        Debug.WriteLine("TEST");
     }
 
 
