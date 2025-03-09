@@ -137,9 +137,7 @@ public class DebugViewModel : BaseViewModel, IDocument, INotifyPropertyChanged
         {
             tickGen.AddMajor(i, "");
         }
-
-        OscDisplay.Plot.Axes.Bottom.TickLabelStyle.Rotation = -45;
-        OscDisplay.Plot.Axes.Bottom.TickLabelStyle.Alignment = Alignment.MiddleRight;
+        OscDisplay.Plot.Axes.Bottom.TickGenerator = tickGen;
 
 
         Oscilloscope = oscilloscope;
@@ -171,7 +169,7 @@ public class DebugViewModel : BaseViewModel, IDocument, INotifyPropertyChanged
     private void CaptureMeasurementHandler(object? obj)
     {
         Oscilloscope.Run();
-        Oscilloscope.SetTimebase(8);
+        Oscilloscope.SetTimebase(7);
         Oscilloscope.SetVoltages(8);
         Oscilloscope.CollectBlockImmediate();
 
@@ -181,6 +179,7 @@ public class DebugViewModel : BaseViewModel, IDocument, INotifyPropertyChanged
 
     private void GetInfoHandler(object? obj)
     {
+        Oscilloscope.Run();
         Oscilloscope.GetDeviceInfo();
         Oscilloscope.DisplaySettings();
 

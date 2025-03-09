@@ -310,10 +310,10 @@ namespace CID_Tester.ViewModel.DebugSDK
                     int x = pinnedTimes.Target[i];
 
                     //Debug.Write(x.ToString() + '\t');
-                    Print(x.ToString() + '\t');
-                    Print(y.ToString() + '\t');
+                    Print((Convert.ToDouble(x) / 100).ToString() + '\t');
+                    Print((Convert.ToDouble(y) / 1000).ToString() + '\t');
 
-                    _DebugVM.Values[i] = (y);
+                    _DebugVM.Values[i] = (Convert.ToDouble(y) / 1000);
                     tickGen.AddMajor(i, "");
 
                     //_DebugVM.Values[i] = Math.Sin(i * 1 + 2);
