@@ -38,8 +38,8 @@ namespace CID_Tester.Model
 
         private async Task RunTests()
         {
-            SwitchMatrix matrix = new SwitchMatrix("COM8");
-            Measure measure = new Measure("COM8");
+            //SwitchMatrix matrix = new SwitchMatrix("COM8");
+            Measure measure = new Measure("COM10");
 
             foreach (var parameter in TEST_PARAMETERS)
             {
@@ -49,7 +49,7 @@ namespace CID_Tester.Model
                 // communicate with PSU
 
                 // communicate with measuring devices to start meeasuring
-                measure.SetModeVoltage();
+                await measure.SetModeVoltage();
                 string value = await measure.GetMeasurement();
                 Debug.WriteLine($"Voltage: {value}");
             }
