@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel;
 
 namespace CID_Tester.Model
 {
@@ -35,6 +34,18 @@ namespace CID_Tester.Model
 
         [Required]
         public string Parameters { get; set; } = null!;
+
+        public Dictionary<string, bool> ParseToParameterDictionary()
+        {
+            Dictionary<string, bool> ParameterDictionary = new Dictionary<string, bool>();
+            string[] parametersArray = Parameters.Split(", ");
+            foreach (var parameter in parametersArray)
+            {
+                var relayStringSplit = parameter.Split('=');
+                ParameterDictionary.Add(relayStringSplit[0], relayStringSplit[1] == "True");
+            }
+            return ParameterDictionary;
+        }
 
     }
 }

@@ -38,23 +38,32 @@ namespace CID_Tester.Model
 
         private async Task RunTests()
         {
-            //SwitchMatrix matrix = new SwitchMatrix("COM8");
             Measure measure = new Measure("COM10");
+            SwitchMatrix matrix = new SwitchMatrix("COM8");
+            PowerSupply supply = new PowerSupply("COM7");
 
-            foreach (var parameter in TEST_PARAMETERS)
+            for (int dut_indx = 0; dut_indx < 0;  dut_indx++)
             {
-                // communicate with mainboard to setup relay
-                
+                foreach (var parameter in TEST_PARAMETERS)
+                {
+                    Debug.WriteLine(parameter.Name);
+                    // communicate with mainboard to setup relay
+                    matrix.Start(parameter.ParseToParameterDictionary());
 
-                // communicate with PSU
+                    // communicate with PSU
+                    
 
-                // communicate with measuring devices to start meeasuring
-                await measure.SetModeVoltage();
-                string value = await measure.GetMeasurement();
-                Debug.WriteLine($"Voltage: {value}");
+                    // communicate with measuring devices to start meeasuring
+                    await measure.SetModeVoltage();
+                    string value = await measure.GetMeasurement();
+                }
+
+                matrix.ChangeDut(dut_indx);
             }
 
+
             measure.Close();
+            matrix.Close();
         }
     }
 }
