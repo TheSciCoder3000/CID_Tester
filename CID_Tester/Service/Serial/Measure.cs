@@ -3,19 +3,11 @@ using System.IO.Ports;
 
 namespace CID_Tester.Service.Serial
 {
-    public class Measure
+    public class Measure : BaseSerial
     {
-        private SerialPort _serialPort;
         private TaskCompletionSource<string> _taskCompletionSource;
 
-        public Measure(string portName)
-        {
-            _serialPort = new SerialPort();
-            _serialPort.PortName = portName;  // TODO: replace with actual port
-            _serialPort.BaudRate = 115200;
-            _serialPort.DataReceived += OnDataReceived;
-            _serialPort.Open();
-        }
+        public Measure(string portName) : base(portName, 115200) { }
 
         private void OnDataReceived(object sender, SerialDataReceivedEventArgs e)
         {
@@ -65,11 +57,6 @@ namespace CID_Tester.Service.Serial
 
             if (completedTask == responseTask) return responseTask.Result;
             throw new TimeoutException("TImed out in waiting for serial response");
-        }
-
-        public void Close()
-        {
-            _serialPort.Close();
         }
     }
 }

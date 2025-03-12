@@ -1,17 +1,51 @@
 ﻿
+using System.Diagnostics;
 using System.IO.Ports;
 
 namespace CID_Tester.Service.Serial
 {
-    public class PowerSupply
+    public class PowerSupply : BaseSerial
     {
-        private SerialPort _serialPort;
 
-        public PowerSupply(string portName)
+        public PowerSupply(string portName) : base(portName, 115200) { }
+
+        public void SetDPS1Voltage(int voltage)
         {
-            _serialPort = new SerialPort(portName);
-            _serialPort.BaudRate = 9600;
-            _serialPort.Open();
+            Debug.WriteLine($"1SETV{voltage}");
+        }
+        public void SetDPS2Voltage(int voltage)
+        {
+            Debug.WriteLine($"2SETV{voltage}");
+        }
+        public void SetPMU1Voltage(int voltage)
+        {
+            Debug.WriteLine($"3SETV{voltage}");
+        }
+        public void SetPMU2Voltage(int voltage)
+        {
+            Debug.WriteLine($"2SETV{voltage}");
+        }
+
+        public void SetDPS1Current(int current)
+        {
+            Debug.WriteLine($"1SETA{current}");
+        }
+        public void SetDPS2Current(int current)
+        {
+            Debug.WriteLine($"2SETA{current}");
+        }
+        public void SetPMU1Current(int current)
+        {
+            Debug.WriteLine($"3SETA{current}");
+        }
+        public void SetPMU2Current(int current)
+        {
+            Debug.WriteLine($"2SETA{current}");
+        }
+
+        public void ToggleSupply()
+        {
+
         }
     }
 }
