@@ -25,5 +25,10 @@ namespace CID_Tester.Service.Serial
         {
             Debug.WriteLine($"DUTS DUT_{dut_indx}");
         }
+
+        public void Reset()
+        {
+            Debug.WriteLine("ALL0");
+        }
     }
 }

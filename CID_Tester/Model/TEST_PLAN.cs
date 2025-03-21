@@ -42,23 +42,38 @@ namespace CID_Tester.Model
             SwitchMatrix matrix = new SwitchMatrix("COM8");
             PowerSupply supply = new PowerSupply("COM7");
 
-            for (int dut_indx = 0; dut_indx < 0;  dut_indx++)
+            foreach (var parameter in TEST_PARAMETERS)
             {
-                foreach (var parameter in TEST_PARAMETERS)
+                // setup wiring
+
+                for (int dutNum = 1; dutNum <= 4; dutNum++)
                 {
-                    Debug.WriteLine(parameter.Name);
-                    // communicate with mainboard to setup relay
-                    matrix.Start(parameter.ParseToParameterDictionary());
+                    // switch to dut num
+                    matrix.ChangeDut(dutNum);
 
-                    // communicate with PSU
-                    
+                    // turn on + power supply
+                    // supply.ToggleDPSPos(true);
 
-                    // communicate with measuring devices to start meeasuring
+                    // turn on - power supply
+                    // supply.ToggleDPSNeg(true);
+
+                    // turn on input
+
+                    // start measurement
                     await measure.SetModeVoltage();
-                    string value = await measure.GetMeasurement();
+                    string rawValue = await measure.GetMeasurement();
+
+                    // turn off input
+
+                    // turn off - power supply
+                    // supply.ToggleDPSNeg(false);
+
+                    // turn off + power supply
+                    // supply.ToggleDPSPos(false);
                 }
 
-                matrix.ChangeDut(dut_indx);
+                // reset wiring
+                matrix.Reset();
             }
 
 

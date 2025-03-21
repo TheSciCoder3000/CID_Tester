@@ -4,9 +4,16 @@ using System.IO.Ports;
 
 namespace CID_Tester.Service.Serial
 {
+
+    public enum OpAmpInput
+    {
+        Inverting,
+        NonInverting,
+        Both
+    }
+
     public class PowerSupply : BaseSerial
     {
-
         public PowerSupply(string portName) : base(portName, 115200) { }
 
         public void SetDPS1Voltage(int voltage)
@@ -43,9 +50,34 @@ namespace CID_Tester.Service.Serial
             Debug.WriteLine($"2SETA{current}");
         }
 
-        public void ToggleSupply()
+        public void ToggleDPSPos(bool state)
         {
+            Debug.WriteLine($"1TOGG {(state ? 1 : 0)}");
+        }
 
+        public void ToggleDPSNeg(bool state)
+        {
+            Debug.WriteLine($"2TOGG {(state ? 1 : 0)}");
+        }
+
+        public void TogglePMUInput(OpAmpInput inputPin, bool state)
+        {
+            switch (inputPin)
+            {
+                case OpAmpInput.Inverting:
+                    Debug.WriteLine($"3TOGG {(state ? 1 : 0)}");
+                    break;
+                case OpAmpInput.NonInverting:
+                    Debug.WriteLine($"4TOGG {(state ? 1 : 0)}");
+                    break;
+                case OpAmpInput.Both:
+                    Debug.WriteLine($"3TOGG {(state ? 1 : 0)}");
+                    Debug.WriteLine($"4TOGG {(state ? 1 : 0)}");
+                    break;
+                default:
+                    Debug.WriteLine("Incorrect supply input Pin");
+                    break;
+            }
         }
     }
 }

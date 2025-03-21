@@ -90,10 +90,10 @@ namespace CID_Tester.ViewModel.DebugSDK
         // Initialise view 
         public PS2000SigGen()
         {
-            _signalType = 0;
-            _frequency = 1000;
-            _p2pVoltage = 2000;
-            _offsetVoltage = 0;
+            signalType = 0;
+            frequency = 1000;
+            p2pVoltage = 2000;
+            offsetVoltage = 0;
         }
 
         // Disable sweep for DC waveType

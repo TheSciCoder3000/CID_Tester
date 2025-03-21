@@ -261,11 +261,6 @@ namespace CID_Tester.ViewModel.DebugSDK
             }
             while (status == 0);
 
-
-
-            
-
-
             Debug.WriteLine("Timebase: {0}\toversample:{1}\n", _timebase, _oversample);
             Print("Timebase: " + _timebase + "\toversample:" + _oversample + "\n");
 
@@ -303,17 +298,20 @@ namespace CID_Tester.ViewModel.DebugSDK
                 Debug.WriteLine('\n');
                 Print("" + '\n');
 
-                for (int i = 0; i < _DebugVM.Values.Length; i++)
+                for (int i = 0; i < _DebugVM.ValuesOut.Length; i++)
                 {
 
-                    long y = adc_to_mv(pinned[0].Target[i], (int)_channelSettings[0].range);
+                    long y1 = adc_to_mv(pinned[0].Target[i], (int)_channelSettings[0].range);
+                    long y2 = adc_to_mv(pinned[1].Target[i], (int)_channelSettings[1].range);
                     int x = pinnedTimes.Target[i];
 
                     //Debug.Write(x.ToString() + '\t');
+                    Debug.WriteLine($"Channel A: {y1}mv");
                     Print((Convert.ToDouble(x) / 100).ToString() + '\t');
-                    Print((Convert.ToDouble(y) / 1000).ToString() + '\t');
+                    Print((Convert.ToDouble(y1) / 1000).ToString() + '\t');
 
-                    _DebugVM.Values[i] = (Convert.ToDouble(y) / 1000);
+                    _DebugVM.ValuesOut[i] = (Convert.ToDouble(y1) / 1000);
+                    _DebugVM.ValuesIn[i] = (Convert.ToDouble(y2) / 1000);
                     tickGen.AddMajor(i, "");
 
                     //_DebugVM.Values[i] = Math.Sin(i * 1 + 2);
@@ -1025,8 +1023,21 @@ namespace CID_Tester.ViewModel.DebugSDK
         {
             int ch;
             int voltage;
+            int timeInterval;
+            int maxSamples;
+            short timeunit;
 
             Debug.WriteLine(Environment.NewLine);
+
+            for (short i = 0; i < Imports.PS2200_MAX_TIMEBASE; i++)
+            {
+                short status = Imports.GetTimebase(handle, i, BUFFER_SIZE, out timeInterval, out timeunit, _oversample, out maxSamples);
+
+                if (status == 1)
+                {
+                    Debug.WriteLine("{0,2}: {1} ns", i, timeInterval);
+                }
+            }
 
             for (ch = 0; ch < _channelCount; ch++)
             {
@@ -1073,7 +1084,7 @@ namespace CID_Tester.ViewModel.DebugSDK
             {
                 _channelSettings[i].enabled = 1;
                 _channelSettings[i].DCcoupled = 1; //DC coupled
-                _channelSettings[i].range = Imports.Range.Range_5V;
+                _channelSettings[i].range = Imports.Range.Range_20V;
             }
 
             // main loop - read key and call routine

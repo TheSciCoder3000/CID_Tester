@@ -60,8 +60,9 @@ public class DebugViewModel : BaseViewModel, IDocument, INotifyPropertyChanged
         }
     }
 
-    public double[] Values = new double[100];
+    public double[] ValuesOut = new double[100];
 
+    public double[] ValuesIn = new double[100];
 
     private int _signalType;
     public int signalType
@@ -121,7 +122,8 @@ public class DebugViewModel : BaseViewModel, IDocument, INotifyPropertyChanged
     public DebugViewModel(Store appStore, PS2000 oscilloscope, PS2000SigGen sigGen)
     {
         OscDisplay = new WpfPlot();
-        OscDisplay.Plot.Add.Signal(Values);
+        OscDisplay.Plot.Add.Signal(ValuesOut);
+        OscDisplay.Plot.Add.Signal(ValuesIn);
         ScottPlot.TickGenerators.NumericManual tickGen = new();
 
         ScottPlot.AxisPanels.Experimental.LeftAxisWithSubtitle customAxisY = new()
@@ -133,12 +135,12 @@ public class DebugViewModel : BaseViewModel, IDocument, INotifyPropertyChanged
         OscDisplay.Plot.Axes.Remove(OscDisplay.Plot.Axes.Left);
         OscDisplay.Plot.Axes.AddLeftAxis(customAxisY);
 
-        for (int i = 0; i < Values.Length; i++)
+        for (int i = 0; i < ValuesOut.Length; i++)
         {
             tickGen.AddMajor(i, "");
         }
         OscDisplay.Plot.Axes.Bottom.TickGenerator = tickGen;
-
+        
 
         Oscilloscope = oscilloscope;
         SigGen = sigGen;
@@ -170,7 +172,7 @@ public class DebugViewModel : BaseViewModel, IDocument, INotifyPropertyChanged
     {
         Oscilloscope.Run();
         Oscilloscope.SetTimebase(7);
-        Oscilloscope.SetVoltages(8);
+        Oscilloscope.SetVoltages(10);
         Oscilloscope.CollectBlockImmediate();
 
         //Oscilloscope.Stream();
@@ -194,6 +196,10 @@ public class DebugViewModel : BaseViewModel, IDocument, INotifyPropertyChanged
 
     private void StartSigGenHandler(object? obj)
     {
+        SigGen.signalType = signalType;
+        SigGen.frequency = frequency;
+        SigGen.p2pVoltage = p2pVoltage;
+        SigGen.offsetVoltage = offsetVoltage;
         SigGen.StartSignal();
     }
 

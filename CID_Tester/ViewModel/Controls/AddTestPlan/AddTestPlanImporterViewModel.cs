@@ -75,8 +75,7 @@ public class AddTestPlanImporterViewModel : BaseViewModel
                 string testName = worksheet.Cells[1, 2].Text;
 
                 string deviceName = worksheet.Cells[3, 3].Text;
-                DUT? device = _AppStore.DUTs.FirstOrDefault(dut => dut.DutName == deviceName);
-                if (device == null) throw new ExcelFormatException("Device in the Test Plan does not exist in the database");
+                DUT? device = _AppStore.DUTs.FirstOrDefault(dut => dut.DutName == deviceName) ?? throw new ExcelFormatException("Device in the Test Plan does not exist in the database");
 
                 int testCycNo = int.Parse(worksheet.Cells[4, 3].Text);
                 string testDesc = worksheet.Cells[5, 3].Text;
@@ -101,6 +100,8 @@ public class AddTestPlanImporterViewModel : BaseViewModel
                     string rF = worksheet.Cells[row, 5].Text;
                     var (target, unit) = parseRawTarget(worksheet.Cells[row, 6].Text);
                     string parameters = ParseParameterToString(worksheet, row);
+                    float PMU1 = float.Parse(worksheet.Cells[row, 25].Text);
+                    float PMU2 = float.Parse(worksheet.Cells[row, 26].Text);
 
                     _testPlan.TEST_PARAMETERS.Add(new TEST_PARAMETER()
                     {
