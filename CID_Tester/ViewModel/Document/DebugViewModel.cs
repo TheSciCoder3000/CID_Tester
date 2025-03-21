@@ -205,10 +205,15 @@ public class DebugViewModel : BaseViewModel, IDocument, INotifyPropertyChanged
 
     private void StopSigGenHandler(object? obj)
     {
-        SigGen.signalType = 8;
-        SigGen.frequency = 0;
-        SigGen.p2pVoltage = 0;
-        SigGen.offsetVoltage = 0;
+        signalType = 8;
+        frequency = 0;
+        p2pVoltage = 0;
+        offsetVoltage = 0;
+
+        SigGen.signalType = signalType;
+        SigGen.frequency = frequency;
+        SigGen.p2pVoltage = p2pVoltage;
+        SigGen.offsetVoltage = offsetVoltage;
         SigGen.StartSignal();
     }
 
