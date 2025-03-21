@@ -112,6 +112,45 @@ public class DebugViewModel : BaseViewModel, IDocument, INotifyPropertyChanged
         }
     }
 
+    private int _selectedTimebase;
+    public int SelectedTimebase
+    {
+        get => _selectedTimebase;
+        set
+        {
+            _selectedTimebase = value;
+            OnPropertyChanged();
+        }
+    }
+    private static readonly KeyValuePair<int, string>[] _timebaseList = {
+        new KeyValuePair<int, string>(1, "10 ns"),
+        new KeyValuePair<int, string>(2, "20 ns"),
+        new KeyValuePair<int, string>(3, "40 ns"),
+        new KeyValuePair<int, string>(4, "80 ns"),
+        new KeyValuePair<int, string>(5, "160 ns"),
+        new KeyValuePair<int, string>(6, "320 ns"),
+        new KeyValuePair<int, string>(7, "640 ns"),
+        new KeyValuePair<int, string>(8, "1.28 µs"),
+        new KeyValuePair<int, string>(9, "2.56 µs"),
+        new KeyValuePair<int, string>(10, "5.12 µs"),
+        new KeyValuePair<int, string>(11, "10.24 µs"),
+        new KeyValuePair<int, string>(12, "20.48 µs"),
+        new KeyValuePair<int, string>(13, "40.96 µs"),
+        new KeyValuePair<int, string>(14, "81.92 µs"),
+        new KeyValuePair<int, string>(15, "163.84 µs"),
+        new KeyValuePair<int, string>(16, "327.68 µs"),
+        new KeyValuePair<int, string>(17, "655.36 µs"),
+        new KeyValuePair<int, string>(18, "1.31 ms"),
+        new KeyValuePair<int, string>(19, "2.62 ms"),
+        new KeyValuePair<int, string>(20, "5.24 ms"),
+        new KeyValuePair<int, string>(21, "10.49 ms"),
+        new KeyValuePair<int, string>(22, "20.97 ms"),
+    };
+    public KeyValuePair<int, string>[] TimebaseList
+    {
+        get => _timebaseList;
+    }
+
     public ICommand CloseCommand { get; }
     public ICommand CaptureMeasurement { get; }
     public ICommand GetInfo { get; }
@@ -149,7 +188,7 @@ public class DebugViewModel : BaseViewModel, IDocument, INotifyPropertyChanged
 
         // Oscilloscope
         CloseCommand = new RelayCommand(CloseCommandHanlder);
-        CaptureMeasurement = new RelayCommand(CaptureMeasurementHandler);
+        CaptureMeasurement = new RelayCommand((object? obj) => Task.Run(CaptureMeasurementHandler));
         GetInfo = new RelayCommand(GetInfoHandler);
 
         // Signal Generator
@@ -157,6 +196,7 @@ public class DebugViewModel : BaseViewModel, IDocument, INotifyPropertyChanged
         StopSigGen = new RelayCommand(StopSigGenHandler);
         Loaded = new RelayCommand(LoadedHandler);
         signalType = 0;
+        SelectedTimebase = 15;
         frequency = 1000;
         p2pVoltage = 2000;
         offsetVoltage = 0;
@@ -168,10 +208,10 @@ public class DebugViewModel : BaseViewModel, IDocument, INotifyPropertyChanged
         _AppStore.RemoveDocument(this);
     }
 
-    private void CaptureMeasurementHandler(object? obj)
+    private void CaptureMeasurementHandler()
     {
         Oscilloscope.Run();
-        Oscilloscope.SetTimebase(7);
+        Oscilloscope.SetTimebase((short)SelectedTimebase);
         Oscilloscope.SetVoltages(10);
         Oscilloscope.CollectBlockImmediate();
 
@@ -201,20 +241,17 @@ public class DebugViewModel : BaseViewModel, IDocument, INotifyPropertyChanged
         SigGen.p2pVoltage = p2pVoltage;
         SigGen.offsetVoltage = offsetVoltage;
         SigGen.StartSignal();
+        Task.Run(CaptureMeasurementHandler);
     }
 
     private void StopSigGenHandler(object? obj)
     {
-        signalType = 8;
-        frequency = 0;
-        p2pVoltage = 0;
-        offsetVoltage = 0;
-
-        SigGen.signalType = signalType;
-        SigGen.frequency = frequency;
-        SigGen.p2pVoltage = p2pVoltage;
-        SigGen.offsetVoltage = offsetVoltage;
+        SigGen.signalType = 0;
+        SigGen.frequency = 0;
+        SigGen.p2pVoltage = 0;
+        SigGen.offsetVoltage = 0;
         SigGen.StartSignal();
+        Task.Run(CaptureMeasurementHandler);
     }
 
 
