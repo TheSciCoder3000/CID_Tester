@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO.Ports;
 using System.Linq;
 using System.Text;
@@ -14,15 +15,32 @@ namespace CID_Tester.Service.Serial
         public BaseSerial(string portName, int baudrate = 9600)
         {
             _serialPort = new SerialPort(portName, baudrate);
+        }
+
+        public bool Open()
+        {
             try
             {
                 _serialPort.Open();
-            } catch(Exception ex)
+                return true;
+            }
+            catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
+                return false;
             }
         }
 
         public void Close() => _serialPort.Close();
+
+        protected void SendCommand(string command)
+        {
+            //if (_serialPort.IsOpen)
+            //{
+            //    _serialPort.WriteLine(command);
+            //}
+
+            Debug.WriteLine(command);
+        }
     }
 }

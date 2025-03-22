@@ -16,19 +16,19 @@ namespace CID_Tester.Service.Serial
             foreach (var command in parameterDictionary)
             {
                 if (command.Value == false) continue;
-                Debug.WriteLine("ALL0");
-                Debug.WriteLine($"RLAY {command.Key}");
+                SendCommand("ALL0");
+                SendCommand($"RLAY {command.Key}");
             }
         }
 
         public void ChangeDut(int dut_indx)
         {
-            Debug.WriteLine($"DUTS DUT_{dut_indx}");
+            SendCommand($"DUTS DUT_{dut_indx}");
         }
 
         public void Reset()
         {
-            Debug.WriteLine("ALL0");
+            SendCommand("ALL0");
         }
     }
 }

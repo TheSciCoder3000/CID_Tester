@@ -20,7 +20,7 @@ namespace CID_Tester.Service.Serial
         public async Task SetModeVoltage()
         {
             string mode = await GetFunc();
-            if (mode != "\"VOLT\"") _serialPort.WriteLine("CONF:VOLT:DC");
+            if (mode != "\"VOLT\"") SendCommand("CONF:VOLT:DC");
         }
 
         public async Task<string> GetFunc(int timeout_delay = 10000)
@@ -29,7 +29,7 @@ namespace CID_Tester.Service.Serial
 
             _taskCompletionSource = new TaskCompletionSource<string>();
 
-            _serialPort.WriteLine("FUNC?");
+            SendCommand("FUNC?");
 
             Task timeoutTask = Task.Delay(timeout_delay);
             Task<string> responseTask = _taskCompletionSource.Task;
@@ -48,7 +48,7 @@ namespace CID_Tester.Service.Serial
 
             _taskCompletionSource = new TaskCompletionSource<string>();
 
-            _serialPort.WriteLine("MEAS?");
+            SendCommand("MEAS?");
 
             Task timeoutTask = Task.Delay(timeout_delay);
             Task<string> responseTask = _taskCompletionSource.Task;
