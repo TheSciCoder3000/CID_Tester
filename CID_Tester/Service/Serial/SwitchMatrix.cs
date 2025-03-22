@@ -7,16 +7,16 @@ namespace CID_Tester.Service.Serial
 {
     public class SwitchMatrix : BaseSerial
     {
-        public bool IsOpen { get => _serialPort.IsOpen; }
+        public bool IsOpen { get => _serialPort?.IsOpen ?? false; }
 
-        public SwitchMatrix(string portName) : base(portName, 9600) { }
+        public SwitchMatrix() : base("MATRIX", 9600) { }
 
         public void Start(Dictionary<string, bool> parameterDictionary)
         {
+            SendCommand("ALL0");
             foreach (var command in parameterDictionary)
             {
                 if (command.Value == false) continue;
-                SendCommand("ALL0");
                 SendCommand($"RLAY {command.Key}");
             }
         }

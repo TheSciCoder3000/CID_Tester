@@ -7,7 +7,10 @@ namespace CID_Tester.Service.Serial
     {
         private TaskCompletionSource<string> _taskCompletionSource;
 
-        public Measure(string portName) : base(portName, 115200) { }
+        public Measure() : base("DMM", 115200)
+        {
+            if (_serialPort != null) _serialPort.DataReceived += OnDataReceived;
+        }
 
         private void OnDataReceived(object sender, SerialDataReceivedEventArgs e)
         {
@@ -19,13 +22,20 @@ namespace CID_Tester.Service.Serial
         #region Set Mode Functions
         public async Task SetModeVoltage()
         {
-            string mode = await GetFunc();
-            if (mode != "\"VOLT\"") SendCommand("CONF:VOLT:DC");
+            try
+            {
+                string mode = await GetFunc();
+                if (mode != "\"VOLT\"") SendCommand("CONF:VOLT:DC");
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+            }
         }
 
         public async Task<string> GetFunc(int timeout_delay = 10000)
         {
-            if (!_serialPort.IsOpen) throw new Exception("Serial Port is not open");
+            if (!_serialPort?.IsOpen ?? true) throw new Exception("Serial Port is not open");
 
             _taskCompletionSource = new TaskCompletionSource<string>();
 
@@ -44,7 +54,7 @@ namespace CID_Tester.Service.Serial
 
         public async Task<string> GetMeasurement(int timeout_delay = 10000)
         {
-            if (!_serialPort.IsOpen) throw new Exception("Serial Port is not open");
+            if (!_serialPort?.IsOpen ?? true) throw new Exception("Serial Port is not open");
 
             _taskCompletionSource = new TaskCompletionSource<string>();
 

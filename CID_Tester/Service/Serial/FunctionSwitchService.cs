@@ -9,7 +9,7 @@ namespace CID_Tester.Service.Serial
 {
     public class FunctionSwitchService : BaseSerial
     {
-        public FunctionSwitchService(string portName) : base(portName) { }
+        public FunctionSwitchService() : base("FGRELAY", 9600) { }
 
         public void OpenInvFG()
         {
