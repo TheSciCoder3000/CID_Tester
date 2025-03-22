@@ -1,6 +1,7 @@
 ﻿using CID_Tester.Exceptions;
 using CID_Tester.Service.DbCreator;
 using CID_Tester.Service.DbProvider;
+using CID_Tester.Service.Serial;
 using CID_Tester.ViewModel;
 
 namespace CID_Tester.Model
@@ -31,13 +32,13 @@ namespace CID_Tester.Model
         public IEnumerable<DUT> DUTs { get; private set; } = [];
         public TEST_USER TestUser { get; private set; }
 
-        private TEST_PLAN? _testPlan;
+        private TestPlanService _testPlanService = new TestPlanService();
         public TEST_PLAN? TestPlan
         {
-            get => _testPlan;
+            get => _testPlanService.TestPlan;
             set
             {
-                _testPlan = value;
+                _testPlanService.TestPlan = value;
                 OnTestPlanUpdated?.Invoke(value);
             }
         }
