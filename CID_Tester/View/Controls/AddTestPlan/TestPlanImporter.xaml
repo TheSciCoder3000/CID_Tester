@@ -13,10 +13,11 @@
         </StackPanel>
         <DataGrid HorizontalScrollBarVisibility="Disabled" Margin="0 20 0 0" ItemsSource="{Binding TestParameters}">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Name" Binding="{Binding Name}" MinWidth="200" />
+                <DataGridTextColumn Header="Name" Binding="{Binding Name}" MinWidth="170" />
                 <DataGridTextColumn Header="Description" Binding="{Binding Description}" MinWidth="100" Width="*" />
                 <DataGridTextColumn Header="Metric" Binding="{Binding Metric}" MaxWidth="100" Width="*" />
                 <DataGridTextColumn Header="Target" Binding="{Binding Target}" MaxWidth="100" Width="*" />
+                <DataGridTextColumn Header="Input Configuration" Binding="{Binding InputConfiguration}" Width="*" />
             </DataGrid.Columns>
         </DataGrid>
     </StackPanel>
