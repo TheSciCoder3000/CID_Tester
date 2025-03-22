@@ -26,7 +26,7 @@ namespace CID_Tester.Model
             {
                 _testing = value;
                 OnTesting?.Invoke(value);
-                if (value == TestingMode.Start) TestPlan?.Start(() => Testing = TestingMode.Stop);
+                if (value == TestingMode.Start) _testPlanService?.Start(() => Testing = TestingMode.Stop);
             }
         }
         public IEnumerable<DUT> DUTs { get; private set; } = [];
