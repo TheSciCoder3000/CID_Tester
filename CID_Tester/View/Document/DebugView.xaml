@@ -6,6 +6,7 @@
       xmlns:local="clr-namespace:CID_Tester.View.Document"
       xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
       xmlns:ScottPlot="clr-namespace:ScottPlot.WPF;assembly=ScottPlot.WPF"
+      xmlns:controls="clr-namespace:CID_Tester.View.Controls.DebugView"
       mc:Ignorable="d"
       Unloaded="UserControl_Unloaded"   
       >
@@ -120,7 +121,7 @@
 
                         </StackPanel>
 
-
+                        <controls:SwitchMatrixPanelControl />
                     </StackPanel>
                 </Border>
             </StackPanel>

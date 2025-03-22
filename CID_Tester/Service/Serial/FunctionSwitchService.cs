@@ -37,4 +37,4 @@ namespace CID_Tester.Service.Serial
         }
     }
 }
-}
+
