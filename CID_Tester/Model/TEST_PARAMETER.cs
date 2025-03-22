@@ -35,6 +35,9 @@ namespace CID_Tester.Model
         [Required]
         public string Parameters { get; set; } = null!;
 
+        [Required]
+        public string InputConfiguration { get; set; } = null!;
+
         public Dictionary<string, bool> ParseToParameterDictionary()
         {
             Dictionary<string, bool> ParameterDictionary = new Dictionary<string, bool>();
