@@ -30,9 +30,15 @@ namespace CID_Tester.Service.DbProvider
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<TEST_PLAN>> GetAllTestPlans()
+        public async Task<IEnumerable<TEST_PLAN>> GetAllTestPlans()
         {
-            throw new NotImplementedException();
+            using (TesterDbContext context = _dbContextFactory.CreateDbContext())
+            {
+                return await context.TEST_PLAN
+                    .Include(tp => tp.DUT)
+                    .Include(tp => tp.TEST_PARAMETERS)
+                    .ToListAsync();
+            }
         }
 
         public async Task<TEST_USER?> GetUser(string username, string password, IDbCreator dbCreator)
@@ -50,10 +56,11 @@ namespace CID_Tester.Service.DbProvider
 
                 TEST_USER? verifiedUser = await context.TEST_USER
                     .Where(r => r.UserCode == user.UserCode)
-                    .Include(u => u.TEST_PLANS)
-                        .ThenInclude(tp => tp.DUT)
-                    .Include(u => u.TEST_PLANS)
-                        .ThenInclude(tp => tp.TEST_PARAMETERS)
+                    // TODO: REFACTOR THE FOLLOWING LINES
+                    //.Include(u => u.TEST_PLANS)
+                    //    .ThenInclude(tp => tp.DUT)
+                    //.Include(u => u.TEST_PLANS)
+                    //    .ThenInclude(tp => tp.TEST_PARAMETERS)
                     .FirstOrDefaultAsync();
 
                 return verifiedUser;

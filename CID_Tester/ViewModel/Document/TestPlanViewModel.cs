@@ -5,12 +5,13 @@ using CID_Tester.ViewModel.Interfaces;
 using System.Windows.Input;
 using CID_Tester.ViewModel.Windows;
 using CID_Tester.ViewModel.Anchorables;
+using CID_Tester.Store;
 
 namespace CID_Tester.ViewModel.Document;
 
 public class TestPlanViewModel : BaseViewModel, IDocument
 {
-    private readonly Store _AppStore;
+    private readonly AppStore _AppStore;
     public string Title { get; }
 
 
@@ -41,11 +42,11 @@ public class TestPlanViewModel : BaseViewModel, IDocument
     public ICommand AddTestParameterCommand { get; }
     public ICommand DeleteTestParameterCommand { get; }
 
-    public TestPlanViewModel(Store appStore)
+    public TestPlanViewModel(AppStore appStore)
     {
         _AppStore = appStore;
         _AppStore.OnTestParameterUpdated += LoadTestParameters;
-        LoadTestParameters(_AppStore.TestPlan!.TEST_PARAMETERS);
+        LoadTestParameters(_AppStore.TestPlanStore.SelectedTestPlan!.TEST_PARAMETERS);
 
         Title = "Test Plan";
         CloseCommand = new RelayCommand(CloseCommandHanlder);
@@ -57,7 +58,7 @@ public class TestPlanViewModel : BaseViewModel, IDocument
 
     private async void DeleteTestParameterHandler(object? obj)
     {
-        if (_selectedTestParameter != null) await _AppStore.DeleteTestParameter(_selectedTestParameter);
+        if (_selectedTestParameter != null) await _AppStore.TestPlanStore.DeleteTestParameter(_selectedTestParameter);
     }
 
     private void DoubleClickHandler(object? obj)

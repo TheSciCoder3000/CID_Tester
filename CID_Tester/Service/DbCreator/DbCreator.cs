@@ -16,7 +16,7 @@ namespace CID_Tester.Service.DbCreator
 
         public async Task CreateDUT(DUT dut)
         {
-            using (TesterDbContext context  = _dbContextFactory.CreateDbContext())
+            using (TesterDbContext context = _dbContextFactory.CreateDbContext())
             {
 
                 context.DUT.Add(dut);
@@ -37,7 +37,7 @@ namespace CID_Tester.Service.DbCreator
         {
             using (TesterDbContext context = _dbContextFactory.CreateDbContext())
             {
-                context.Entry(param.TestPlan).State = EntityState.Unchanged;
+                context.Entry(param.TEST_PLAN).State = EntityState.Unchanged;
 
                 context.TEST_PARAMETER.Add(param);
 
@@ -49,7 +49,7 @@ namespace CID_Tester.Service.DbCreator
         {
             using (TesterDbContext context = _dbContextFactory.CreateDbContext())
             {
-                context.Entry(param.TestPlan).State = EntityState.Unchanged;
+                context.Entry(param.TEST_PLAN).State = EntityState.Unchanged;
 
                 context.TEST_PARAMETER.Remove(param);
 
@@ -62,10 +62,9 @@ namespace CID_Tester.Service.DbCreator
             using (TesterDbContext context = _dbContextFactory.CreateDbContext())
             {
                 context.Entry(testPlan.DUT).State = EntityState.Unchanged;
-                context.Entry(testPlan.TEST_USER).State = EntityState.Unchanged;
 
                 context.TEST_PLAN.Add(testPlan);
-                
+
                 await context.SaveChangesAsync();
             }
         }
@@ -84,6 +83,24 @@ namespace CID_Tester.Service.DbCreator
             using (TesterDbContext context = _dbContextFactory.CreateDbContext())
             {
                 context.Entry(param).State = EntityState.Modified;
+                await context.SaveChangesAsync();
+            }
+        }
+
+        public async Task CreateTestOutput(TEST_OUTPUT output)
+        {
+            using (TesterDbContext context = _dbContextFactory.CreateDbContext())
+            {
+                context.TEST_OUTPUT.Add(output);
+                await context.SaveChangesAsync();
+            }
+        }
+
+        public async Task UpdateTestOutput(TEST_OUTPUT output)
+        {
+            using (TesterDbContext context = _dbContextFactory.CreateDbContext())
+            {
+                context.Entry(output).State = EntityState.Modified;
                 await context.SaveChangesAsync();
             }
         }

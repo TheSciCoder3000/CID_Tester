@@ -8,12 +8,13 @@ using System.Windows.Input;
 using CID_Tester.ViewModel.Command;
 using System.Globalization;
 using System.Diagnostics;
+using CID_Tester.Store;
 
 namespace CID_Tester.ViewModel.Controls.AddTestPlan;
 
 public class AddTestPlanImporterViewModel : BaseViewModel
 {
-    private readonly Store _AppStore;
+    private readonly AppStore _AppStore;
     private readonly Action _closeDialog;
     private TEST_PLAN? _testPlan;
 
@@ -25,7 +26,7 @@ public class AddTestPlanImporterViewModel : BaseViewModel
     public ICommand SaveCommand { get; }
     public ICommand ImportCommand { get; }
 
-    public AddTestPlanImporterViewModel(Store appStore, Action closeDialog)
+    public AddTestPlanImporterViewModel(AppStore appStore, Action closeDialog)
     {
         _AppStore = appStore;
         _closeDialog = closeDialog;
@@ -39,7 +40,7 @@ public class AddTestPlanImporterViewModel : BaseViewModel
     {
         if (_testPlan != null)
         {
-            await _AppStore.CreateTestPlan(_testPlan);
+            await _AppStore.TestPlanStore.CreateTestPlan(_testPlan);
             _closeDialog();
         }
     }
@@ -84,10 +85,6 @@ public class AddTestPlanImporterViewModel : BaseViewModel
                 {
                     Name = testName,
                     Description = testDesc,
-                    Date = DateTime.Now,
-                    CycleNo = testCycNo,
-                    TestTime = 0,
-                    TEST_USER = _AppStore.TestUser,
                     DUT = device,
                 };
 

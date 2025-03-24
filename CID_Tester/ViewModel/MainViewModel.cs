@@ -5,12 +5,13 @@ using CID_Tester.Service.DbProvider;
 using System.Windows.Input;
 using CID_Tester.ViewModel.Command.Navigation;
 using CID_Tester.ViewModel.DebugSDK;
+using CID_Tester.Store;
 
 namespace CID_Tester.ViewModel
 {
     public class MainViewModel : BaseViewModel
     {
-        private readonly Store _AppStore;
+        private readonly AppStore _AppStore;
         private PS2000 Oscilloscope;
         private PS2000SigGen SigGen;
 
@@ -62,7 +63,7 @@ namespace CID_Tester.ViewModel
 
         public MainViewModel(TEST_USER user, IDbProvider dbProvider, IDbCreator dbCreator)
         {
-            _AppStore = new Store(dbProvider, dbCreator, user, []);
+            _AppStore = new AppStore(dbProvider, dbCreator, user, []);
             _AppStore.OnDocumentOpenned         += LoadDocuments;
             _AppStore.OnDocumentClosed          += LoadDocuments;
             _AppStore.OnActiveDocumentChanged   += UpdateActiveDocument;

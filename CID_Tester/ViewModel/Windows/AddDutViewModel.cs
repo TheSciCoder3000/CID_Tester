@@ -2,6 +2,7 @@
 using CID_Tester.Model;
 using CID_Tester.ViewModel.Interfaces;
 using System.Windows.Input;
+using CID_Tester.Store;
 
 namespace CID_Tester.ViewModel.Windows;
 
@@ -9,7 +10,7 @@ public class AddDutViewModel : BaseViewModel, IDocument
 {
     private readonly Action _closeDialog;
 
-    private readonly Store _AppStore;
+    private readonly AppStore _AppStore;
     private string _dutName = null!;
     public string DutName
     {
@@ -38,7 +39,7 @@ public class AddDutViewModel : BaseViewModel, IDocument
 
     public ICommand CloseCommand { get; }
 
-    public AddDutViewModel(Store appStore, Action closeDialog)
+    public AddDutViewModel(AppStore appStore, Action closeDialog)
     {
         Title = "Add Devices";
         _closeDialog = closeDialog;

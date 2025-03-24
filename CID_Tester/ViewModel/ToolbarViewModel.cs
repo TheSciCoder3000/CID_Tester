@@ -1,4 +1,5 @@
 ﻿using CID_Tester.Model;
+using CID_Tester.Store;
 using CID_Tester.View.Windows;
 using CID_Tester.ViewModel.Command;
 using CID_Tester.ViewModel.Controls.AddTestPlan;
@@ -9,12 +10,12 @@ namespace CID_Tester.ViewModel;
 
 public class ToolbarViewModel : BaseViewModel
 {
-    private readonly Store _AppStore;
+    private readonly AppStore _AppStore;
 
-    public ToolbarViewModel(Store appStore)
+    public ToolbarViewModel(AppStore appStore)
     {
         _AppStore = appStore;
-        _AppStore.OnTestPlanUpdated += updateTestPlanList;
+        _AppStore.TestPlanStore.OnTestPlanUpdated += updateTestPlanList;
         _AppStore.OnTesting += (TestingMode testing) => onPropertyChanged(nameof(NotLocked));
     }
 
@@ -57,13 +58,13 @@ public class ToolbarViewModel : BaseViewModel
         onPropertyChanged(nameof(SelectedTestPlan));
     }
 
-    public IEnumerable<TEST_PLAN> TestPlans { get => _AppStore.TestUser.TEST_PLANS; }
+    public IEnumerable<TEST_PLAN> TestPlans { get => _AppStore.TestPlanStore.TestPlans; }
     public TEST_PLAN? SelectedTestPlan
     {
-        get => _AppStore.TestPlan;
+        get => _AppStore.TestPlanStore.SelectedTestPlan;
         set
         {
-            if (value != null) _AppStore.setTestPlan(value);
+            if (value != null) _AppStore.TestPlanStore.SelectTestPlan(value);
             onPropertyChanged(nameof(SelectedTestPlan));
         }
     }

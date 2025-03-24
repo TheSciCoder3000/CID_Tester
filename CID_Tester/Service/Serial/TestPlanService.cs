@@ -9,6 +9,16 @@ namespace CID_Tester.Service.Serial;
 
 public class TestPlanService
 {
+    private ICollection<TEST_PLAN> _testPlans = [];
+    public ICollection<TEST_PLAN> TestPlans
+    {
+        get => _testPlans;
+        set
+        {
+            _testPlans = value;
+        }
+    }
+
     private TEST_PLAN? _testPlan;
     public TEST_PLAN? TestPlan
     {
@@ -60,7 +70,7 @@ public class TestPlanService
             var token = TokenSource.Token;
 
 
-            for (int cycle = 0; cycle < _testPlan.CycleNo; cycle++)
+            for (int cycle = 0; cycle < 3; cycle++)
             {
                 Debug.WriteLine($"Test Cycle: {cycle + 1}");
                 await RunTests(token);

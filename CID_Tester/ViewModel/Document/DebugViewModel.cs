@@ -12,11 +12,12 @@ using CID_Tester.ViewModel.DebugSDK;
 using ScottPlot.WPF;
 using ScottPlot.Plottables;
 using ScottPlot;
+using CID_Tester.Store;
 namespace CID_Tester.ViewModel.Document;
 
 public class DebugViewModel : BaseViewModel, IDocument, INotifyPropertyChanged
 {
-    private readonly Store _AppStore;
+    private readonly AppStore _AppStore;
 
     public event PropertyChangedEventHandler PropertyChanged;
 
@@ -158,7 +159,7 @@ public class DebugViewModel : BaseViewModel, IDocument, INotifyPropertyChanged
     public ICommand StopSigGen { get; }
     public ICommand Loaded { get; }
 
-    public DebugViewModel(Store appStore, PS2000 oscilloscope, PS2000SigGen sigGen)
+    public DebugViewModel(AppStore appStore, PS2000 oscilloscope, PS2000SigGen sigGen)
     {
         OscDisplay = new WpfPlot();
         OscDisplay.Plot.Add.Signal(ValuesOut);

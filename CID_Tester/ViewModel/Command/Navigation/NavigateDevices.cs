@@ -1,11 +1,12 @@
 ﻿using CID_Tester.Model;
+using CID_Tester.Store;
 using CID_Tester.ViewModel.Document;
 
 namespace CID_Tester.ViewModel.Command.Navigation;
 
-public class NavigateDevices(Store appStore) : CommandBase
+public class NavigateDevices(AppStore appStore) : CommandBase
 {
-    private readonly Store _AppStore = appStore;
+    private readonly AppStore _AppStore = appStore;
 
     public override void Execute(object? parameter)
     {

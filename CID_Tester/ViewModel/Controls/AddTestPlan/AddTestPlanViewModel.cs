@@ -1,12 +1,13 @@
 ﻿using CID_Tester.ViewModel.Command;
 using CID_Tester.Model;
 using System.Windows.Input;
+using CID_Tester.Store;
 
 namespace CID_Tester.ViewModel.Controls.AddTestPlan;
 
 public class AddTestPlanViewModel : BaseViewModel
 {
-    private readonly Store _appStore;
+    private readonly AppStore _appStore;
     private string _selectedDevice;
     public string SelectedDevice
     {
@@ -66,7 +67,7 @@ public class AddTestPlanViewModel : BaseViewModel
     public ICommand CreateCommand { get; }
     public ICommand CancelCommand { get; }
 
-    public AddTestPlanViewModel(Store appStore, Action CloseModal)
+    public AddTestPlanViewModel(AppStore appStore, Action CloseModal)
     {
         _appStore = appStore;
         CloseCommand = CloseModal;
@@ -81,13 +82,9 @@ public class AddTestPlanViewModel : BaseViewModel
         {
             Name = Name,
             Description = Description,
-            Date = DateTime.Now,
-            CycleNo = CycleNo,
-            TestTime = 0,
             DUT = _appStore.DUTs.FirstOrDefault(dut => dut.DutName == SelectedDevice),
-            TEST_USER = _appStore.TestUser
         };
-        await _appStore.CreateTestPlan(testPlan);
+        await _appStore.TestPlanStore.CreateTestPlan(testPlan);
         CloseCommand();
     }
 }
