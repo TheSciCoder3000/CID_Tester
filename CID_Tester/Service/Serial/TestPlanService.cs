@@ -1,6 +1,7 @@
 ﻿using CID_Tester.Model;
 using CID_Tester.Service.DbCreator;
 using System.Diagnostics;
+using System.Media;
 using System.Windows;
 using System.Windows.Input;
 
@@ -24,18 +25,22 @@ public class TestPlanService
     private FunctionSwitchService _functionSwitchService;
     private IDbCreator _dbCreator;
 
+    public CancellationTokenSource? TokenSource;
+
     public TestPlanService(IDbCreator dbCreator)
     {
         _dbCreator = dbCreator;
         initialize();
     }
 
-    public void initialize()
+    public int initialize()
     {
         _powerSupplyService = new PowerSupply();
         _measureService = new Measure();
         _functionSwitchService = new FunctionSwitchService();
         _switchMatrixService = new SwitchMatrix();
+
+        return _measureService.Unconnected() + _powerSupplyService.Unconnected() + _functionSwitchService.Unconnected() + _switchMatrixService.Unconnected();
     }
 
     public async void Start(Action? OnTestComplete = null)
@@ -48,12 +53,28 @@ public class TestPlanService
 
         try
         {
+            SoundPlayer soundPlayer = new SoundPlayer("Start.wav");
+            soundPlayer.Play();
+
+            TokenSource = new CancellationTokenSource();
+            var token = TokenSource.Token;
+
+
             for (int cycle = 0; cycle < _testPlan.CycleNo; cycle++)
             {
-                Debug.WriteLine($"Test: {cycle + 1}");
-                await RunTests();
+                Debug.WriteLine($"Test Cycle: {cycle + 1}");
+                await RunTests(token);
             }
-        } catch (Exception e)
+            soundPlayer = new SoundPlayer("Alarm.wav");
+            soundPlayer.Play();
+
+        }
+        catch (OperationCanceledException ex)
+        {
+            TokenSource?.Dispose();
+            TokenSource = null;
+        }
+        catch (Exception e)
         {
             MessageBox.Show(e.Message, "Test Plan Unable to Start", MessageBoxButton.OK, MessageBoxImage.Warning);
         }
@@ -63,7 +84,8 @@ public class TestPlanService
         CommandManager.InvalidateRequerySuggested();
     }
 
-    private async Task RunTests()
+
+    private async Task RunTests(CancellationToken token)
     {
         // Open Services
         _powerSupplyService.Open();
@@ -78,7 +100,15 @@ public class TestPlanService
 
             for (int dutNum = 1; dutNum <= 4; dutNum++)
             {
+                if (token.IsCancellationRequested)
+                {
+                    _powerSupplyService.ClosePMU();
+                    _functionSwitchService.StopFunctionGen();
+                    _switchMatrixService.Reset();
+                    token.ThrowIfCancellationRequested();
+                }
                 // switch to dut num
+                Debug.WriteLine($"Switching to DUT {dutNum}");
                 _switchMatrixService.ChangeDut(dutNum);
 
                 // turn on + power supply
@@ -90,30 +120,23 @@ public class TestPlanService
                 // turn on input
                 if (parameter.Type == "DC")
                 {
-                    // set voltage
+                    // set voltage and open PMU
+                    Debug.WriteLine($"Running dc test: {parameter.Name}");
                     _powerSupplyService.StartPMU(parameter.Type, parameter.InputConfiguration);
+
+                    // start measurement
+                    await _measureService.SetModeVoltage();
+                    string rawValue = await _measureService.GetMeasurement();
+                    Debug.WriteLine($"Raw value: {rawValue}");
+
+                    // close pmu
+                    _powerSupplyService.ClosePMU();
                 }
                 else if (parameter.Type == "AC")
                 {
                     // start function generator
                     _functionSwitchService.ParseInputConfiguration(parameter.InputConfiguration);
                     _functionSwitchService.StartFunctionGen();
-                }
-
-                // start measurement
-                await _measureService.SetModeVoltage();
-                string rawValue = await _measureService.GetMeasurement();
-                Debug.WriteLine($"Raw value: {rawValue}");
-
-                // turn off input
-                if (parameter.Type == "DC")
-                {
-                    // set voltage
-                    _powerSupplyService.ClosePMU();
-                }
-                else if (parameter.Type == "AC")
-                {
-                    // start function generator
                     _functionSwitchService.StopFunctionGen();
                 }
 
@@ -126,6 +149,7 @@ public class TestPlanService
 
             // reset wiring
             _switchMatrixService.Reset();
+            Thread.Sleep(1000);
         }
 
         // Close Services

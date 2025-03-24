@@ -1,4 +1,5 @@
 ﻿using CID_Tester.Model;
+using ScottPlot.Colormaps;
 using System.Diagnostics;
 using System.IO.Ports;
 using System.Windows;
@@ -9,7 +10,7 @@ namespace CID_Tester.Service.Serial
     {
         public bool IsOpen { get => _serialPort?.IsOpen ?? false; }
 
-        public SwitchMatrix() : base("MATRIX", 9600) { }
+        public SwitchMatrix() : base("SWITCH", 9600) { }
 
         public void Start(Dictionary<string, bool> parameterDictionary)
         {
@@ -17,7 +18,8 @@ namespace CID_Tester.Service.Serial
             foreach (var command in parameterDictionary)
             {
                 if (command.Value == false) continue;
-                SendCommand($"RLAY {command.Key}");
+                SendCommand($"RLAY {command.Key} 1");
+                Thread.Sleep(100);
             }
         }
 

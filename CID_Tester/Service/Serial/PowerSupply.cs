@@ -14,7 +14,7 @@ namespace CID_Tester.Service.Serial
 
     public class PowerSupply : BaseSerial
     {
-        public PowerSupply() : base("SUPP", 115200) { }
+        public PowerSupply() : base("SUPP", 9600) { }
 
         #region Power Supply Configuration Commands
         private void SetDPS1Voltage(int voltage)
@@ -66,12 +66,12 @@ namespace CID_Tester.Service.Serial
 
         private void OpenPMUInv()
         {
-            SendCommand("3TOGG 1");
+            SendCommand("3TOGG1");
         }
 
         private  void OpenPMUNinv()
         {
-            SendCommand("6TOGG 1");
+            SendCommand("6TOGG1");
         }
 
         #endregion
@@ -93,15 +93,23 @@ namespace CID_Tester.Service.Serial
 
             if (usePMU1)
             {
+                Debug.WriteLine($"voltage pmu1: {voltage}");
+                Debug.WriteLine($"COM Port: {_serialPort?.PortName}");
                 SetPMU1Voltage((int)voltage);
+                Thread.Sleep(1000);
                 SetPMU1Current(0.1f);
+                Thread.Sleep(1000);
                 OpenPMUInv();
             }
 
             if (usePMU2)
             {
+                Debug.WriteLine($"voltage pmu2: {voltage}");
+                Debug.WriteLine($"COM Port: {_serialPort?.PortName}");
                 SetPMU2Voltage((int)voltage);
+                Thread.Sleep(1000);
                 SetPMU2Current(0.1f);
+                Thread.Sleep(1000);
                 OpenPMUNinv();
             }
         }
@@ -109,8 +117,8 @@ namespace CID_Tester.Service.Serial
 
         public void ClosePMU()
         {
-            SendCommand("3TOGG 0");
-            SendCommand("6TOGG 0");
+            SendCommand("3TOGG0");
+            SendCommand("6TOGG0");
         }
     }
 }

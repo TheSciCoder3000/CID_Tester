@@ -82,7 +82,7 @@ namespace CID_Tester.ViewModel
             NavigateToResults   = new NavigateResults(_AppStore);
             NavigateToDebug = new NavigateDebug(_AppStore, Oscilloscope, SigGen);
 
-
+            
         }
 
         private void UpdateActiveDocument(BaseViewModel activeDocument) => ActiveDocument = activeDocument;

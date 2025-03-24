@@ -17,6 +17,7 @@ namespace CID_Tester.Service.Serial
         {
             if (_serialPort?.IsOpen ?? false)
             {
+                Debug.WriteLine($"\nPort: {_serialPort?.PortName}");
                 Debug.WriteLine($"Send: {command}");
                 _serialPort.WriteLine(command);
             }
@@ -36,8 +37,13 @@ namespace CID_Tester.Service.Serial
                 try
                 {
                     string[] portNames = SerialPort.GetPortNames();
+                    foreach (var port in portNames)
+                    {
+                        Debug.WriteLine($"Port: {port}");
+                    }
                     string? portName = GetPortFromDeviceId(deviceId, baudrate, portNames, command);
                     _serialPort = new SerialPort(portName, baudrate);
+                    connectAgain = MessageBoxResult.No;
                 }
                 catch (Exception ex)
                 {
@@ -50,28 +56,33 @@ namespace CID_Tester.Service.Serial
         {
             foreach (var portName in portNames)
             {
-                SerialPort serialPortChecker = new SerialPort(portName, baudrate);
-                try
+                Debug.WriteLine($"Checking port: {portName}");
+                using (SerialPort serialPortChecker = new SerialPort(portName, baudrate))
                 {
-                    serialPortChecker.Open();
-                    int retries = 5;
-                    string response = string.Empty;
-                    Debug.WriteLine($"Checking device {deviceId}");
-                    while (response != deviceId && retries != 0)
+                    try
                     {
-                        serialPortChecker.WriteLine(command);
-                        Thread.Sleep(200);
-                        response = serialPortChecker.ReadExisting().Trim();
-                        Debug.WriteLine($"Response {retries}: {response}");
-                        retries--;
+                        serialPortChecker.Open();
+                        int retries = 5;
+                        string response = string.Empty;
+                        Debug.WriteLine($"Checking device {deviceId} with command '{command}'");
+                        while (response != deviceId && retries != 0)
+                        {
+                        
+                            Debug.WriteLine($"condition: {response} | retries: {retries}");
+                            serialPortChecker.WriteLine(command);
+                            Thread.Sleep(100);
+                            response = serialPortChecker.ReadExisting().Trim();
+                            Debug.WriteLine($"Response {retries}: {response}");
+                            retries--;
+                        }
+                        serialPortChecker.Close();
+                        if (response == deviceId) return portName;
                     }
-                    serialPortChecker.Close();
-                    if (response == deviceId) return portName;
-                }
-                catch (Exception ex)
-                {
-                    Debug.WriteLine($"Unable to communicate with serial port {portName}");
-                    Debug.WriteLine(ex.Message);
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine($"Unable to communicate with serial port {portName}");
+                        Debug.WriteLine(ex.Message);
+                    }
                 }
             }
 
@@ -85,5 +96,7 @@ namespace CID_Tester.Service.Serial
         }
 
         public void Close() => _serialPort?.Close();
+
+        public int Unconnected() => _serialPort == null ? 1 : 0;
     }
 }

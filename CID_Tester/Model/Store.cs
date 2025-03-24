@@ -3,6 +3,8 @@ using CID_Tester.Service.DbCreator;
 using CID_Tester.Service.DbProvider;
 using CID_Tester.Service.Serial;
 using CID_Tester.ViewModel;
+using System.Diagnostics;
+using System.Windows;
 
 namespace CID_Tester.Model
 {
@@ -27,6 +29,11 @@ namespace CID_Tester.Model
                 _testing = value;
                 OnTesting?.Invoke(value);
                 if (value == TestingMode.Start) _testPlanService?.Start(() => Testing = TestingMode.Stop);
+                if (value == TestingMode.Stop && _testPlanService?.TokenSource != null)
+                {
+                    Debug.WriteLine("");
+                    _testPlanService?.TokenSource?.Cancel();
+                }
             }
         }
         public IEnumerable<DUT> DUTs { get; private set; } = [];
@@ -155,7 +162,15 @@ namespace CID_Tester.Model
         #region Test Plan Function
         public void ReinitializeTestDevices()
         {
-            _testPlanService.initialize();
+            int unconnectedDevices = _testPlanService.initialize();
+            if (unconnectedDevices == 0)
+            {
+                MessageBox.Show("All devices are connected", "Device Connection", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            else
+            {
+                MessageBox.Show($"{unconnectedDevices} devices are not connected", "Device Connection", MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
         }
 
         public void setTestPlan(TEST_PLAN testPlan)
