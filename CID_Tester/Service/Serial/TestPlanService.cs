@@ -1,10 +1,7 @@
 ﻿using CID_Tester.Model;
-using System;
-using System.Collections.Generic;
+using CID_Tester.Service.DbCreator;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 
 namespace CID_Tester.Service.Serial;
@@ -25,13 +22,20 @@ public class TestPlanService
     private SwitchMatrix _switchMatrixService;
     private Measure _measureService;
     private FunctionSwitchService _functionSwitchService;
+    private IDbCreator _dbCreator;
 
-    public TestPlanService()
+    public TestPlanService(IDbCreator dbCreator)
     {
-        _powerSupplyService = new PowerSupply("");
-        _switchMatrixService = new SwitchMatrix("COM8");
-        _measureService = new Measure("");
-        _functionSwitchService = new FunctionSwitchService("COM12");
+        _dbCreator = dbCreator;
+        initialize();
+    }
+
+    public void initialize()
+    {
+        _powerSupplyService = new PowerSupply();
+        _measureService = new Measure();
+        _functionSwitchService = new FunctionSwitchService();
+        _switchMatrixService = new SwitchMatrix();
     }
 
     public async void Start(Action? OnTestComplete = null)
@@ -42,10 +46,16 @@ public class TestPlanService
             return;
         }
 
-        for (int cycle = 0; cycle < _testPlan.CycleNo; cycle++)
+        try
         {
-            Debug.WriteLine($"Test: {cycle + 1}");
-            await RunTests();
+            for (int cycle = 0; cycle < _testPlan.CycleNo; cycle++)
+            {
+                Debug.WriteLine($"Test: {cycle + 1}");
+                await RunTests();
+            }
+        } catch (Exception e)
+        {
+            MessageBox.Show(e.Message, "Test Plan Unable to Start", MessageBoxButton.OK, MessageBoxImage.Warning);
         }
 
         await Task.Delay(2000);
@@ -64,6 +74,7 @@ public class TestPlanService
         foreach (var parameter in _testPlan!.TEST_PARAMETERS)
         {
             // setup matrix configuration
+            _switchMatrixService.Start(parameter.ParseToParameterDictionary());
 
             for (int dutNum = 1; dutNum <= 4; dutNum++)
             {
@@ -77,12 +88,34 @@ public class TestPlanService
                 // supply.ToggleDPSNeg(true);
 
                 // turn on input
+                if (parameter.Type == "DC")
+                {
+                    // set voltage
+                    _powerSupplyService.StartPMU(parameter.Type, parameter.InputConfiguration);
+                }
+                else if (parameter.Type == "AC")
+                {
+                    // start function generator
+                    _functionSwitchService.ParseInputConfiguration(parameter.InputConfiguration);
+                    _functionSwitchService.StartFunctionGen();
+                }
 
                 // start measurement
                 await _measureService.SetModeVoltage();
                 string rawValue = await _measureService.GetMeasurement();
+                Debug.WriteLine($"Raw value: {rawValue}");
 
                 // turn off input
+                if (parameter.Type == "DC")
+                {
+                    // set voltage
+                    _powerSupplyService.ClosePMU();
+                }
+                else if (parameter.Type == "AC")
+                {
+                    // start function generator
+                    _functionSwitchService.StopFunctionGen();
+                }
 
                 // turn off - power supply
                 // supply.ToggleDPSNeg(false);
