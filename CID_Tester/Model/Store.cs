@@ -32,7 +32,7 @@ namespace CID_Tester.Model
         public IEnumerable<DUT> DUTs { get; private set; } = [];
         public TEST_USER TestUser { get; private set; }
 
-        private TestPlanService _testPlanService = new TestPlanService();
+        private TestPlanService _testPlanService;
         public TEST_PLAN? TestPlan
         {
             get => _testPlanService.TestPlan;
@@ -73,6 +73,8 @@ namespace CID_Tester.Model
             _dbCreator = dbCreator;
             TestUser = testUser;
             Documents = documents;
+
+            _testPlanService = new TestPlanService(dbCreator);
 
             LoadDut();
         }
@@ -151,6 +153,10 @@ namespace CID_Tester.Model
         #endregion
 
         #region Test Plan Function
+        public void ReinitializeTestDevices()
+        {
+            _testPlanService.initialize();
+        }
 
         public void setTestPlan(TEST_PLAN testPlan)
         {
