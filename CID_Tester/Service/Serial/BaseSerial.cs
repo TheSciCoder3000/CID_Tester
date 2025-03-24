@@ -11,18 +11,38 @@ namespace CID_Tester.Service.Serial
 {
     public class BaseSerial
     {
+        private string _deviceId;
         protected SerialPort? _serialPort;
+        protected void SendCommand(string command)
+        {
+            if (_serialPort?.IsOpen ?? false)
+            {
+                Debug.WriteLine($"Send: {command}");
+                _serialPort.WriteLine(command);
+            }
+            else
+            {
+                Debug.WriteLine(command);
+            }
+
+        }
+
         public BaseSerial(string deviceId, int baudrate = 9600, string command = "WHOU")
         {
-            try
+            _deviceId = deviceId;
+            MessageBoxResult connectAgain = MessageBoxResult.Yes;
+            while (connectAgain == MessageBoxResult.Yes)
             {
-                string[] portNames = SerialPort.GetPortNames();
-                string? portName = GetPortFromDeviceId(deviceId, baudrate, portNames, command);
-                _serialPort = new SerialPort(portName, baudrate);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
+                try
+                {
+                    string[] portNames = SerialPort.GetPortNames();
+                    string? portName = GetPortFromDeviceId(deviceId, baudrate, portNames, command);
+                    _serialPort = new SerialPort(portName, baudrate);
+                }
+                catch (Exception ex)
+                {
+                    connectAgain = MessageBox.Show($"{ex.Message}, Would you like to try again?", "Cannot Find Device", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                }
             }
         }
 
@@ -55,37 +75,15 @@ namespace CID_Tester.Service.Serial
                 }
             }
 
-            throw new Exception($"Unable to find device with id {deviceId}");
+            throw new Exception($"Unable to find device with id '{deviceId}'");
         }
 
-        public bool Open()
+        public void Open()
         {
-            try
-            {
-                if (_serialPort == null) throw new Exception("Serial Port is not initialized");
-                _serialPort.Open();
-                return true;
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-                return false;
-            }
+            if (_serialPort == null) throw new Exception($"Make sure the device '{_deviceId}' is connected");
+            _serialPort.Open();
         }
 
         public void Close() => _serialPort?.Close();
-
-        protected void SendCommand(string command)
-        {
-            if (_serialPort?.IsOpen ?? false)
-            {
-                Debug.WriteLine($"Send: {command}");
-                _serialPort.WriteLine(command);
-            } else
-            {
-                Debug.WriteLine(command);
-            }
-
-        }
     }
 }
