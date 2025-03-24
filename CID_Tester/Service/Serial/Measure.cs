@@ -7,7 +7,7 @@ namespace CID_Tester.Service.Serial
     {
         private TaskCompletionSource<string> _taskCompletionSource;
 
-        public Measure() : base("DMM", 115200)
+        public Measure() : base("OWON,XDM1241,22320320,V3.8.0,3", 115200, "*IDN?")
         {
             if (_serialPort != null) _serialPort.DataReceived += OnDataReceived;
         }
