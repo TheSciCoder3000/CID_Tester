@@ -14,70 +14,103 @@ namespace CID_Tester.Service.Serial
 
     public class PowerSupply : BaseSerial
     {
-        public PowerSupply(string portName) : base(portName, 115200) { }
+        public PowerSupply() : base("SUPP", 115200) { }
 
-        public void SetDPS1Voltage(int voltage)
+        #region Power Supply Configuration Commands
+        private void SetDPS1Voltage(int voltage)
         {
             SendCommand($"1SETV{voltage}");
         }
-        public void SetDPS2Voltage(int voltage)
+        private void SetDPS2Voltage(int voltage)
         {
             SendCommand($"2SETV{voltage}");
         }
-        public void SetPMU1Voltage(int voltage)
+        private void SetPMU1Voltage(float voltage)
         {
             SendCommand($"3SETV{voltage}");
         }
-        public void SetPMU2Voltage(int voltage)
+        private void SetPMU2Voltage(float voltage)
         {
-            SendCommand($"2SETV{voltage}");
+            SendCommand($"6SETV{voltage}");
         }
 
-        public void SetDPS1Current(int current)
+        private void SetDPS1Current(int current)
         {
             SendCommand($"1SETA{current}");
         }
-        public void SetDPS2Current(int current)
+        private void SetDPS2Current(int current)
         {
             SendCommand($"2SETA{current}");
         }
-        public void SetPMU1Current(int current)
+        private void SetPMU1Current(float current)
         {
             SendCommand($"3SETA{current}");
         }
-        public void SetPMU2Current(int current)
+        private void SetPMU2Current(float current)
         {
-            SendCommand($"2SETA{current}");
+            SendCommand($"6SETA{current}");
         }
 
-        public void ToggleDPSPos(bool state)
+        #endregion
+
+        #region Power Supply Control Commands
+        private void ToggleDPSPos(bool state)
         {
-            SendCommand($"1TOGG {(state ? 1 : 0)}");
+            SendCommand($"1TOGG");
         }
 
-        public void ToggleDPSNeg(bool state)
+        private void ToggleDPSNeg(bool state)
         {
-            SendCommand($"2TOGG {(state ? 1 : 0)}");
+            SendCommand($"2TOGG");
         }
 
-        public void TogglePMUInput(OpAmpInput inputPin, bool state)
+        private void OpenPMUInv()
         {
-            switch (inputPin)
+            SendCommand("3TOGG 1");
+        }
+
+        private  void OpenPMUNinv()
+        {
+            SendCommand("6TOGG 1");
+        }
+
+        #endregion
+
+        public void StartPMU(string type, string config)
+        {
+            if (type != "DC") return;
+
+            string[] configList = config.Split(", ");
+            Dictionary<string, string> configuration = new Dictionary<string, string>(configList.Select(configItem =>
             {
-                case OpAmpInput.Inverting:
-                    SendCommand($"3TOGG {(state ? 1 : 0)}");
-                    break;
-                case OpAmpInput.NonInverting:
-                    SendCommand($"4TOGG {(state ? 1 : 0)}");
-                    break;
-                case OpAmpInput.Both:
-                    SendCommand($"3TOGG {(state ? 1 : 0)}");
-                    SendCommand($"4TOGG {(state ? 1 : 0)}");
-                    break;
-                default:
-                    SendCommand("Incorrect supply input Pin");
-                    break;
+                string[] keyValue = configItem.Split('=');
+                return new KeyValuePair<string, string>(keyValue[0], keyValue[1]);
+            }));
+
+            bool usePMU1 = configuration["PMU1"] == "ON";
+            bool usePMU2 = configuration["PMU2"] == "ON";
+            float voltage = float.Parse(configuration["Input"]);
+
+            if (usePMU1)
+            {
+                SetPMU1Voltage((int)voltage);
+                SetPMU1Current(0.1f);
+                OpenPMUInv();
             }
+
+            if (usePMU2)
+            {
+                SetPMU2Voltage((int)voltage);
+                SetPMU2Current(0.1f);
+                OpenPMUNinv();
+            }
+        }
+
+
+        public void ClosePMU()
+        {
+            SendCommand("3TOGG 0");
+            SendCommand("6TOGG 0");
         }
     }
 }
