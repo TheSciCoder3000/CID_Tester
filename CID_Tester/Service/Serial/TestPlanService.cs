@@ -24,11 +24,14 @@ public class TestPlanService
     private Measure _measureService;
     private FunctionSwitchService _functionSwitchService;
     private IDbCreator _dbCreator;
+    private TEST_BATCH _testBatch;
+    private TEST_USER _testUser;
 
     public CancellationTokenSource? TokenSource;
 
-    public TestPlanService(IDbCreator dbCreator)
+    public TestPlanService(TEST_USER testUser, IDbCreator dbCreator)
     {
+        _testUser = testUser;
         _dbCreator = dbCreator;
         Initialize();
     }
@@ -53,7 +56,13 @@ public class TestPlanService
 
         try
         {
-            
+            _testBatch = new TEST_BATCH()
+            {
+                TEST_PLAN = TestPlan,
+                Date = DateTime.Now,
+                CycleNo = 3,        // TODO: MAKE THIS DYNAMIC
+                TEST_USER = _testUser
+            };
             SoundPlayer soundPlayer = new SoundPlayer("Start.wav");
             soundPlayer.Play();
 
@@ -79,6 +88,9 @@ public class TestPlanService
         {
             MessageBox.Show(e.Message, "Test Plan Unable to Start", MessageBoxButton.OK, MessageBoxImage.Warning);
         }
+
+        await _dbCreator.CreateBatch(_testBatch);
+
 
         await Task.Delay(2000);
         OnTestComplete?.Invoke();
@@ -127,6 +139,15 @@ public class TestPlanService
                     // start measurement
                     await _measureService.SetModeVoltage();
                     string rawValue = await _measureService.GetMeasurement();
+
+                    TEST_OUTPUT result = new TEST_OUTPUT()
+                    {
+                        Measured = rawValue,
+                        TEST_PARAMETER = parameter,
+                        DutLocation = dutNum,
+                    };
+                    _testBatch.TEST_OUTPUTS.Add(result);
+
                     Debug.WriteLine($"Raw value: {rawValue}");
 
                     // close pmu
@@ -137,7 +158,20 @@ public class TestPlanService
                     // start function generator
                     _functionSwitchService.ParseInputConfiguration(parameter.InputConfiguration);
                     _functionSwitchService.StartFunctionGen();
+
+                    // capture graph
+                    string fullResultPath = _functionSwitchService.CaptureGraph($"D{dutNum}-P{parameter.ParamCode}-B{_testBatch.BatchCode}");
+
+                    // stop function generator
                     _functionSwitchService.StopFunctionGen();
+
+                    TEST_OUTPUT result = new TEST_OUTPUT()
+                    {
+                        Measured = fullResultPath,
+                        TEST_PARAMETER = parameter,
+                        DutLocation = dutNum,
+                    };
+                    _testBatch.TEST_OUTPUTS.Add(result);
                 }
 
                 // turn off - power supply

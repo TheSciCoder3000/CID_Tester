@@ -65,7 +65,7 @@ public class AppStore
         _dbCreator = dbCreator;
         TestUser = testUser;
 
-        _testPlanService = new TestPlanService(dbCreator);
+        _testPlanService = new TestPlanService(testUser, dbCreator);
         DocumentStore = new DocumentStore(documents);
         TestPlanStore = new TestPlanStore(dbProvider, dbCreator);
 
