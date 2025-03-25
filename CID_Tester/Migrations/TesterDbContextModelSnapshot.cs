@@ -36,6 +36,66 @@ namespace CID_Tester.Migrations
                     b.ToTable("DUT");
                 });
 
+            modelBuilder.Entity("CID_Tester.Model.TEST_BATCH", b =>
+                {
+                    b.Property<int>("BatchCode")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("CycleNo")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("TestCode")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("TestTime")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("UserCode")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("BatchCode");
+
+                    b.HasIndex("TestCode");
+
+                    b.HasIndex("UserCode");
+
+                    b.ToTable("TEST_BATCH");
+                });
+
+            modelBuilder.Entity("CID_Tester.Model.TEST_OUTPUT", b =>
+                {
+                    b.Property<int>("OutputCode")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("BatchCode")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("DutNum")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<double>("Measured")
+                        .HasColumnType("REAL");
+
+                    b.Property<int>("ParamCode")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("pass")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("OutputCode");
+
+                    b.HasIndex("BatchCode");
+
+                    b.HasIndex("ParamCode");
+
+                    b.ToTable("TEST_OUTPUT");
+                });
+
             modelBuilder.Entity("CID_Tester.Model.TEST_PARAMETER", b =>
                 {
                     b.Property<int>("ParamCode")
@@ -62,9 +122,6 @@ namespace CID_Tester.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<bool?>("Pass")
-                        .HasColumnType("INTEGER");
-
                     b.Property<decimal>("Target")
                         .HasColumnType("TEXT");
 
@@ -76,9 +133,6 @@ namespace CID_Tester.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT")
                         .HasDefaultValue("DC");
-
-                    b.Property<decimal?>("Value")
-                        .HasColumnType("TEXT");
 
                     b.HasKey("ParamCode");
 
@@ -93,12 +147,6 @@ namespace CID_Tester.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("CycleNo")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("TEXT");
-
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("TEXT");
@@ -110,17 +158,9 @@ namespace CID_Tester.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("TestTime")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("UserCode")
-                        .HasColumnType("INTEGER");
-
                     b.HasKey("TestCode");
 
                     b.HasIndex("DutCode");
-
-                    b.HasIndex("UserCode");
 
                     b.ToTable("TEST_PLAN");
                 });
@@ -172,15 +212,53 @@ namespace CID_Tester.Migrations
                         });
                 });
 
+            modelBuilder.Entity("CID_Tester.Model.TEST_BATCH", b =>
+                {
+                    b.HasOne("CID_Tester.Model.TEST_PLAN", "TEST_PLAN")
+                        .WithMany("TEST_BATCHES")
+                        .HasForeignKey("TestCode")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("CID_Tester.Model.TEST_USER", "TEST_USER")
+                        .WithMany("TEST_BATCHES")
+                        .HasForeignKey("UserCode")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("TEST_PLAN");
+
+                    b.Navigation("TEST_USER");
+                });
+
+            modelBuilder.Entity("CID_Tester.Model.TEST_OUTPUT", b =>
+                {
+                    b.HasOne("CID_Tester.Model.TEST_BATCH", "TEST_BATCH")
+                        .WithMany("TEST_OUTPUTS")
+                        .HasForeignKey("BatchCode")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("CID_Tester.Model.TEST_PARAMETER", "TEST_PARAMETER")
+                        .WithMany("TEST_OUTPUTS")
+                        .HasForeignKey("ParamCode")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("TEST_BATCH");
+
+                    b.Navigation("TEST_PARAMETER");
+                });
+
             modelBuilder.Entity("CID_Tester.Model.TEST_PARAMETER", b =>
                 {
-                    b.HasOne("CID_Tester.Model.TEST_PLAN", "TestPlan")
+                    b.HasOne("CID_Tester.Model.TEST_PLAN", "TEST_PLAN")
                         .WithMany("TEST_PARAMETERS")
                         .HasForeignKey("TestCode")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("TestPlan");
+                    b.Navigation("TEST_PLAN");
                 });
 
             modelBuilder.Entity("CID_Tester.Model.TEST_PLAN", b =>
@@ -191,15 +269,7 @@ namespace CID_Tester.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("CID_Tester.Model.TEST_USER", "TEST_USER")
-                        .WithMany("TEST_PLANS")
-                        .HasForeignKey("UserCode")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("DUT");
-
-                    b.Navigation("TEST_USER");
                 });
 
             modelBuilder.Entity("CID_Tester.Model.DUT", b =>
@@ -207,14 +277,26 @@ namespace CID_Tester.Migrations
                     b.Navigation("TEST_PLANS");
                 });
 
+            modelBuilder.Entity("CID_Tester.Model.TEST_BATCH", b =>
+                {
+                    b.Navigation("TEST_OUTPUTS");
+                });
+
+            modelBuilder.Entity("CID_Tester.Model.TEST_PARAMETER", b =>
+                {
+                    b.Navigation("TEST_OUTPUTS");
+                });
+
             modelBuilder.Entity("CID_Tester.Model.TEST_PLAN", b =>
                 {
+                    b.Navigation("TEST_BATCHES");
+
                     b.Navigation("TEST_PARAMETERS");
                 });
 
             modelBuilder.Entity("CID_Tester.Model.TEST_USER", b =>
                 {
-                    b.Navigation("TEST_PLANS");
+                    b.Navigation("TEST_BATCHES");
                 });
 #pragma warning restore 612, 618
         }

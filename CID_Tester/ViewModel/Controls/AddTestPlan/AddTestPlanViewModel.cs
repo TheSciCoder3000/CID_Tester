@@ -81,11 +81,7 @@ public class AddTestPlanViewModel : BaseViewModel
         {
             Name = Name,
             Description = Description,
-            Date = DateTime.Now,
-            CycleNo = CycleNo,
-            TestTime = 0,
             DUT = _appStore.DUTs.FirstOrDefault(dut => dut.DutName == SelectedDevice),
-            TEST_USER = _appStore.TestUser
         };
         await _appStore.CreateTestPlan(testPlan);
         CloseCommand();

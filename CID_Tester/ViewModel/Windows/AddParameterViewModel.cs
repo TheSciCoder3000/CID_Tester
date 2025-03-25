@@ -34,7 +34,7 @@ public class AddParameterViewModel : BaseViewModel
                         Metric= Metric, 
                         Target=Target, 
                         Parameters="",
-                        TestPlan = _AppStore.TestPlan
+                        TEST_PLAN = _AppStore.TestPlan
                     }
                 );
         _closeWindow();

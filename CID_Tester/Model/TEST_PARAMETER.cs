@@ -17,7 +17,8 @@ namespace CID_Tester.Model
         public string Type { get; set; } = null!;
 
         [Required]
-        public TEST_PLAN TestPlan { get; set; } = null!;
+        public TEST_PLAN TEST_PLAN { get; set; } = null!;
+        public ICollection<TEST_OUTPUT> TEST_OUTPUTS { get; set; } = null!;
 
         [Required]
         public string Description { get; set; } = null!;
@@ -25,12 +26,8 @@ namespace CID_Tester.Model
         [Required]
         public string Metric { get; set; } = null!;
 
-        public decimal? Value { get; set; }
-
         [Required]
         public decimal Target { get; set; }
-
-        public bool? Pass { get; set; }
 
         [Required]
         public string Parameters { get; set; } = null!;

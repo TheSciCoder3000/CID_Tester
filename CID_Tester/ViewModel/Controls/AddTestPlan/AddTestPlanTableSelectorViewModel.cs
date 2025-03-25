@@ -11,7 +11,7 @@ public class AddTestPlanTableSelectorViewModel : BaseViewModel
 
     public ICollection<TEST_PLAN> TestPlans
     {
-        get => _AppStore.TestUser.TEST_PLANS;
+        get => _AppStore.TEST_PLANS.ToList();
     }
 
     private TEST_PLAN? _selectedTestPlan;

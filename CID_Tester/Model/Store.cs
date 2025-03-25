@@ -37,6 +37,7 @@ namespace CID_Tester.Model
             }
         }
         public IEnumerable<DUT> DUTs { get; private set; } = [];
+        public IEnumerable<TEST_PLAN> TEST_PLANS { get; private set; } = [];
         public TEST_USER TestUser { get; private set; }
 
         private TestPlanService _testPlanService;
@@ -62,6 +63,7 @@ namespace CID_Tester.Model
         public event Action<TEST_USER>? OnTestUserUpdated;
 
         public event Action<TEST_PLAN?>? OnTestPlanUpdated;
+        public event Action<IEnumerable<TEST_PLAN>> OnTestPlanListUpdated;
         public event Action<IEnumerable<TEST_PARAMETER>>? OnTestParameterUpdated;
 
         public event Action<IEnumerable<BaseViewModel>>? OnDocumentOpenned;
@@ -81,9 +83,10 @@ namespace CID_Tester.Model
             TestUser = testUser;
             Documents = documents;
 
-            _testPlanService = new TestPlanService(dbCreator);
+            _testPlanService = new TestPlanService(dbCreator, dbProvider);
 
             LoadDut();
+            LoadTestPlans();
         }
 
         #region Testing Functions
@@ -158,8 +161,6 @@ namespace CID_Tester.Model
         }
 
         #endregion
-
-        #region Test Plan Function
         public void ReinitializeTestDevices()
         {
             int unconnectedDevices = _testPlanService.initialize();
@@ -173,6 +174,13 @@ namespace CID_Tester.Model
             }
         }
 
+        #region Test Plan Function
+
+        private async Task LoadTestPlans()
+        {
+            TEST_PLANS = await _dbProvider.GetAllTestPlans();
+        }
+
         public void setTestPlan(TEST_PLAN testPlan)
         {
             TestPlan = testPlan;
@@ -183,6 +191,8 @@ namespace CID_Tester.Model
         public async Task CreateTestPlan(TEST_PLAN testPlan)
         {
             await _dbCreator.CreateTestPlan(testPlan);
+            await LoadTestPlans();
+            OnTestPlanListUpdated?.Invoke(TEST_PLANS);
             TestPlan = testPlan;
             OnTestPlanUpdated?.Invoke(TestPlan);
             OnTestParameterUpdated?.Invoke(TestPlan.TEST_PARAMETERS);

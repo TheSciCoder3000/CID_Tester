@@ -84,10 +84,6 @@ public class AddTestPlanImporterViewModel : BaseViewModel
                 {
                     Name = testName,
                     Description = testDesc,
-                    Date = DateTime.Now,
-                    CycleNo = testCycNo,
-                    TestTime = 0,
-                    TEST_USER = _AppStore.TestUser,
                     DUT = device,
                 };
 

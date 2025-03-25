@@ -14,8 +14,14 @@ public class ToolbarViewModel : BaseViewModel
     public ToolbarViewModel(Store appStore)
     {
         _AppStore = appStore;
-        _AppStore.OnTestPlanUpdated += updateTestPlanList;
+        _AppStore.OnTestPlanListUpdated += updateTestPlanList;
+        _AppStore.OnTestPlanUpdated += updateSelectedTestPlan;
         _AppStore.OnTesting += (TestingMode testing) => onPropertyChanged(nameof(NotLocked));
+    }
+
+    private void updateTestPlanList(IEnumerable<TEST_PLAN> obj)
+    {
+        onPropertyChanged(nameof(TestPlans));
     }
 
 
@@ -51,16 +57,19 @@ public class ToolbarViewModel : BaseViewModel
 
     #endregion
 
-    private void updateTestPlanList(TEST_PLAN? testPlan)
+    private void updateSelectedTestPlan(TEST_PLAN? testPlan)
     {
-        onPropertyChanged(nameof(TestPlans));
+        //onPropertyChanged(nameof(TestPlans));
         onPropertyChanged(nameof(SelectedTestPlan));
     }
 
-    public IEnumerable<TEST_PLAN> TestPlans { get => _AppStore.TestUser.TEST_PLANS; }
+    public IEnumerable<TEST_PLAN> TestPlans 
+    {
+        get => _AppStore.TEST_PLANS;
+    }
     public TEST_PLAN? SelectedTestPlan
     {
-        get => _AppStore.TestPlan;
+        get => TestPlans.FirstOrDefault(tp => tp.TestCode == _AppStore.TestPlan?.TestCode);
         set
         {
             if (value != null) _AppStore.setTestPlan(value);

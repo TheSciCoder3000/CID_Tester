@@ -34,44 +34,43 @@ public partial class DashboardMetricControl : UserControl
 
     private void CreateCustomTable(List<TEST_PARAMETER> tableData)
     {
-        Debug.WriteLine(tableData.Count);
+        //Debug.WriteLine(tableData.Count);
 
 
-        int row_count = 1;
+        //int row_count = 1;
 
-        foreach (var test in tableData)
-        {
+        //foreach (var test in tableData)
+        //{
 
-            CreateCell(test.Description.ToString(), row_count, 0);
-            CreateCell(test.Metric.ToString(), row_count, 1);
-            CreateCell(test.Target.ToString(), row_count, 2);
-            CreateCell(test.Value.ToString(), row_count, 3);
+        //    CreateCell(test.Description.ToString(), row_count, 0);
+        //    CreateCell(test.Metric.ToString(), row_count, 1);
+        //    CreateCell(test.Target.ToString(), row_count, 2);
 
-            TextBlock text = new TextBlock
-            {
-                Text = (test.Pass == true) ? "PASS" : "FAIL",
-                FontWeight = FontWeights.Bold,
-                Padding = new Thickness(10),
-                Foreground = Brushes.White,
-                HorizontalAlignment = HorizontalAlignment.Center,
-            };
+        //    TextBlock text = new TextBlock
+        //    {
+        //        Text = (test.Pass == true) ? "PASS" : "FAIL",
+        //        FontWeight = FontWeights.Bold,
+        //        Padding = new Thickness(10),
+        //        Foreground = Brushes.White,
+        //        HorizontalAlignment = HorizontalAlignment.Center,
+        //    };
 
-            Border border = new Border
-            {
-                Child = text,
-                Padding = new Thickness(5),
-                Background = (test.Pass == true) ? Brushes.Green : Brushes.Red
-            };
-            Grid.SetRow(border, row_count);
-            Grid.SetColumn(border, 4);
-            MainGrid.Children.Add(border);
+        //    Border border = new Border
+        //    {
+        //        Child = text,
+        //        Padding = new Thickness(5),
+        //        Background = (test.Pass == true) ? Brushes.Green : Brushes.Red
+        //    };
+        //    Grid.SetRow(border, row_count);
+        //    Grid.SetColumn(border, 4);
+        //    MainGrid.Children.Add(border);
 
 
-            RowDefinition rowParams = new RowDefinition();
-            MainGrid.RowDefinitions.Add(rowParams);
+        //    RowDefinition rowParams = new RowDefinition();
+        //    MainGrid.RowDefinitions.Add(rowParams);
 
-            Debug.WriteLine(row_count);
-            row_count++;
-        }
+        //    Debug.WriteLine(row_count);
+        //    row_count++;
+        //}
     }
 }

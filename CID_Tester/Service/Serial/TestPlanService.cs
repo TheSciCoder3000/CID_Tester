@@ -1,5 +1,6 @@
 ﻿using CID_Tester.Model;
 using CID_Tester.Service.DbCreator;
+using CID_Tester.Service.DbProvider;
 using System.Diagnostics;
 using System.Media;
 using System.Windows;
@@ -9,6 +10,7 @@ namespace CID_Tester.Service.Serial;
 
 public class TestPlanService
 {
+    
     private TEST_PLAN? _testPlan;
     public TEST_PLAN? TestPlan
     {
@@ -24,14 +26,18 @@ public class TestPlanService
     private Measure _measureService;
     private FunctionSwitchService _functionSwitchService;
     private IDbCreator _dbCreator;
+    private IDbProvider _dbProvider;
 
     public CancellationTokenSource? TokenSource;
 
-    public TestPlanService(IDbCreator dbCreator)
+    public TestPlanService(IDbCreator dbCreator, IDbProvider dbProvider)
     {
         _dbCreator = dbCreator;
+        _dbProvider = dbProvider;
         initialize();
     }
+
+    
 
     public int initialize()
     {
@@ -60,7 +66,7 @@ public class TestPlanService
             var token = TokenSource.Token;
 
 
-            for (int cycle = 0; cycle < _testPlan.CycleNo; cycle++)
+            for (int cycle = 0; cycle < 3; cycle++)
             {
                 Debug.WriteLine($"Test Cycle: {cycle + 1}");
                 await RunTests(token);

@@ -37,7 +37,7 @@ namespace CID_Tester.Service.DbCreator
         {
             using (TesterDbContext context = _dbContextFactory.CreateDbContext())
             {
-                context.Entry(param.TestPlan).State = EntityState.Unchanged;
+                context.Entry(param.TEST_PLAN).State = EntityState.Unchanged;
 
                 context.TEST_PARAMETER.Add(param);
 
@@ -49,7 +49,7 @@ namespace CID_Tester.Service.DbCreator
         {
             using (TesterDbContext context = _dbContextFactory.CreateDbContext())
             {
-                context.Entry(param.TestPlan).State = EntityState.Unchanged;
+                context.Entry(param.TEST_PLAN).State = EntityState.Unchanged;
 
                 context.TEST_PARAMETER.Remove(param);
 
@@ -62,7 +62,6 @@ namespace CID_Tester.Service.DbCreator
             using (TesterDbContext context = _dbContextFactory.CreateDbContext())
             {
                 context.Entry(testPlan.DUT).State = EntityState.Unchanged;
-                context.Entry(testPlan.TEST_USER).State = EntityState.Unchanged;
 
                 context.TEST_PLAN.Add(testPlan);
                 

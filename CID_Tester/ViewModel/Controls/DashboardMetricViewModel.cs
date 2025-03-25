@@ -10,8 +10,8 @@ namespace CID_Tester.ViewModel
         public string DUTName { get => _AppStore.TestPlan!.DUT.DutName; }
         public string DUTDescription { get => _AppStore.TestPlan!.DUT.Description; }
         public string TotalNumberTests { get => $"{_AppStore.TestPlan!.TEST_PARAMETERS.Count} tests"; }
-        public string TestsPassed { get => $"{_AppStore.TestPlan!.TEST_PARAMETERS.Where(par => par.Pass == true).Count()} PASSED"; }
-        public string TestsFailed { get => $"{_AppStore.TestPlan!.TEST_PARAMETERS.Where(par => par.Pass == true).Count()} FAILED"; }
+        //public string TestsPassed { get => $"{_AppStore.TestPlan!.TEST_PARAMETERS.Where(par => par.Pass == true).Count()} PASSED"; }
+        //public string TestsFailed { get => $"{_AppStore.TestPlan!.TEST_PARAMETERS.Where(par => par.Pass == true).Count()} FAILED"; }
         public string TestStatus
         {
             get
