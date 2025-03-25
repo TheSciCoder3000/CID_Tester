@@ -16,6 +16,7 @@ namespace CID_Tester.Service.DbProvider
             _dbContextFactory = dbContextFactory;
         }
 
+        #region DUT Provider Functions
         public async Task<IEnumerable<DUT>> GetAllDuts()
         {
             using (TesterDbContext context = _dbContextFactory.CreateDbContext())
@@ -25,10 +26,9 @@ namespace CID_Tester.Service.DbProvider
             }
         }
 
-        public Task<IEnumerable<TEST_PARAMETER>> GetAllTestParameters()
-        {
-            throw new NotImplementedException();
-        }
+        #endregion
+
+        #region Test Plan Provider Functions
 
         public async Task<IEnumerable<TEST_PLAN>> GetAllTestPlans()
         {
@@ -41,6 +41,17 @@ namespace CID_Tester.Service.DbProvider
             }
         }
 
+        #endregion
+
+        #region Test Parameter Provider Functions
+        public Task<IEnumerable<TEST_PARAMETER>> GetAllTestParameters()
+        {
+            throw new NotImplementedException();
+        }
+
+        #endregion
+
+        #region Test User Provider Functions
         public async Task<TEST_USER?> GetUser(string username, string password, IDbCreator dbCreator)
         {
             using(TesterDbContext context = _dbContextFactory.CreateDbContext())
@@ -67,5 +78,7 @@ namespace CID_Tester.Service.DbProvider
             }
 
         }
+
+        #endregion
     }
 }
