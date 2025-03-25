@@ -50,7 +50,7 @@ public class AddDutViewModel : BaseViewModel, IDocument
 
     private void RemoveAnchorable(object? obj)
     {
-        _AppStore.RemoveAnchorable(this);
+        _AppStore.DocumentStore.RemoveAnchorable(this);
     }
 
     private async void CreateDutHandler(object? obj)

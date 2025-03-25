@@ -111,7 +111,7 @@ public class DashboardViewModel : BaseViewModel, IDocument
     private void CloseCommandHanlder(object? parameter)
     {
         _AppStore.TestPlanStore.OnTestPlanUpdated -= LoadTestMetrics;
-        _AppStore.RemoveDocument(this);
+        _AppStore.DocumentStore.RemoveDocument(this);
     }
 
 }

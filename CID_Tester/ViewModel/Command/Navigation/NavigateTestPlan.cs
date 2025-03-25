@@ -20,6 +20,6 @@ public class NavigateTestPlan(AppStore appStore) : CommandBase
             testPlanDialog.ShowDialog();
         }
 
-        if (_AppStore.TestPlanStore.SelectedTestPlan != null) _AppStore.AddDocument<TestPlanViewModel>(new TestPlanViewModel(appStore));
+        if (_AppStore.TestPlanStore.SelectedTestPlan != null) _AppStore.DocumentStore.AddDocument<TestPlanViewModel>(new TestPlanViewModel(appStore));
     }
 }

@@ -65,8 +65,8 @@ public class TestPlanViewModel : BaseViewModel, IDocument
     {
         if (_selectedTestParameter != null)
         {
-            _AppStore.ClearAnchorables();
-            _AppStore.AddAnchorables(new TestParameterPropertiesViewModel(_AppStore, _selectedTestParameter));
+            _AppStore.DocumentStore.ClearAnchorables();
+            _AppStore.DocumentStore.AddAnchorables(new TestParameterPropertiesViewModel(_AppStore, _selectedTestParameter));
         }
     }
 
@@ -83,6 +83,6 @@ public class TestPlanViewModel : BaseViewModel, IDocument
     private void CloseCommandHanlder(object? parameter)
     {
         _AppStore.OnTestParameterUpdated -= LoadTestParameters;
-        _AppStore.RemoveDocument(this);
+        _AppStore.DocumentStore.RemoveDocument(this);
     }
 }

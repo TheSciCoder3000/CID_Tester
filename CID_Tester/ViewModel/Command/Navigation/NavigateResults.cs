@@ -22,6 +22,6 @@ public class NavigateResults : CommandBase
 
     public override void Execute(object? parameter)
     {
-        _AppStore.AddDocument<ResultsViewModel>(new ResultsViewModel(_AppStore));
+        _AppStore.DocumentStore.AddDocument<ResultsViewModel>(new ResultsViewModel(_AppStore));
     }
 }

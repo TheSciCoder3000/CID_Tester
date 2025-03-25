@@ -13,6 +13,6 @@ public class NavigateDebug(AppStore appStore, PS2000 oscilloscope, PS2000SigGen 
     {
         DebugViewModel viewModel = new DebugViewModel(appStore, oscilloscope, sigGen);
         oscilloscope.DebugVM = viewModel;
-        _AppStore.AddDocument<DebugViewModel>(viewModel);
+        _AppStore.DocumentStore.AddDocument<DebugViewModel>(viewModel);
     }
 }

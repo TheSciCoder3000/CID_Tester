@@ -60,7 +60,7 @@ public class TestParameterPropertiesViewModel : BaseViewModel, IDocument
 
     private void CloseAnchorable(object? obj)
     {
-        _AppStore.RemoveAnchorable(this);
+        _AppStore.DocumentStore.RemoveAnchorable(this);
     }
 
     public string Name

@@ -11,6 +11,6 @@ public class NavigateDashboard(AppStore appStore, ICommand navigateCommand) : Co
 
     public override void Execute(object? parameter)
     {
-        _AppStore.AddDocument<DashboardViewModel>(new DashboardViewModel(appStore, navigateCommand));
+        _AppStore.DocumentStore.AddDocument<DashboardViewModel>(new DashboardViewModel(appStore, navigateCommand));
     }
 }

@@ -69,7 +69,7 @@ public class DevicesViewModel : BaseViewModel, IDocument
     {
         _AppStore.OnDutUpdated -= Load;
         _AppStore.OnDutDeleted -= Load;
-        _AppStore.RemoveDocument(this);
+        _AppStore.DocumentStore.RemoveDocument(this);
     }
 
     private async void Load(IEnumerable<DUT>? devices = null)

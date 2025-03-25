@@ -41,9 +41,7 @@ public class AppStore
     private TestPlanService _testPlanService;
 
     public TestPlanStore TestPlanStore { get; }
-    public IEnumerable<BaseViewModel> Documents { get; private set; }
-    public object ActiveDocument { get; set; } = null!;
-    public IEnumerable<BaseViewModel> Anchorables { get; private set; } = [];
+    public DocumentStore DocumentStore { get; }
 
     #region Events
 
@@ -55,11 +53,7 @@ public class AppStore
 
     public event Action<IEnumerable<TEST_PARAMETER>>? OnTestParameterUpdated;
 
-    public event Action<IEnumerable<BaseViewModel>>? OnDocumentOpenned;
-    public event Action<IEnumerable<BaseViewModel>>? OnDocumentClosed;
-    public event Action<BaseViewModel>? OnActiveDocumentChanged;
-    public event Action<IEnumerable<BaseViewModel>>? OnAnchorableAdded;
-    public event Action<IEnumerable<BaseViewModel>>? OnAnchorableRemoved;
+    
 
     public event Action<TestingMode>? OnTesting;
 
@@ -70,9 +64,9 @@ public class AppStore
         _dbProvider = dbProvider;
         _dbCreator = dbCreator;
         TestUser = testUser;
-        Documents = documents;
 
         _testPlanService = new TestPlanService(dbCreator);
+        DocumentStore = new DocumentStore(documents);
         TestPlanStore = new TestPlanStore(dbProvider, dbCreator);
 
         LoadDut();
@@ -88,67 +82,7 @@ public class AppStore
 
     #region Document Functions
 
-    public void setActiveDocument(BaseViewModel document)
-    {
-        ActiveDocument = document;
-        OnActiveDocumentChanged?.Invoke(document);
-    }
-
-    public void AddDocument<T>(BaseViewModel document)
-    {
-        ICollection<BaseViewModel> DocumentCollection = Documents.ToList();
-        BaseViewModel? activeDocument = DocumentCollection.FirstOrDefault(d => d is T);
-
-        if (activeDocument == null)
-        {
-            DocumentCollection.Add(document);
-            Documents = DocumentCollection;
-            OnDocumentOpenned?.Invoke(Documents);
-            setActiveDocument(document);
-            ClearAnchorables();
-        }
-        if (ActiveDocument != activeDocument && activeDocument != null)
-        {
-            setActiveDocument(activeDocument);
-            ClearAnchorables();
-        }
-    }
-
-    public void RemoveDocument(BaseViewModel document)
-    {
-        ICollection<BaseViewModel> DocumentCollection = Documents.ToList();
-        DocumentCollection.Remove(document);
-        Documents = DocumentCollection;
-        OnDocumentClosed?.Invoke(Documents);
-        ClearAnchorables();
-    }
-
-    public void AddAnchorables(BaseViewModel anchorable)
-    {
-        ICollection<BaseViewModel> AnchorableCollection = Anchorables.ToList();
-        BaseViewModel? ancorableExist = AnchorableCollection.FirstOrDefault(d => d == anchorable);
-
-        if (ancorableExist == null)
-        {
-            AnchorableCollection.Add(anchorable);
-            Anchorables = AnchorableCollection;
-            OnAnchorableAdded?.Invoke(Anchorables);
-        }
-    }
-
-    public void RemoveAnchorable(BaseViewModel anchorable)
-    {
-        ICollection<BaseViewModel> AnchorableCollection = Anchorables.ToList();
-        AnchorableCollection.Remove(anchorable);
-        Anchorables = AnchorableCollection;
-        OnAnchorableRemoved?.Invoke(Anchorables);
-    }
-
-    public void ClearAnchorables()
-    {
-        Anchorables = [];
-        OnAnchorableRemoved?.Invoke(Anchorables);
-    }
+    
 
     #endregion
 

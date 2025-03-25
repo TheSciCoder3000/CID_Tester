@@ -64,11 +64,11 @@ namespace CID_Tester.ViewModel
         public MainViewModel(TEST_USER user, IDbProvider dbProvider, IDbCreator dbCreator)
         {
             _AppStore = new AppStore(dbProvider, dbCreator, user, []);
-            _AppStore.OnDocumentOpenned         += LoadDocuments;
-            _AppStore.OnDocumentClosed          += LoadDocuments;
-            _AppStore.OnActiveDocumentChanged   += UpdateActiveDocument;
-            _AppStore.OnAnchorableAdded         += LoadAnchorables;
-            _AppStore.OnAnchorableRemoved       += LoadAnchorables;
+            _AppStore.DocumentStore.OnDocumentOpenned         += LoadDocuments;
+            _AppStore.DocumentStore.OnDocumentClosed          += LoadDocuments;
+            _AppStore.DocumentStore.OnActiveDocumentChanged   += UpdateActiveDocument;
+            _AppStore.DocumentStore.OnAnchorableAdded         += LoadAnchorables;
+            _AppStore.DocumentStore.OnAnchorableRemoved       += LoadAnchorables;
 
             toolbarViewModel = new ToolbarViewModel(_AppStore);
 

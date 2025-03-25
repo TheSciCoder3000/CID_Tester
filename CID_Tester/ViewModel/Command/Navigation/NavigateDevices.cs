@@ -10,6 +10,6 @@ public class NavigateDevices(AppStore appStore) : CommandBase
 
     public override void Execute(object? parameter)
     {
-        _AppStore.AddDocument<DevicesViewModel>(new DevicesViewModel(appStore));
+        _AppStore.DocumentStore.AddDocument<DevicesViewModel>(new DevicesViewModel(appStore));
     }
 }

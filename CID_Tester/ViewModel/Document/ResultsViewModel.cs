@@ -20,5 +20,5 @@ public class ResultsViewModel : BaseViewModel, IDocument
         CloseCommand = new RelayCommand(CloseCommandHanlder);
     }
 
-    private void CloseCommandHanlder(object? parameter) => _AppStore.RemoveDocument(this);
+    private void CloseCommandHanlder(object? parameter) => _AppStore.DocumentStore.RemoveDocument(this);
 }

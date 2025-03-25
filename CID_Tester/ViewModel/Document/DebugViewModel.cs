@@ -206,7 +206,7 @@ public class DebugViewModel : BaseViewModel, IDocument, INotifyPropertyChanged
 
     private void CloseCommandHanlder(object? parameter)
     {
-        _AppStore.RemoveDocument(this);
+        _AppStore.DocumentStore.RemoveDocument(this);
     }
 
     private void CaptureMeasurementHandler()
