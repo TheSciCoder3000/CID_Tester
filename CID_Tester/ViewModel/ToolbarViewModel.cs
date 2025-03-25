@@ -61,7 +61,7 @@ public class ToolbarViewModel : BaseViewModel
     public IEnumerable<TEST_PLAN> TestPlans { get => _AppStore.TestPlanStore.TestPlans; }
     public TEST_PLAN? SelectedTestPlan
     {
-        get => _AppStore.TestPlanStore.SelectedTestPlan;
+        get => TestPlans.FirstOrDefault(tp => tp.TestCode == _AppStore.TestPlanStore.SelectedTestPlan?.TestCode);
         set
         {
             if (value != null) _AppStore.TestPlanStore.SelectTestPlan(value);
