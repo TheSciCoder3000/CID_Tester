@@ -9,16 +9,6 @@ namespace CID_Tester.Service.Serial;
 
 public class TestPlanService
 {
-    private ICollection<TEST_PLAN> _testPlans = [];
-    public ICollection<TEST_PLAN> TestPlans
-    {
-        get => _testPlans;
-        set
-        {
-            _testPlans = value;
-        }
-    }
-
     private TEST_PLAN? _testPlan;
     public TEST_PLAN? TestPlan
     {
@@ -40,10 +30,10 @@ public class TestPlanService
     public TestPlanService(IDbCreator dbCreator)
     {
         _dbCreator = dbCreator;
-        initialize();
+        Initialize();
     }
 
-    public int initialize()
+    public int Initialize()
     {
         _powerSupplyService = new PowerSupply();
         _measureService = new Measure();
@@ -63,6 +53,7 @@ public class TestPlanService
 
         try
         {
+            
             SoundPlayer soundPlayer = new SoundPlayer("Start.wav");
             soundPlayer.Play();
 
@@ -93,7 +84,6 @@ public class TestPlanService
         OnTestComplete?.Invoke();
         CommandManager.InvalidateRequerySuggested();
     }
-
 
     private async Task RunTests(CancellationToken token)
     {

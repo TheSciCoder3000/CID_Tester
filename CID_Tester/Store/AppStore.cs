@@ -73,23 +73,14 @@ public class AppStore
 
     }
 
-    #region Testing Functions
+
     public bool canTest
     {
         get => (TestPlanStore.SelectedTestPlan != null || TestPlanStore.SelectedTestPlan?.TEST_PARAMETERS.Count > 0);
     }
-    #endregion
-
-    #region Document Functions
-
-    
-
-    #endregion
-
-    #region Test Plan Function
     public void ReinitializeTestDevices()
     {
-        int unconnectedDevices = _testPlanService.initialize();
+        int unconnectedDevices = _testPlanService.Initialize();
         if (unconnectedDevices == 0)
         {
             MessageBox.Show("All devices are connected", "Device Connection", MessageBoxButton.OK, MessageBoxImage.Information);
@@ -99,9 +90,6 @@ public class AppStore
             MessageBox.Show($"{unconnectedDevices} devices are not connected", "Device Connection", MessageBoxButton.OK, MessageBoxImage.Warning);
         }
     }
-
-
-    #endregion
 
     #region DUT Functions
 

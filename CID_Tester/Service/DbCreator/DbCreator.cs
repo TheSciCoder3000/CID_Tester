@@ -14,6 +14,7 @@ namespace CID_Tester.Service.DbCreator
             _dbContextFactory = dbContextFactory;
         }
 
+        #region DUT
         public async Task CreateDUT(DUT dut)
         {
             using (TesterDbContext context = _dbContextFactory.CreateDbContext())
@@ -33,6 +34,9 @@ namespace CID_Tester.Service.DbCreator
             }
         }
 
+        #endregion
+
+        #region Test Parameter
         public async Task CreateTestParameter(TEST_PARAMETER param)
         {
             using (TesterDbContext context = _dbContextFactory.CreateDbContext())
@@ -41,6 +45,15 @@ namespace CID_Tester.Service.DbCreator
 
                 context.TEST_PARAMETER.Add(param);
 
+                await context.SaveChangesAsync();
+            }
+        }
+
+        public async Task UpdateTestParameter(TEST_PARAMETER param)
+        {
+            using (TesterDbContext context = _dbContextFactory.CreateDbContext())
+            {
+                context.Entry(param).State = EntityState.Modified;
                 await context.SaveChangesAsync();
             }
         }
@@ -57,6 +70,9 @@ namespace CID_Tester.Service.DbCreator
             }
         }
 
+        #endregion
+
+
         public async Task CreateTestPlan(TEST_PLAN testPlan)
         {
             using (TesterDbContext context = _dbContextFactory.CreateDbContext())
@@ -68,6 +84,7 @@ namespace CID_Tester.Service.DbCreator
                 await context.SaveChangesAsync();
             }
         }
+        
 
         public async Task CreateUser(TEST_USER user)
         {
@@ -78,14 +95,6 @@ namespace CID_Tester.Service.DbCreator
             }
         }
 
-        public async Task UpdateTestParameter(TEST_PARAMETER param)
-        {
-            using (TesterDbContext context = _dbContextFactory.CreateDbContext())
-            {
-                context.Entry(param).State = EntityState.Modified;
-                await context.SaveChangesAsync();
-            }
-        }
 
         public async Task CreateTestOutput(TEST_OUTPUT output)
         {
@@ -101,6 +110,15 @@ namespace CID_Tester.Service.DbCreator
             using (TesterDbContext context = _dbContextFactory.CreateDbContext())
             {
                 context.Entry(output).State = EntityState.Modified;
+                await context.SaveChangesAsync();
+            }
+        }
+
+        public async Task CreateBatch(TEST_BATCH batch)
+        {
+            using (TesterDbContext context = _dbContextFactory.CreateDbContext())
+            {
+                context.TEST_BATCH.Add(batch);
                 await context.SaveChangesAsync();
             }
         }

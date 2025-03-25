@@ -25,7 +25,7 @@ public class TestPlanStore
     public TEST_PLAN? SelectedTestPlan { get; private set; }
 
 
-    public async void RefreshTestPlans()
+    public async Task RefreshTestPlans()
     {
         TestPlans = (ICollection<TEST_PLAN>)await _dbProvider.GetAllTestPlans();
     }
@@ -40,6 +40,7 @@ public class TestPlanStore
     public async Task CreateTestPlan(TEST_PLAN testPlan)
     {
         await _dbCreator.CreateTestPlan(testPlan);
+        await RefreshTestPlans();
         SelectedTestPlan = testPlan;
         OnTestPlanUpdated?.Invoke(SelectedTestPlan);
         OnTestParameterUpdated?.Invoke(SelectedTestPlan.TEST_PARAMETERS);

@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CID_Tester.Migrations
 {
     [DbContext(typeof(TesterDbContext))]
-    [Migration("20250324234808_Initial")]
+    [Migration("20250325003105_Initial")]
     partial class Initial
     {
         /// <inheritdoc />

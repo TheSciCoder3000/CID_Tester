@@ -11,6 +11,7 @@ public class TesterDbContext : DbContext
     public DbSet<TEST_PARAMETER> TEST_PARAMETER { get; set; }
     public DbSet<DUT> DUT { get; set; }
     public DbSet<TEST_OUTPUT> TEST_OUTPUT { get; set; }
+    public DbSet<TEST_BATCH> TEST_BATCH { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
