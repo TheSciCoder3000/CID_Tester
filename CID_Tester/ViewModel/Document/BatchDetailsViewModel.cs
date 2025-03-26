@@ -48,7 +48,8 @@ public class BatchDetailsViewModel : BaseViewModel
             // TODO: Replace with dynamic number of DUTs tested
             int NumberOfDuts = 4;
             return Enumerable.Range(1,NumberOfDuts)
-                .Select(dutIndx => new DutDetailViewModel(SelectedCycle, dutIndx, BatchDetails.TEST_OUTPUTS.Where(output => output.DutLocation == dutIndx).ToList()));
+                .Select(dutIndx => new DutDetailViewModel(SelectedCycle, dutIndx, BatchDetails.TEST_OUTPUTS
+                .Where(output => output.DutLocation == dutIndx && output.TEST_PARAMETER.Type == "DC").ToList()));
         }
     }
 
