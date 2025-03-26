@@ -71,7 +71,6 @@ public class DebugViewModel : BaseViewModel, IDocument, INotifyPropertyChanged
         get { return _signalType; }
         set
         {
-            SigGen.signalType = value;
             _signalType = value;
             OnPropertyChanged();
         }
@@ -83,7 +82,6 @@ public class DebugViewModel : BaseViewModel, IDocument, INotifyPropertyChanged
         get { return _frequency; }
         set
         {
-            SigGen.frequency = value;
             _frequency = value;
             OnPropertyChanged();
         }
@@ -95,7 +93,6 @@ public class DebugViewModel : BaseViewModel, IDocument, INotifyPropertyChanged
         get { return _p2pVoltage; }
         set
         {
-            SigGen.p2pVoltage = value;
             _p2pVoltage = value;
             OnPropertyChanged();
         }
@@ -107,7 +104,6 @@ public class DebugViewModel : BaseViewModel, IDocument, INotifyPropertyChanged
         get { return _offsetVoltage; }
         set
         {
-            SigGen.offsetVoltage = value;
             _offsetVoltage = value;
             OnPropertyChanged();
         }
@@ -211,12 +207,7 @@ public class DebugViewModel : BaseViewModel, IDocument, INotifyPropertyChanged
 
     private void CaptureMeasurementHandler()
     {
-        Oscilloscope.Run();
-        Oscilloscope.SetTimebase((short)SelectedTimebase);
-        Oscilloscope.SetVoltages(8);
-        Oscilloscope.CollectBlockImmediate();
-
-        //Oscilloscope.Stream();
+        Oscilloscope.GetDataUpdate(OscDisplay, (short)SelectedTimebase, 8);
 
     }
 
@@ -237,21 +228,14 @@ public class DebugViewModel : BaseViewModel, IDocument, INotifyPropertyChanged
 
     private void StartSigGenHandler(object? obj)
     {
-        SigGen.signalType = signalType;
-        SigGen.frequency = frequency;
-        SigGen.p2pVoltage = p2pVoltage;
-        SigGen.offsetVoltage = offsetVoltage;
-        SigGen.StartSignal();
+        SigGen.StartSignal(signalType, offsetVoltage, frequency, p2pVoltage);
         Task.Run(CaptureMeasurementHandler);
     }
 
     private void StopSigGenHandler(object? obj)
     {
-        SigGen.signalType = 0;
-        SigGen.frequency = 0;
-        SigGen.p2pVoltage = 0;
-        SigGen.offsetVoltage = 0;
-        SigGen.StartSignal();
+
+        SigGen.StartSignal(0,0,0,0);
         Task.Run(CaptureMeasurementHandler);
     }
 
