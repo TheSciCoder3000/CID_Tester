@@ -13,7 +13,7 @@ public class BatchDetailsViewModel : BaseViewModel
     public string Title { get; set; }
     public ICommand CloseCommand { get; }
 
-    private TEST_BATCH _batchDetails;
+    private TEST_BATCH _batchDetails = null!;
     public TEST_BATCH BatchDetails
     {
         get => _batchDetails;
@@ -50,6 +50,18 @@ public class BatchDetailsViewModel : BaseViewModel
             return Enumerable.Range(1,NumberOfDuts)
                 .Select(dutIndx => new DutDetailViewModel(SelectedCycle, dutIndx, BatchDetails.TEST_OUTPUTS
                 .Where(output => output.DutLocation == dutIndx && output.TEST_PARAMETER.Type == "DC").ToList()));
+        }
+    }
+
+    public IEnumerable<DutGraphViewModel> AcDutList
+    {
+        get
+        {
+            // TODO: Replace with dynamic number of DUTs tested
+            int NumberOfDuts = 4;
+            return Enumerable.Range(1, NumberOfDuts)
+                .Select(dutIndx => new DutGraphViewModel(SelectedCycle, dutIndx, BatchDetails.TEST_OUTPUTS
+                .Where(output => output.DutLocation == dutIndx && output.TEST_PARAMETER.Type == "AC").ToList()));
         }
     }
 

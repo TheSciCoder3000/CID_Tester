@@ -58,6 +58,19 @@
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
             </StackPanel>
+
+            <StackPanel Margin="0 20" HorizontalAlignment="Left">
+                <TextBlock Foreground="White" FontSize="28" FontWeight="Medium">AC Testing</TextBlock>
+                <ItemsControl Background="Transparent" ItemsSource="{Binding AcDutList}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Margin="0 20" DataContext="{Binding OutputList}">
+                                <Image Source="{Binding ImageDir}" Width="800" Height="auto" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </StackPanel>
         </StackPanel>
     </ScrollViewer>
 </UserControl>
