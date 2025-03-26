@@ -13,7 +13,7 @@ namespace CID_Tester.Service.Serial
         private PS2000SigGen FuncGen = new PS2000SigGen();
         private float _frequency = 0;
         private float _amplitude = 0;
-        private short _timebase = 0;
+        private short _timebase = 7;
         private short _oversample = 1;
         private Imports.WaveType _signalType = Imports.WaveType.SINE;
         private bool _useFG1 = false;
@@ -38,21 +38,23 @@ namespace CID_Tester.Service.Serial
 
             _frequency = float.Parse(configuration["frequency"]);
             _amplitude = float.Parse(configuration["amplitude"]);
-            _timebase = short.Parse(configuration["timebase"]);
+            //_timebase = short.Parse(configuration["timebase"]);
+            _range = (uint)Imports.Range.Range_5V;
+            _timebase = 4;
             _signalType = (Imports.WaveType)Enum.Parse(typeof(Imports.WaveType), configuration["signalType"]);
             _useFG1 = configuration["FG1"] == "ON";
-            _useFG1 = configuration["FG2"] == "ON";
+            _useFG2 = configuration["FG2"] == "ON";
 
-            if (configuration["range"] == "1V") _range = (uint)Imports.Range.Range_1V;
-            if (configuration["range"] == "2V") _range = (uint)Imports.Range.Range_2V;
-            if (configuration["range"] == "5V") _range = (uint)Imports.Range.Range_5V;
-            if (configuration["range"] == "10V") _range = (uint)Imports.Range.Range_10V;
-            if (configuration["range"] == "20V") _range = (uint)Imports.Range.Range_20V;
+            //if (configuration["range"] == "1V") _range = (uint)Imports.Range.Range_1V;
+            //if (configuration["range"] == "2V") _range = (uint)Imports.Range.Range_2V;
+            //if (configuration["range"] == "5V") _range = (uint)Imports.Range.Range_5V;
+            //if (configuration["range"] == "10V") _range = (uint)Imports.Range.Range_10V;
+            //if (configuration["range"] == "20V") _range = (uint)Imports.Range.Range_20V;
         }
         public void StartFunctionGen()
         {
             int offset = 0;
-            uint pkToPk = (uint)(_amplitude * 2 * 1000) * 1000;
+            uint pkToPk = 2000;
 
             FuncGen.StartSignal((int)_signalType, offset, _frequency, pkToPk);
             Thread.Sleep(1000);

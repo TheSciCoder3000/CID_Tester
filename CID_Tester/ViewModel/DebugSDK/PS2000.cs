@@ -112,7 +112,7 @@ namespace CID_Tester.ViewModel.DebugSDK
 
         short _timebase = 0;
         short _oversample = 1;
-        short handle = 0;
+        short handle = 1;
         bool _hasFastStreaming = false;
 
         uint _totalSampleCount = 0;
@@ -898,39 +898,21 @@ namespace CID_Tester.ViewModel.DebugSDK
         {
             bool valid = false;
 
-            Debug.WriteLine("Available voltage ranges:\n");
-
-            /* See what ranges are available... */
-            for (int i = (int)_firstRange; i <= (int)_lastRange; i++)
-            {
-                Debug.WriteLine("{0}: {1} mV", i, inputRanges[i]);
-            }
-
-            /* Ask the user to select a range */
-            Debug.WriteLine("\nSpecify voltage range ({0}..{1})", _firstRange, _lastRange);
-            Debug.WriteLine("99 - switches channel off");
-
             for (int ch = 0; ch < _channelCount; ch++)
             {
-                Debug.WriteLine("");
-
                 do
                 {
-                    Debug.WriteLine("Channel {0}:", (char)('A' + ch));
                     valid = true;
 
                 } while (range != 99 && (range < (uint)_firstRange || range > (uint)_lastRange) || !valid);
 
-
                 if (range != 99)
                 {
                     _channelSettings[ch].range = (Imports.Range)range;
-                    Debug.WriteLine(" = {0} mV", inputRanges[range]);
                     _channelSettings[ch].enabled = 1;
                 }
                 else
                 {
-                    Debug.WriteLine("Channel switched off");
                     _channelSettings[ch].enabled = 0;
                 }
             }
@@ -950,20 +932,7 @@ namespace CID_Tester.ViewModel.DebugSDK
             short timeunit;
             bool valid = false;
             short status = 0;
-            short maxTimebaseIndex = 0; // Use this to place an upper bound on the timebase index selected
-
-            Debug.WriteLine("Available timebases indices and sampling intervals (nanoseconds):\n");
-
-            for (short i = 0; i < Imports.PS2200_MAX_TIMEBASE; i++)
-            {
-                status = Imports.GetTimebase(handle, i, BUFFER_SIZE, out timeInterval, out timeunit, _oversample, out maxSamples);
-
-                if (status == 1)
-                {
-                    Debug.WriteLine("{0,2}: {1} ns", i, timeInterval);
-                    maxTimebaseIndex = i;
-                }
-            }
+            short maxTimebaseIndex = 11; // Use this to place an upper bound on the timebase index selected
 
             do
             {
@@ -971,6 +940,7 @@ namespace CID_Tester.ViewModel.DebugSDK
                 try
                 {
                     _timebase = time;
+                    Debug.WriteLine(_timebase + " | " + maxTimebaseIndex);
 
                     if (_timebase < 0 || _timebase > maxTimebaseIndex)
                     {
@@ -1170,7 +1140,8 @@ namespace CID_Tester.ViewModel.DebugSDK
 
         private void Print(string text)
         {
-            _DebugVM.ConsoleString += text;
+            if (_DebugVM != null) _DebugVM.ConsoleString += text;
+
         }
 
         public WpfPlot GetDataGenerate(short timebase, uint range)
@@ -1201,8 +1172,8 @@ namespace CID_Tester.ViewModel.DebugSDK
             chart.Plot.Add.Signal(_valuesOut);
             chart.Plot.Add.Signal(_valuesIn);
 
-            _DebugVM.OscDisplay.Plot.Axes.AutoScale();
-            _DebugVM.OscDisplay.Refresh();
+            chart.Plot.Axes.AutoScale();
+            chart.Refresh();
 
             return chart;
         }

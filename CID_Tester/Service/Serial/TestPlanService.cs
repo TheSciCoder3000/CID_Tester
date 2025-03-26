@@ -57,8 +57,8 @@ public class TestPlanService
                 TEST_OUTPUTS = []
             };
 
-            SoundPlayer soundPlayer = new SoundPlayer("Start.wav");
-            soundPlayer.Play();
+            //SoundPlayer soundPlayer = new SoundPlayer("Start.wav");
+            //soundPlayer.Play();
 
             TokenSource = new CancellationTokenSource();
             var token = TokenSource.Token;
@@ -69,8 +69,8 @@ public class TestPlanService
                 Debug.WriteLine($"Test Cycle: {cycle + 1}");
                 await RunTests(token);
             }
-            soundPlayer = new SoundPlayer("Alarm.wav");
-            soundPlayer.Play();
+            //soundPlayer = new SoundPlayer("Alarm.wav");
+            //soundPlayer.Play();
 
             await _dbCreator.CreateBatch(_testBatch);
 
@@ -96,9 +96,9 @@ public class TestPlanService
     private async Task RunTests(CancellationToken token)
     {
         // Open Services
-        _powerSupplyService.Open();
+        //_powerSupplyService.Open();
         _switchMatrixService.Open();
-        _measureService.Open();
+        //_measureService.Open();
         _functionSwitchService.Open();
 
         foreach (var parameter in _TestPlan!.TEST_PARAMETERS)
@@ -126,7 +126,7 @@ public class TestPlanService
                 // supply.ToggleDPSNeg(true);
 
                 // turn on input
-                if (parameter.Type == "DC")
+                if (parameter.Type == "DC" && false)
                 {
                     // set voltage and open PMU
                     Debug.WriteLine($"Running dc test: {parameter.Name}");
@@ -154,7 +154,6 @@ public class TestPlanService
                     // start function generator
                     _functionSwitchService.ParseInputConfiguration(parameter.InputConfiguration);
                     _functionSwitchService.StartFunctionGen();
-
 
                     // capture graph
                     string fullResultPath = _functionSwitchService.CaptureGraph($"D{dutNum}-P{parameter.ParamCode}-B{_testBatch.BatchCode}.jpeg");
