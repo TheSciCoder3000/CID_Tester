@@ -22,9 +22,11 @@
             </DataGrid.InputBindings>
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Batch No." Binding="{Binding BatchCode}" Width="80" ElementStyle="{StaticResource CenteredCellStyle}" />
-                    <DataGridTextColumn Header="Test Plan" Binding="{Binding TEST_PLAN.Name}" Width="*" />
-                <DataGridTextColumn Header="Cycle No." Binding="{Binding CycleNo}" Width="100" />
-                <DataGridTextColumn Header="Date" Binding="{Binding Date}" Width="150" />
+                <DataGridTextColumn Header="Test Plan" Binding="{Binding TEST_PLAN.Name}" Width="*" />
+                <DataGridTextColumn Header="DUT" Binding="{Binding TEST_PLAN.DUT.DutName}" Width="*" />
+                <DataGridTextColumn Header="Cycle No." Binding="{Binding CycleNo}" Width="100" ElementStyle="{StaticResource CenteredCellStyle}" />
+                <DataGridTextColumn Header="Date" Binding="{Binding Date, StringFormat=MMMM dd\, yyyy}" Width="150" ElementStyle="{StaticResource CenteredCellStyle}" />
+                <DataGridTextColumn Header="Time" Binding="{Binding Date, StringFormat=hh:MM tt}" Width="100" ElementStyle="{StaticResource CenteredCellStyle}" />
             </DataGrid.Columns>
         </DataGrid>
     </StackPanel>

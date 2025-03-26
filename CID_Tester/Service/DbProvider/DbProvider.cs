@@ -37,6 +37,9 @@ namespace CID_Tester.Service.DbProvider
                 return await context.TEST_PLAN
                     .Include(tp => tp.DUT)
                     .Include(tp => tp.TEST_PARAMETERS)
+                        .ThenInclude(tp => tp.TEST_OUTPUTS)
+                    .Include(tp => tp.TEST_BATCHES)
+                        .ThenInclude(tp => tp.TEST_OUTPUTS)
                     .ToListAsync();
             }
         }
@@ -69,7 +72,10 @@ namespace CID_Tester.Service.DbProvider
                     .Where(r => r.UserCode == user.UserCode)
                     .Include(u => u.TEST_BATCHES)
                         .ThenInclude(tp => tp.TEST_PLAN)
-                        .ThenInclude(tp => tp.TEST_PARAMETERS)
+                            .ThenInclude(tp => tp.DUT)
+                    .Include(u => u.TEST_BATCHES)
+                        .ThenInclude(tp => tp.TEST_PLAN)
+                            .ThenInclude(tp => tp.TEST_PARAMETERS)
                     .Include(u => u.TEST_BATCHES)
                         .ThenInclude(tp => tp.TEST_OUTPUTS)
                     .FirstOrDefaultAsync();
