@@ -2,11 +2,12 @@
 using CID_Tester.Store;
 using CID_Tester.ViewModel.Command;
 using CID_Tester.ViewModel.Controls.History;
+using CID_Tester.ViewModel.Interfaces;
 using System.Windows.Input;
 
 namespace CID_Tester.ViewModel.Document;
 
-public class BatchDetailsViewModel : BaseViewModel
+public class BatchDetailsViewModel : BaseViewModel, IDocument
 {
     private readonly AppStore _AppStore;
 
@@ -65,11 +66,11 @@ public class BatchDetailsViewModel : BaseViewModel
         }
     }
 
-    public BatchDetailsViewModel(AppStore appStore, TEST_BATCH batchDetails)
+    public BatchDetailsViewModel(AppStore appStore, TEST_BATCH batchDetails, string title = "Batch Details")
     {
         _AppStore = appStore;
         BatchDetails = batchDetails;
-        Title = "Batch Details";
+        Title = title;
         CloseCommand = new RelayCommand(CloseCommandHanlder);
     }
 

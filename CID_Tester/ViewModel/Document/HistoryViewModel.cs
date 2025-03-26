@@ -2,12 +2,12 @@
 using CID_Tester.Model;
 using CID_Tester.Store;
 using CID_Tester.ViewModel.Command;
-using System.Diagnostics;
+using CID_Tester.ViewModel.Interfaces;
 using System.Windows.Input;
 
 namespace CID_Tester.ViewModel.Document;
 
-public class HistoryViewModel : BaseViewModel
+public class HistoryViewModel : BaseViewModel, IDocument
 {
     private readonly AppStore _AppStore;
 
@@ -47,8 +47,7 @@ public class HistoryViewModel : BaseViewModel
     }
     private void DoubleClickCommandHandler(object? obj)
     {
-        Debug.WriteLine($"Batch: {SelectedBatch.BatchCode}");
-        _AppStore.DocumentStore.AddDocument<BatchDetailsViewModel>(new BatchDetailsViewModel(_AppStore, SelectedBatch));
+        _AppStore.DocumentStore.AddDocument<BatchDetailsViewModel>(new BatchDetailsViewModel(_AppStore, SelectedBatch, $"Batch {SelectedBatch.BatchCode} Details"));
     }
     #endregion
 }

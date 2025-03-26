@@ -1,4 +1,5 @@
 ﻿using CID_Tester.ViewModel;
+using CID_Tester.ViewModel.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,8 +28,11 @@ public class DocumentStore
 
     public void AddDocument<T>(BaseViewModel document)
     {
-        ICollection<BaseViewModel> DocumentCollection = Documents.ToList();
-        BaseViewModel? activeDocument = DocumentCollection.FirstOrDefault(d => d is T);
+        ICollection<BaseViewModel> DocumentCollection = Documents.ToList(); 
+        BaseViewModel? activeDocument = DocumentCollection.FirstOrDefault(d =>
+        {
+            return ((IDocument)d).Title == ((IDocument)document).Title;
+        });
 
         if (activeDocument == null)
         {
