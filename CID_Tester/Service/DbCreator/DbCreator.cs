@@ -1,5 +1,4 @@
-﻿using CID_Tester.Exceptions;
-using CID_Tester.Model;
+﻿using CID_Tester.Model;
 using CID_Tester.Model.DbContexts;
 using Microsoft.EntityFrameworkCore;
 
@@ -100,6 +99,8 @@ namespace CID_Tester.Service.DbCreator
         {
             using (TesterDbContext context = _dbContextFactory.CreateDbContext())
             {
+                context.Entry(output.TEST_BATCH).State = EntityState.Unchanged;
+                context.Entry(output.TEST_PARAMETER).State = EntityState.Unchanged;
                 context.TEST_OUTPUT.Add(output);
                 await context.SaveChangesAsync();
             }
@@ -118,6 +119,16 @@ namespace CID_Tester.Service.DbCreator
         {
             using (TesterDbContext context = _dbContextFactory.CreateDbContext())
             {
+                context.Entry(batch.TEST_PLAN.DUT).State = EntityState.Unchanged;
+                context.Entry(batch.TEST_PLAN).State = EntityState.Unchanged;
+                context.Entry(batch.TEST_USER).State = EntityState.Unchanged;
+
+                foreach (TEST_OUTPUT testOutput in batch.TEST_OUTPUTS)
+                {
+                    context.Entry(testOutput.TEST_PARAMETER).State = EntityState.Unchanged;
+                    context.Entry(testOutput).State = EntityState.Added;
+                }
+
                 context.TEST_BATCH.Add(batch);
                 await context.SaveChangesAsync();
             }

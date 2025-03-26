@@ -9,16 +9,7 @@ namespace CID_Tester.Service.Serial;
 
 public class TestPlanService
 {
-    private TEST_PLAN? _testPlan;
-    public TEST_PLAN? TestPlan
-    {
-        get => _testPlan;
-        set
-        {
-            _testPlan = value;
-        }
-    }
-
+    private TEST_PLAN? _TestPlan;
     private PowerSupply _powerSupplyService;
     private SwitchMatrix _switchMatrixService;
     private Measure _measureService;
@@ -46,9 +37,10 @@ public class TestPlanService
         return _measureService.Unconnected() + _powerSupplyService.Unconnected() + _functionSwitchService.Unconnected() + _switchMatrixService.Unconnected();
     }
 
-    public async void Start(Action? OnTestComplete = null)
+    public async void Start(TEST_PLAN TestPlan, Action? OnTestComplete = null)
     {
-        if (_testPlan == null)
+        _TestPlan = TestPlan;
+        if (TestPlan == null)
         {
             Debug.WriteLine("Test plan is null");
             return;
@@ -61,8 +53,10 @@ public class TestPlanService
                 TEST_PLAN = TestPlan,
                 Date = DateTime.Now,
                 CycleNo = 3,        // TODO: MAKE THIS DYNAMIC
-                TEST_USER = _testUser
+                TEST_USER = _testUser,
+                TEST_OUTPUTS = []
             };
+
             SoundPlayer soundPlayer = new SoundPlayer("Start.wav");
             soundPlayer.Play();
 
@@ -77,6 +71,8 @@ public class TestPlanService
             }
             soundPlayer = new SoundPlayer("Alarm.wav");
             soundPlayer.Play();
+
+            await _dbCreator.CreateBatch(_testBatch);
 
         }
         catch (OperationCanceledException ex)
@@ -105,7 +101,7 @@ public class TestPlanService
         _measureService.Open();
         _functionSwitchService.Open();
 
-        foreach (var parameter in _testPlan!.TEST_PARAMETERS)
+        foreach (var parameter in _TestPlan!.TEST_PARAMETERS)
         {
             // setup matrix configuration
             _switchMatrixService.Start(parameter.ParseToParameterDictionary());
@@ -138,11 +134,11 @@ public class TestPlanService
 
                     // start measurement
                     await _measureService.SetModeVoltage();
-                    string rawValue = await _measureService.GetMeasurement();
+                    double rawValue = await _measureService.GetMeasurement();
 
                     TEST_OUTPUT result = new TEST_OUTPUT()
                     {
-                        Measured = rawValue,
+                        Measured = rawValue.ToString(),
                         TEST_PARAMETER = parameter,
                         DutLocation = dutNum,
                     };
@@ -159,8 +155,9 @@ public class TestPlanService
                     _functionSwitchService.ParseInputConfiguration(parameter.InputConfiguration);
                     _functionSwitchService.StartFunctionGen();
 
+
                     // capture graph
-                    string fullResultPath = _functionSwitchService.CaptureGraph($"D{dutNum}-P{parameter.ParamCode}-B{_testBatch.BatchCode}");
+                    string fullResultPath = _functionSwitchService.CaptureGraph($"D{dutNum}-P{parameter.ParamCode}-B{_testBatch.BatchCode}.jpeg");
 
                     // stop function generator
                     _functionSwitchService.StopFunctionGen();
