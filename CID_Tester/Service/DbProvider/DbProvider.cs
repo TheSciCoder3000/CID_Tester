@@ -67,11 +67,11 @@ namespace CID_Tester.Service.DbProvider
 
                 TEST_USER? verifiedUser = await context.TEST_USER
                     .Where(r => r.UserCode == user.UserCode)
-                    // TODO: REFACTOR THE FOLLOWING LINES
-                    //.Include(u => u.TEST_PLANS)
-                    //    .ThenInclude(tp => tp.DUT)
-                    //.Include(u => u.TEST_PLANS)
-                    //    .ThenInclude(tp => tp.TEST_PARAMETERS)
+                    .Include(u => u.TEST_BATCHES)
+                        .ThenInclude(tp => tp.TEST_PLAN)
+                        .ThenInclude(tp => tp.TEST_PARAMETERS)
+                    .Include(u => u.TEST_BATCHES)
+                        .ThenInclude(tp => tp.TEST_OUTPUTS)
                     .FirstOrDefaultAsync();
 
                 return verifiedUser;
