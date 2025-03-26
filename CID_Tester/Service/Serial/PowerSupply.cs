@@ -14,7 +14,7 @@ namespace CID_Tester.Service.Serial
 
     public class PowerSupply : BaseSerial
     {
-        public PowerSupply() : base("SUPP", 9600) { }
+        public PowerSupply() : base("SUPP", 115200) { }
 
         #region Power Supply Configuration Commands
         private void SetDPS1Voltage(int voltage)

@@ -1,4 +1,6 @@
-﻿using System.Diagnostics;
+﻿using ScottPlot.Triangulation;
+using System.Diagnostics;
+using System.Globalization;
 using System.IO.Ports;
 
 namespace CID_Tester.Service.Serial
@@ -63,7 +65,7 @@ namespace CID_Tester.Service.Serial
 
             _taskCompletionSource = new TaskCompletionSource<string>();
 
-            await Task.Delay(1000);
+            await Task.Delay(2500);
             SendCommand("MEAS?");
 
             Task timeoutTask = Task.Delay(timeout_delay);
