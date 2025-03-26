@@ -897,7 +897,7 @@ namespace CID_Tester.ViewModel.DebugSDK
         /****************************************************************************
          * Select input voltage ranges for channels A and B
          ****************************************************************************/
-        public void SetVoltages(uint range)
+        public void SetVoltages(uint voltage)
         {
             bool valid = false;
 
@@ -916,10 +916,12 @@ namespace CID_Tester.ViewModel.DebugSDK
             for (int ch = 0; ch < _channelCount; ch++)
             {
                 Debug.WriteLine("");
+                uint range = 10;
 
                 do
                 {
                     Debug.WriteLine("Channel {0}:", (char)('A' + ch));
+                    range = voltage;
                     valid = true;
 
                 } while (range != 99 && (range < (uint)_firstRange || range > (uint)_lastRange) || !valid);
