@@ -9,6 +9,8 @@ namespace CID_Tester.Service.Serial
 {
     public class FunctionSwitchService : BaseSerial
     {
+        private PS2000 Oscilloscope = new PS2000();
+        private PS2000SigGen FuncGen = new PS2000SigGen();
         private float _frequency = 0;
         private float _amplitude = 0;
         private short _timebase = 0;
@@ -16,6 +18,7 @@ namespace CID_Tester.Service.Serial
         private Imports.WaveType _signalType = Imports.WaveType.SINE;
         private bool _useFG1 = false;
         private bool _useFG2 = false;
+        private uint _range = 8;
         private short _handle = 1;
 
         private WpfPlot OscPlot = new WpfPlot();
@@ -35,149 +38,47 @@ namespace CID_Tester.Service.Serial
 
             _frequency = float.Parse(configuration["frequency"]);
             _amplitude = float.Parse(configuration["amplitude"]);
-            _timebase = 7;
+            _timebase = short.Parse(configuration["timebase"]);
             _signalType = (Imports.WaveType)Enum.Parse(typeof(Imports.WaveType), configuration["signalType"]);
             _useFG1 = configuration["FG1"] == "ON";
             _useFG1 = configuration["FG2"] == "ON";
 
-            Imports.SetChannel(_handle, (Imports.Channel)0,
-                                   1,
-                                   1,
-                                   Imports.Range.Range_5V);
-
-            Imports.SetChannel(_handle, (Imports.Channel)1,
-                                   1,
-                                   1,
-                                   Imports.Range.Range_5V);
+            if (configuration["range"] == "1V") _range = (uint)Imports.Range.Range_1V;
+            if (configuration["range"] == "2V") _range = (uint)Imports.Range.Range_2V;
+            if (configuration["range"] == "5V") _range = (uint)Imports.Range.Range_5V;
+            if (configuration["range"] == "10V") _range = (uint)Imports.Range.Range_10V;
+            if (configuration["range"] == "20V") _range = (uint)Imports.Range.Range_20V;
         }
         public void StartFunctionGen()
         {
             int offset = 0;
             uint pkToPk = (uint)(_amplitude * 2 * 1000) * 1000;
-            uint sweeps = 0;
-            Double startFreq = _frequency;
-            Double stopFreq = startFreq;
-            Double increment = 0;
-            Double dwellTime = 0;
-            Imports.SweepType sweeptype = Imports.SweepType.UP;
-            Imports.WaveType wavetype = Imports.WaveType.SINE;
 
-            int status = Imports.SetSigGenBuiltIn(_handle,
-                                              offset,
-                                              pkToPk,
-                                              wavetype,
-                                              (float)startFreq,
-                                              (float)stopFreq,
-                                              (float)increment,
-                                              (float)dwellTime,
-                                              sweeptype,
-                                              sweeps);
-
+            FuncGen.StartSignal((int)_signalType, offset, _frequency, pkToPk);
             Thread.Sleep(1000);
-            if (status == 0) Debug.WriteLine("Function gen error");
+
             if (_useFG1) OpenInvFG();
             else if (_useFG2) OpenNinvFG();
         }
 
         public void StopFunctionGen()
         {
-            Imports.SetSigGenBuiltIn(1, 0, 0, Imports.WaveType.SINE, 0, 0, 0, 0, Imports.SweepType.UP, 0);
+            FuncGen.StartSignal(0,0,0,0);
             CloseAll();
         }
 
         public string CaptureGraph(string filename)
         {
-            PinnedArray<short>[] pinned = new PinnedArray<short>[4];
-            int sampleCount = 1024*7;
-            short timeUnit = 0;
-            int timeIndisposed;
-            short status = 0;
-            ScottPlot.TickGenerators.NumericManual tickGen = new();
-
-            int[] times = new int[sampleCount];
-            PinnedArray<int> pinnedTimes = new PinnedArray<int>(times);
-
-            // Channel buffers
-            for (int i = 0; i < 2; i++)
-            {
-                short[] buffer = new short[sampleCount];
-                pinned[i] = new PinnedArray<short>(buffer);
-            }
-
-            int timeInterval = 0;
-            int maxSamples;
-
-            do
-            {
-                status = Imports.GetTimebase(_handle, _timebase, sampleCount, out timeInterval, out timeUnit, _oversample, out maxSamples);
-
-                if (status != 1)
-                {
-                    Debug.WriteLine("Selected timebase {0} could not be used\n", _timebase);
-                    _timebase++;
-                }
-
-            }
-            while (status == 0);
-
-            Debug.WriteLine("Timebase: {0}\toversample:{1}\n", _timebase, _handle);
-
-            /* Start the device collecting, then wait for completion*/
-
-            Imports.RunBlock(_handle, sampleCount, (short)_timebase, _handle, out timeIndisposed);
-
-            short ready = 0;
-
-            while (ready == 0)
-            {
-                ready = Imports.Isready(_handle);
-                Thread.Sleep(1);
-            }
-
-            if (ready > 0)
-            {
-                short overflow;
-
-                Imports.GetTimesAndValues(1, pinnedTimes, pinned[0], pinned[1], null, null, out overflow, timeUnit, sampleCount);
-
-
-                for (int i = 0; i < ValuesOut.Length; i++)
-                {
-
-                    long y1 = adc_to_mv(pinned[0].Target[i], 20000);
-                    long y2 = adc_to_mv(pinned[1].Target[i], 20000);
-                    int x = pinnedTimes.Target[i];
-
-                    ValuesOut[i] = (Convert.ToDouble(y1) / 1000);
-                    ValuesIn[i] = (Convert.ToDouble(y2) / 1000);
-                    tickGen.AddMajor(i, "");
-                }
-            }
-            else
-            {
-                Console.WriteLine("Data collection aborted");
-            }
-
-
-            OscPlot.Plot.Axes.Bottom.TickGenerator = tickGen;
-            OscPlot.Plot.Axes.AutoScale();
-            OscPlot.Refresh();
-
-            Imports.Stop(_handle);
+            WpfPlot chart = Oscilloscope.GetDataGenerate(_timebase, _range);
 
             string localAppData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
             string resultsPath = Path.Combine(localAppData, "Results", filename);
-            using (MemoryStream ms = new MemoryStream(OscPlot.Plot.GetImageBytes(1000, 400)))
+            using (MemoryStream ms = new MemoryStream(chart.Plot.GetImageBytes(1000, 400)))
             {
                 Bitmap bmp = new Bitmap(ms);
                 bmp.Save(resultsPath, ImageFormat.Jpeg);
             }
             return resultsPath;
-        }
-
-        private long adc_to_mv(int raw, int ch)
-        {
-            return raw * ch / Imports.PS2000_MAX_VALUE;
         }
 
         public FunctionSwitchService() : base("FGRELAY", 9600)

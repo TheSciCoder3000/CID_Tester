@@ -35,6 +35,8 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using ScottPlot.WPF;
 using ScottPlot.Colormaps;
+using ScottPlot;
+using static OfficeOpenXml.ExcelErrorValue;
 namespace CID_Tester.ViewModel.DebugSDK
 {
     struct ChannelSettings
@@ -73,6 +75,8 @@ namespace CID_Tester.ViewModel.DebugSDK
     public class PS2000
     {
 
+        // Variables
+        #region
         private DebugViewModel _DebugVM;
         public DebugViewModel DebugVM
         {
@@ -102,6 +106,10 @@ namespace CID_Tester.ViewModel.DebugSDK
 
         public PinnedArray<int> Captured;
 
+        public double[] _valuesOut = new double[100];
+
+        public double[] _valuesIn = new double[100];
+
         short _timebase = 0;
         short _oversample = 1;
         short handle = 0;
@@ -126,6 +134,10 @@ namespace CID_Tester.ViewModel.DebugSDK
         private string BlockFile = "block.txt";
         private string StreamFile = "stream.txt";
 
+        #endregion
+
+        // Low Level Functions
+        #region
         /****************************************************************************
          * StreamingCallback
          * used by data streaming collection calls, on receipt of data.
@@ -226,13 +238,8 @@ namespace CID_Tester.ViewModel.DebugSDK
             short timeUnit = 0;
             int timeIndisposed;
             short status = 0;
-            ScottPlot.TickGenerators.NumericManual tickGen = new();
-            //_DebugVM.OscDisplay.Plot.Clear();
-            //_DebugVM.Logger.Clear();
 
             // Buffer to hold time data
-
-
 
             int[] times = new int[sampleCount];
             PinnedArray<int> pinnedTimes = new PinnedArray<int>(times);
@@ -300,7 +307,7 @@ namespace CID_Tester.ViewModel.DebugSDK
                 Debug.WriteLine('\n');
                 Print("" + '\n');
 
-                for (int i = 0; i < _DebugVM.ValuesOut.Length; i++)
+                for (int i = 0; i < _valuesOut.Length; i++)
                 {
 
                     long y1 = adc_to_mv(pinned[0].Target[i], (int)_channelSettings[0].range);
@@ -311,13 +318,8 @@ namespace CID_Tester.ViewModel.DebugSDK
                     Print((Convert.ToDouble(x) / 100).ToString() + '\t');
                     Print((Convert.ToDouble(y1) / 1000).ToString() + '\t');
 
-                    _DebugVM.ValuesOut[i] = (Convert.ToDouble(y1) / 1000);
-                    _DebugVM.ValuesIn[i] = (Convert.ToDouble(y2) / 1000);
-                    tickGen.AddMajor(i, "");
-
-                    //_DebugVM.Values[i] = Math.Sin(i * 1 + 2);
-
-                    //_DebugVM.Streamer.ViewWipeRight();
+                    _valuesOut[i] = (Convert.ToDouble(y1) / 1000);
+                    _valuesIn[i] = (Convert.ToDouble(y2) / 1000);
                     Print("" + '\n');
                 }
 
@@ -328,10 +330,6 @@ namespace CID_Tester.ViewModel.DebugSDK
                 Console.WriteLine("Data collection aborted");
             }
 
-
-            _DebugVM.OscDisplay.Plot.Axes.Bottom.TickGenerator = tickGen;
-
-            UpdateData();
             Imports.Stop(handle);
         }
 
@@ -1145,6 +1143,10 @@ namespace CID_Tester.ViewModel.DebugSDK
             //}
         }
 
+        #endregion
+
+        // High Level Functions
+        #region
         public void Start()
         {
 
@@ -1171,12 +1173,59 @@ namespace CID_Tester.ViewModel.DebugSDK
             _DebugVM.ConsoleString += text;
         }
 
-        private void UpdateData()
+        public WpfPlot GetDataGenerate(short timebase, uint range)
         {
-            //_DebugVM.OscDisplay.Series.Add(lineSeries);
+
+            Run();
+            SetTimebase(timebase);
+            SetVoltages(range);
+            CollectBlockImmediate();
+
+            WpfPlot chart = new WpfPlot();
+
+            ScottPlot.AxisPanels.Experimental.LeftAxisWithSubtitle customAxisY = new()
+            {
+                LabelText = "VOLTAGES",
+                SubLabelText = "All units are in mV",
+            };
+
+            chart.Plot.Axes.Remove(chart.Plot.Axes.Left);
+            chart.Plot.Axes.AddLeftAxis(customAxisY);
+
+            ScottPlot.TickGenerators.NumericManual tickGen = new();
+            for (int i = 0; i < _valuesOut.Length; i++)
+            {
+                tickGen.AddMajor(i, "");
+            }
+
+            chart.Plot.Add.Signal(_valuesOut);
+            chart.Plot.Add.Signal(_valuesIn);
+
             _DebugVM.OscDisplay.Plot.Axes.AutoScale();
             _DebugVM.OscDisplay.Refresh();
+
+            return chart;
         }
+        public void GetDataUpdate(WpfPlot Chart, short timebase, uint range)
+        {
+            Run();
+            SetTimebase(timebase);
+            SetVoltages(range);
+            CollectBlockImmediate();
+
+            ScottPlot.TickGenerators.NumericManual tickGen = new();
+            for (int i = 0; i < _valuesOut.Length; i++)
+            {
+                tickGen.AddMajor(i, "");
+            }
+
+            Chart.Plot.Clear();
+            Chart.Plot.Add.Signal(_valuesOut);
+            Chart.Plot.Add.Signal(_valuesIn);
+            Chart.Plot.Axes.AutoScale();
+            Chart.Refresh();
+        }
+        #endregion
 
     }
 }
