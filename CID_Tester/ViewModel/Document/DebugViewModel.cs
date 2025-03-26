@@ -197,7 +197,7 @@ public class DebugViewModel : BaseViewModel, IDocument, INotifyPropertyChanged
         StopSigGen = new RelayCommand(StopSigGenHandler);
         Loaded = new RelayCommand(LoadedHandler);
         signalType = 0;
-        SelectedTimebase = 15;
+        SelectedTimebase = 9;
         frequency = 1000;
         p2pVoltage = 2000;
         offsetVoltage = 0;
@@ -213,7 +213,7 @@ public class DebugViewModel : BaseViewModel, IDocument, INotifyPropertyChanged
     {
         Oscilloscope.Run();
         Oscilloscope.SetTimebase((short)SelectedTimebase);
-        Oscilloscope.SetVoltages(10);
+        Oscilloscope.SetVoltages(8);
         Oscilloscope.CollectBlockImmediate();
 
         //Oscilloscope.Stream();

@@ -27,7 +27,7 @@ public class AppStore
         {
             _testing = value;
             OnTesting?.Invoke(value);
-            if (value == TestingMode.Start) _testPlanService?.Start(() => Testing = TestingMode.Stop);
+            if (value == TestingMode.Start) _testPlanService?.Start(TestPlanStore.SelectedTestPlan, () => Testing = TestingMode.Stop);
             if (value == TestingMode.Stop && _testPlanService?.TokenSource != null)
             {
                 Debug.WriteLine("");
