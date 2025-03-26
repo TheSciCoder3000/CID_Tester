@@ -28,6 +28,10 @@ public class DocumentStore
 
     public void AddDocument<T>(BaseViewModel document)
     {
+        if (document is not IDocument)
+        {
+            throw new ArgumentException("Document must implement IDocument interface");
+        }
         ICollection<BaseViewModel> DocumentCollection = Documents.ToList(); 
         BaseViewModel? activeDocument = DocumentCollection.FirstOrDefault(d =>
         {
