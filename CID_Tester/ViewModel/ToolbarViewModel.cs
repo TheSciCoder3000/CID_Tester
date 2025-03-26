@@ -3,6 +3,7 @@ using CID_Tester.View.Windows;
 using CID_Tester.ViewModel.Command;
 using CID_Tester.ViewModel.Controls.AddTestPlan;
 using CID_Tester.ViewModel.Windows;
+using System.Windows.Input;
 
 namespace CID_Tester.ViewModel;
 
@@ -72,6 +73,7 @@ public class ToolbarViewModel : BaseViewModel
     public RelayCommand PlayTestCommand => new RelayCommand(execute => PlayTestHandller(), canExecute => canPlay());
     public RelayCommand PauseTestCommand => new RelayCommand(execute => PauseTestHandler(), canExecute => canPause());
     public RelayCommand StopTestCommand => new RelayCommand(execute => StopTestHandler(), canExecute => canStop());
+    public RelayCommand ReconnectDevicesCommand => new RelayCommand(execute => _AppStore.ReinitializeTestDevices());
 
     public bool NotLocked
     {

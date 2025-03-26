@@ -81,13 +81,15 @@ namespace CID_Tester.Migrations
                     ParamCode = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     Name = table.Column<string>(type: "TEXT", nullable: false),
+                    Type = table.Column<string>(type: "TEXT", nullable: false, defaultValue: "DC"),
                     TestCode = table.Column<int>(type: "INTEGER", nullable: false),
                     Description = table.Column<string>(type: "TEXT", nullable: false),
                     Metric = table.Column<string>(type: "TEXT", nullable: false),
                     Value = table.Column<decimal>(type: "TEXT", nullable: true),
                     Target = table.Column<decimal>(type: "TEXT", nullable: false),
                     Pass = table.Column<bool>(type: "INTEGER", nullable: true),
-                    Parameters = table.Column<string>(type: "TEXT", nullable: false)
+                    Parameters = table.Column<string>(type: "TEXT", nullable: false),
+                    InputConfiguration = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {

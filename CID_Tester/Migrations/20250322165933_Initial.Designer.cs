@@ -11,14 +11,14 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CID_Tester.Migrations
 {
     [DbContext(typeof(TesterDbContext))]
-    [Migration("20250127135549_Initial")]
+    [Migration("20250322165933_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "9.0.0");
+            modelBuilder.HasAnnotation("ProductVersion", "9.0.2");
 
             modelBuilder.Entity("CID_Tester.Model.DUT", b =>
                 {
@@ -49,6 +49,10 @@ namespace CID_Tester.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("InputConfiguration")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Metric")
                         .IsRequired()
                         .HasColumnType("TEXT");
@@ -69,6 +73,12 @@ namespace CID_Tester.Migrations
 
                     b.Property<int>("TestCode")
                         .HasColumnType("INTEGER");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT")
+                        .HasDefaultValue("DC");
 
                     b.Property<decimal?>("Value")
                         .HasColumnType("TEXT");

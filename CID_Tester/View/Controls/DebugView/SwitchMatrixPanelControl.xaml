@@ -1,0 +1,72 @@
+﻿<UserControl x:Class="CID_Tester.View.Controls.DebugView.SwitchMatrixPanelControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:CID_Tester.View.Controls.DebugView"
+             xmlns:controls="clr-namespace:CID_Tester.ViewModel.Controls"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <DataTemplate DataType="{x:Type controls:DebugParameterItemViewModel}">
+            <Button Content="{Binding ParameterName}" Command="{Binding SetParameterCommand}">
+                <Button.Style>
+                    <Style TargetType="Button">
+                        <Setter Property="Background" Value="Red" />
+                        <Setter Property="Padding" Value="0 3" />
+                        <Setter Property="Margin" Value="0 0 0 5" />
+                        <Setter Property="Foreground" Value="White" />
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="Button">
+                                    <Border Name="border" BorderThickness="0" Margin="{TemplateBinding Margin}" BorderBrush="Black" Padding="{TemplateBinding Padding}" Background="{TemplateBinding Background}">
+                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                    </Border>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter Property="Opacity" Value="0.8" />
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding IsRelayOn}" Value="True">
+                                <Setter Property="Background" Value="Green" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+            </Button>
+        </DataTemplate>
+    </UserControl.Resources>
+    <StackPanel Margin="0 20 0 0">
+        <TextBlock Foreground="White" FontWeight="Bold" FontSize="22">SWITCH MATRIX</TextBlock>
+        <Grid Margin="0 20 0 0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions >
+                <RowDefinition />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+
+            <StackPanel Grid.Row="0" Grid.Column="0" HorizontalAlignment="Left">
+                <TextBlock Foreground="White" FontSize="16">Dut Selector</TextBlock>
+                <StackPanel Margin="0 10 0 0">
+                    <Button Margin="0 5" Command="{Binding ToggleDut1Command}">DUT 1</Button>
+                    <Button Margin="0 5" Command="{Binding ToggleDut2Command}">DUT 2</Button>
+                    <Button Margin="0 5" Command="{Binding ToggleDut3Command}">DUT 3</Button>
+                    <Button Margin="0 5" Command="{Binding ToggleDut4Command}">DUT 4</Button>
+                    <Button Margin="0 5" Command="{Binding ToggleDut4Command}">OFF</Button>
+                </StackPanel>
+            </StackPanel>
+
+            <StackPanel Grid.Row="1" Grid.Column="0" Margin="0 20 0 0" HorizontalAlignment="Left">
+                <TextBlock Foreground="White" FontSize="16">Parameter Selector</TextBlock>
+                <ItemsControl ItemsSource="{Binding ParameterItems}" />
+            </StackPanel>
+        </Grid>
+    </StackPanel>
+</UserControl>

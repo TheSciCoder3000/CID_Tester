@@ -1,7 +1,10 @@
 ﻿using CID_Tester.Exceptions;
 using CID_Tester.Service.DbCreator;
 using CID_Tester.Service.DbProvider;
+using CID_Tester.Service.Serial;
 using CID_Tester.ViewModel;
+using System.Diagnostics;
+using System.Windows;
 
 namespace CID_Tester.Model
 {
@@ -25,19 +28,24 @@ namespace CID_Tester.Model
             {
                 _testing = value;
                 OnTesting?.Invoke(value);
-                if (value == TestingMode.Start) TestPlan?.Start(() => Testing = TestingMode.Stop);
+                if (value == TestingMode.Start) _testPlanService?.Start(() => Testing = TestingMode.Stop);
+                if (value == TestingMode.Stop && _testPlanService?.TokenSource != null)
+                {
+                    Debug.WriteLine("");
+                    _testPlanService?.TokenSource?.Cancel();
+                }
             }
         }
         public IEnumerable<DUT> DUTs { get; private set; } = [];
         public TEST_USER TestUser { get; private set; }
 
-        private TEST_PLAN? _testPlan;
+        private TestPlanService _testPlanService;
         public TEST_PLAN? TestPlan
         {
-            get => _testPlan;
+            get => _testPlanService.TestPlan;
             set
             {
-                _testPlan = value;
+                _testPlanService.TestPlan = value;
                 OnTestPlanUpdated?.Invoke(value);
             }
         }
@@ -72,6 +80,8 @@ namespace CID_Tester.Model
             _dbCreator = dbCreator;
             TestUser = testUser;
             Documents = documents;
+
+            _testPlanService = new TestPlanService(dbCreator);
 
             LoadDut();
         }
@@ -150,6 +160,18 @@ namespace CID_Tester.Model
         #endregion
 
         #region Test Plan Function
+        public void ReinitializeTestDevices()
+        {
+            int unconnectedDevices = _testPlanService.initialize();
+            if (unconnectedDevices == 0)
+            {
+                MessageBox.Show("All devices are connected", "Device Connection", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            else
+            {
+                MessageBox.Show($"{unconnectedDevices} devices are not connected", "Device Connection", MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
+        }
 
         public void setTestPlan(TEST_PLAN testPlan)
         {

@@ -7,7 +7,10 @@ namespace CID_Tester.Service.Serial
     {
         private TaskCompletionSource<string> _taskCompletionSource;
 
-        public Measure(string portName) : base(portName, 115200) { }
+        public Measure() : base("OWON,XDM1241,22320320,V3.8.0,3", 115200, "*IDN?")
+        {
+            if (_serialPort != null) _serialPort.DataReceived += OnDataReceived;
+        }
 
         private void OnDataReceived(object sender, SerialDataReceivedEventArgs e)
         {
@@ -19,17 +22,24 @@ namespace CID_Tester.Service.Serial
         #region Set Mode Functions
         public async Task SetModeVoltage()
         {
-            string mode = await GetFunc();
-            if (mode != "\"VOLT\"") _serialPort.WriteLine("CONF:VOLT:DC");
+            try
+            {
+                string mode = await GetFunc();
+                if (mode != "\"VOLT\"") SendCommand("CONF:VOLT:DC");
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+            }
         }
 
         public async Task<string> GetFunc(int timeout_delay = 10000)
         {
-            if (!_serialPort.IsOpen) throw new Exception("Serial Port is not open");
+            if (!_serialPort?.IsOpen ?? true) throw new Exception("Serial Port is not open");
 
             _taskCompletionSource = new TaskCompletionSource<string>();
 
-            _serialPort.WriteLine("FUNC?");
+            SendCommand("FUNC?");
 
             Task timeoutTask = Task.Delay(timeout_delay);
             Task<string> responseTask = _taskCompletionSource.Task;
@@ -44,11 +54,12 @@ namespace CID_Tester.Service.Serial
 
         public async Task<string> GetMeasurement(int timeout_delay = 10000)
         {
-            if (!_serialPort.IsOpen) throw new Exception("Serial Port is not open");
+            if (!_serialPort?.IsOpen ?? true) throw new Exception("Serial Port is not open");
 
             _taskCompletionSource = new TaskCompletionSource<string>();
 
-            _serialPort.WriteLine("MEAS?");
+            await Task.Delay(1000);
+            SendCommand("MEAS?");
 
             Task timeoutTask = Task.Delay(timeout_delay);
             Task<string> responseTask = _taskCompletionSource.Task;

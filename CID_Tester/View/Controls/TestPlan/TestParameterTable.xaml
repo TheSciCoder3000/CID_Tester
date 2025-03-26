@@ -24,6 +24,7 @@
                 <DataGridTextColumn Header="Target" Binding="{Binding Target}" Width="75" />
                 <DataGridTextColumn Header="Metric" Binding="{Binding Metric}" Width="75" />
                 <DataGridTextColumn Header="Description" Binding="{Binding Description}" Width="*" />
+                <DataGridTextColumn Header="Input Configuration" Binding="{Binding InputConfiguration}" Width="*" />
             </DataGrid.Columns>
         </DataGrid>
     </StackPanel>

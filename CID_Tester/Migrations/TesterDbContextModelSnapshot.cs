@@ -15,7 +15,7 @@ namespace CID_Tester.Migrations
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "9.0.0");
+            modelBuilder.HasAnnotation("ProductVersion", "9.0.2");
 
             modelBuilder.Entity("CID_Tester.Model.DUT", b =>
                 {
@@ -43,6 +43,10 @@ namespace CID_Tester.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("InputConfiguration")
                         .IsRequired()
                         .HasColumnType("TEXT");
 

@@ -6,6 +6,7 @@
       xmlns:local="clr-namespace:CID_Tester.View.Document"
       xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
       xmlns:ScottPlot="clr-namespace:ScottPlot.WPF;assembly=ScottPlot.WPF"
+      xmlns:controls="clr-namespace:CID_Tester.View.Controls.DebugView"
       mc:Ignorable="d"
       Unloaded="UserControl_Unloaded"   
       >
@@ -60,9 +61,10 @@
                                         <RowDefinition/>
                                         <RowDefinition/>
                                         <RowDefinition/>
+                                        <RowDefinition/>
                                     </Grid.RowDefinitions>
                                     <TextBlock Text="Wave Form: " FontWeight="Bold" FontSize="15" Grid.Column="0" Grid.Row="0" VerticalAlignment="Center"/>
-                                    <ComboBox FontSize="15" Grid.Column="1" Grid.Row="0" Height="30" VerticalAlignment="Center" SelectedIndex="{Binding signalType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                                    <ComboBox Style="{StaticResource ComboBoxStyle1}" FontSize="15" Grid.Column="1" Grid.Row="0" Height="30" VerticalAlignment="Center" SelectedIndex="{Binding signalType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                                         <ComboBoxItem Content="Sine" IsSelected="True"></ComboBoxItem>
                                         <ComboBoxItem Content="Square"></ComboBoxItem>
                                         <ComboBoxItem Content="Triangle"></ComboBoxItem>
@@ -79,6 +81,16 @@
                                     <TextBox Grid.Column="1" Grid.Row="2" VerticalAlignment="Center" Background="White" Width="100" PreviewTextInput="TextBox_PreviewTextInput" Text="{Binding p2pVoltage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Foreground="Black"/>
                                     <TextBlock Text="Offset Voltage (mV): " FontWeight="Bold" FontSize="15" Grid.Column="0" Grid.Row="3" VerticalAlignment="Center"/>
                                     <TextBox Grid.Column="1" Grid.Row="3" VerticalAlignment="Center" Background="White" Width="100" PreviewTextInput="TextBox_PreviewTextInput" Text="{Binding offsetVoltage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Foreground="Black"/>
+                                    <TextBlock Text="Timebase: " FontWeight="Bold" FontSize="15" Grid.Column="0" Grid.Row="4" VerticalAlignment="Center"/>
+                                    <ComboBox FontSize="15" 
+                                              Style="{StaticResource ComboBoxStyle1}"
+                                              Grid.Column="1" 
+                                              Grid.Row="4" Height="30" 
+                                              VerticalAlignment="Center" 
+                                              SelectedValue="{Binding SelectedTimebase, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                                              ItemsSource="{Binding TimebaseList, Mode=OneTime}"
+                                              SelectedValuePath="Key"
+                                              DisplayMemberPath="Value"/>
                                 </Grid>
                                 <ScrollViewer Height="200" Margin="10" DockPanel.Dock="Top" Name="Scroll">
                                     <TextBox VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="White" FontSize="15" Foreground="Black" VerticalScrollBarVisibility="Auto" TextWrapping="Wrap" IsReadOnly="True" Text="{Binding ConsoleString, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" TextChanged="Output_TextChanged" />
@@ -109,7 +121,7 @@
 
                         </StackPanel>
 
-
+                        <controls:SwitchMatrixPanelControl />
                     </StackPanel>
                 </Border>
             </StackPanel>

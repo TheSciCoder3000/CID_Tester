@@ -178,6 +178,8 @@ namespace CID_Tester.ViewModel.DebugSDK
         {
             for (int i = 0; i < _channelCount; i++) // set channels to most recent settings
             {
+                Debug.WriteLine($"Channel settings: {i}");
+                Debug.WriteLine($"Enabled: {_channelSettings[i].enabled}\nDC Coupled: {_channelSettings[i].DCcoupled}\nRange: {inputRanges[(int)_channelSettings[i].range]}");
                 Imports.SetChannel(handle, (Imports.Channel)i,
                                    _channelSettings[i].enabled,
                                    _channelSettings[i].DCcoupled,
@@ -306,7 +308,6 @@ namespace CID_Tester.ViewModel.DebugSDK
                     int x = pinnedTimes.Target[i];
 
                     //Debug.Write(x.ToString() + '\t');
-                    Debug.WriteLine($"Channel A: {y1}mv");
                     Print((Convert.ToDouble(x) / 100).ToString() + '\t');
                     Print((Convert.ToDouble(y1) / 1000).ToString() + '\t');
 
@@ -317,8 +318,6 @@ namespace CID_Tester.ViewModel.DebugSDK
                     //_DebugVM.Values[i] = Math.Sin(i * 1 + 2);
 
                     //_DebugVM.Streamer.ViewWipeRight();
-
-                    Debug.WriteLine(Environment.NewLine);
                     Print("" + '\n');
                 }
 
