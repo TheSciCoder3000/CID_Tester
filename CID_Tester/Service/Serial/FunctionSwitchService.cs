@@ -11,10 +11,12 @@ namespace CID_Tester.Service.Serial
     {
         private float _frequency = 0;
         private float _amplitude = 0;
-        private float _timebase = 0;
+        private short _timebase = 0;
+        private short _oversample = 1;
         private Imports.WaveType _signalType = Imports.WaveType.SINE;
         private bool _useFG1 = false;
         private bool _useFG2 = false;
+        private short _handle = 1;
 
         private WpfPlot OscPlot = new WpfPlot();
         public double[] ValuesOut = new double[100];
@@ -33,10 +35,20 @@ namespace CID_Tester.Service.Serial
 
             _frequency = float.Parse(configuration["frequency"]);
             _amplitude = float.Parse(configuration["amplitude"]);
-            _timebase = float.Parse(configuration["timebase"]);
+            _timebase = 7;
             _signalType = (Imports.WaveType)Enum.Parse(typeof(Imports.WaveType), configuration["signalType"]);
             _useFG1 = configuration["FG1"] == "ON";
             _useFG1 = configuration["FG2"] == "ON";
+
+            Imports.SetChannel(_handle, (Imports.Channel)0,
+                                   1,
+                                   1,
+                                   Imports.Range.Range_5V);
+
+            Imports.SetChannel(_handle, (Imports.Channel)1,
+                                   1,
+                                   1,
+                                   Imports.Range.Range_5V);
         }
         public void StartFunctionGen()
         {
@@ -50,7 +62,7 @@ namespace CID_Tester.Service.Serial
             Imports.SweepType sweeptype = Imports.SweepType.UP;
             Imports.WaveType wavetype = Imports.WaveType.SINE;
 
-            int status = Imports.SetSigGenBuiltIn(1,
+            int status = Imports.SetSigGenBuiltIn(_handle,
                                               offset,
                                               pkToPk,
                                               wavetype,
@@ -70,8 +82,7 @@ namespace CID_Tester.Service.Serial
         public void StopFunctionGen()
         {
             Imports.SetSigGenBuiltIn(1, 0, 0, Imports.WaveType.SINE, 0, 0, 0, 0, Imports.SweepType.UP, 0);
-            if (_useFG1) CloseInvFG();
-            else if (_useFG2) CloseNinvFG();
+            CloseAll();
         }
 
         public string CaptureGraph(string filename)
@@ -98,7 +109,7 @@ namespace CID_Tester.Service.Serial
 
             do
             {
-                status = Imports.GetTimebase(1, (short)_timebase, sampleCount, out timeInterval, out timeUnit, 1, out maxSamples);
+                status = Imports.GetTimebase(_handle, _timebase, sampleCount, out timeInterval, out timeUnit, _oversample, out maxSamples);
 
                 if (status != 1)
                 {
@@ -109,17 +120,17 @@ namespace CID_Tester.Service.Serial
             }
             while (status == 0);
 
-            Debug.WriteLine("Timebase: {0}\toversample:{1}\n", _timebase, 1);
+            Debug.WriteLine("Timebase: {0}\toversample:{1}\n", _timebase, _handle);
 
             /* Start the device collecting, then wait for completion*/
 
-            Imports.RunBlock(1, sampleCount, (short)_timebase, 1, out timeIndisposed);
+            Imports.RunBlock(_handle, sampleCount, (short)_timebase, _handle, out timeIndisposed);
 
             short ready = 0;
 
             while (ready == 0)
             {
-                ready = Imports.Isready(1);
+                ready = Imports.Isready(_handle);
                 Thread.Sleep(1);
             }
 
@@ -152,11 +163,11 @@ namespace CID_Tester.Service.Serial
             OscPlot.Plot.Axes.AutoScale();
             OscPlot.Refresh();
 
-            Imports.Stop(1);
+            Imports.Stop(_handle);
 
             string localAppData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
             string resultsPath = Path.Combine(localAppData, "Results", filename);
-            using (MemoryStream ms = new MemoryStream(OscPlot.Plot.GetImageBytes(400, 400)))
+            using (MemoryStream ms = new MemoryStream(OscPlot.Plot.GetImageBytes(1000, 400)))
             {
                 Bitmap bmp = new Bitmap(ms);
                 bmp.Save(resultsPath, ImageFormat.Jpeg);
