@@ -1,0 +1,63 @@
+﻿<UserControl x:Class="CID_Tester.View.Document.BatchDetailsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:CID_Tester.View.Document"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <ScrollViewer PreviewMouseWheel="ScrollViewer_PreviewMouseWheel" Margin="0 0 0 30" VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="20">
+            <TextBlock Foreground="White" FontWeight="Bold" FontSize="48">Batch Details</TextBlock>
+            <Grid Margin="0 20">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="140" />
+                    <ColumnDefinition Width="200" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="5" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="5" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="5" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="5" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <TextBlock FontWeight="Medium" Grid.Row="0" Grid.Column="0" Text="Batch No: " Margin="0 0 20 0" Foreground="White" FontSize="16" />
+                <TextBlock FontWeight="Medium" Grid.Row="2" Grid.Column="0" Text="Cycle No: " Margin="0 0 20 0" Foreground="White" FontSize="16" />
+                <TextBlock FontWeight="Medium" Grid.Row="4" Grid.Column="0" Text="Test Time: " Margin="0 0 20 0" Foreground="White" FontSize="16" />
+                <TextBlock FontWeight="Medium" Grid.Row="6" Grid.Column="0" Text="Date: " Margin="0 0 20 0" Foreground="White" FontSize="16" />
+
+                <TextBlock Margin="6 0" FontWeight="Light" Grid.Row="0" Grid.Column="1"  Text="{Binding BatchDetails.BatchCode}" Foreground="White" FontSize="15" />
+                <ComboBox  HorizontalAlignment="Left" Width="50" Grid.Row="2" Grid.Column="1" ItemsSource="{Binding CycleNoList}" SelectedItem="{Binding SelectedCycle, Mode=TwoWay}" Style="{StaticResource ComboBoxStyle1}" Foreground="White" FontSize="15" />
+                <TextBlock Margin="6 0" FontWeight="Light" Grid.Row="4" Grid.Column="1"  Text="{Binding BatchDetails.TestTime}" Foreground="White" FontSize="15" />
+                <TextBlock Margin="6 0" FontWeight="Light" Grid.Row="6" Grid.Column="1"  Text="{Binding BatchDetails.Date, StringFormat=MMMM dd yyyy - h:mm tt}" Foreground="White" FontSize="15" />
+            </Grid>
+
+            <StackPanel Margin="0 20" HorizontalAlignment="Left">
+                <TextBlock Foreground="White" FontSize="28" FontWeight="Medium">DC Testing</TextBlock>
+                <ItemsControl Background="Transparent" ItemsSource="{Binding DcDutList}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Margin="0 20">
+                                <TextBlock FontSize="16" Foreground="White" Text="{Binding DutLocation}" />
+                                <DataGrid Margin="0 15 0 0" ItemsSource="{Binding OutputList}">
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn Header="Parameter Name" Binding="{Binding Name}" MinWidth="400" />
+                                        <DataGridTextColumn Header="Target" Binding="{Binding Target}" Width="75" />
+                                        <DataGridTextColumn Header="Metric" Binding="{Binding Metric}" Width="75" />
+                                        <DataGridTextColumn Header="Measured" Binding="{Binding Measured}" Width="100" />
+                                        <DataGridTextColumn Header="Pass" Binding="{Binding Pass}" Width="100" />
+                                    </DataGrid.Columns>
+                                </DataGrid>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </StackPanel>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

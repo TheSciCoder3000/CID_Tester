@@ -13,7 +13,13 @@
     </UserControl.Resources>
     <StackPanel Margin="20">
         <TextBlock Margin="0 0 0 30" FontSize="30" Foreground="White">History</TextBlock>
-        <DataGrid ItemsSource="{Binding Batches}">
+        <DataGrid ItemsSource="{Binding Batches}" SelectedItem="{Binding SelectedBatch, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+            <DataGrid.InputBindings>
+                <MouseBinding 
+                    Gesture="LeftDoubleClick"
+                    Command="{Binding DoubleClickCommand}"
+                    CommandParameter="{Binding Batches/}"/>
+            </DataGrid.InputBindings>
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Batch No." Binding="{Binding BatchCode}" Width="80" ElementStyle="{StaticResource CenteredCellStyle}" />
                     <DataGridTextColumn Header="Test Plan" Binding="{Binding TEST_PLAN.Name}" Width="*" />
