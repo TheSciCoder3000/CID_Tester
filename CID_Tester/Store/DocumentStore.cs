@@ -1,4 +1,5 @@
 ﻿using CID_Tester.ViewModel;
+using CID_Tester.ViewModel.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,11 +12,12 @@ public class DocumentStore
 {
     public IEnumerable<BaseViewModel> Documents { get; private set; }
     public object ActiveDocument { get; set; } = null!;
+    public IDocument? PreviousDocument { get; set; }
     public IEnumerable<BaseViewModel> Anchorables { get; private set; } = [];
 
 
-    public event Action<IEnumerable<BaseViewModel>>? OnDocumentOpenned;
-    public event Action<IEnumerable<BaseViewModel>>? OnDocumentClosed;
+    public event Action<BaseViewModel>? OnDocumentOpenned;
+    public event Action<BaseViewModel>? OnDocumentClosed;
     public event Action<BaseViewModel>? OnActiveDocumentChanged;
     public event Action<IEnumerable<BaseViewModel>>? OnAnchorableAdded;
     public event Action<IEnumerable<BaseViewModel>>? OnAnchorableRemoved;
@@ -27,14 +29,21 @@ public class DocumentStore
 
     public void AddDocument<T>(BaseViewModel document)
     {
-        ICollection<BaseViewModel> DocumentCollection = Documents.ToList();
-        BaseViewModel? activeDocument = DocumentCollection.FirstOrDefault(d => d is T);
+        if (document is not IDocument)
+        {
+            throw new ArgumentException("Document must implement IDocument interface");
+        }
+        ICollection<BaseViewModel> DocumentCollection = Documents.ToList(); 
+        BaseViewModel? activeDocument = DocumentCollection.FirstOrDefault(d =>
+        {
+            return ((IDocument)d).Title == ((IDocument)document).Title;
+        });
 
         if (activeDocument == null)
         {
             DocumentCollection.Add(document);
             Documents = DocumentCollection;
-            OnDocumentOpenned?.Invoke(Documents);
+            OnDocumentOpenned?.Invoke(document);
             setActiveDocument(document);
             ClearAnchorables();
         }
@@ -47,6 +56,7 @@ public class DocumentStore
 
     public void setActiveDocument(BaseViewModel document)
     {
+        PreviousDocument = (IDocument)ActiveDocument;
         ActiveDocument = document;
         OnActiveDocumentChanged?.Invoke(document);
     }
@@ -58,8 +68,8 @@ public class DocumentStore
         ICollection<BaseViewModel> DocumentCollection = Documents.ToList();
         DocumentCollection.Remove(document);
         Documents = DocumentCollection;
-        OnDocumentClosed?.Invoke(Documents);
-        ClearAnchorables();
+        OnDocumentClosed?.Invoke(document);
+        if (document == ActiveDocument) ClearAnchorables();
     }
 
     public void AddAnchorables(BaseViewModel anchorable)

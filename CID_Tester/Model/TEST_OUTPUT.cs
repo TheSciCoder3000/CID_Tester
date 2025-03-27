@@ -19,4 +19,7 @@ public class TEST_OUTPUT
 
     [Required]
     public TEST_BATCH TEST_BATCH { get; set; } = null!;
+
+    // TODO: add parameter "PASS"
+    // TODO: add parameter "Cycle"
 }

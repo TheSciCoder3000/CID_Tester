@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 namespace CID_Tester.Model
 {
     public class TEST_BATCH
@@ -30,5 +24,7 @@ namespace CID_Tester.Model
         public TEST_USER TEST_USER { get; set; } = null!;
 
         public ICollection<TEST_OUTPUT> TEST_OUTPUTS { get; set; } = null!;
+
+        // TODO: add parameter "NumberOfDuts"
     }
 }

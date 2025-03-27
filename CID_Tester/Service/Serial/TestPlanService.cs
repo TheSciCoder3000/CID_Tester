@@ -85,7 +85,6 @@ public class TestPlanService
             MessageBox.Show(e.Message, "Test Plan Unable to Start", MessageBoxButton.OK, MessageBoxImage.Warning);
         }
 
-        await _dbCreator.CreateBatch(_testBatch);
 
 
         await Task.Delay(2000);
