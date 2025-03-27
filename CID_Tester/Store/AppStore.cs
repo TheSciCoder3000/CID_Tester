@@ -26,13 +26,13 @@ public class AppStore
         set
         {
             _testing = value;
-            OnTesting?.Invoke(value);
-            if (value == TestingMode.Start) _testPlanService?.Start(TestPlanStore.SelectedTestPlan, () => Testing = TestingMode.Stop);
+            if (value == TestingMode.Start) Task.Run(() => _testPlanService?.Start(TestPlanStore.SelectedTestPlan, () => Testing = TestingMode.Stop));
             if (value == TestingMode.Stop && _testPlanService?.TokenSource != null)
             {
                 Debug.WriteLine("");
                 _testPlanService?.TokenSource?.Cancel();
             }
+            OnTesting?.Invoke(value);
         }
     }
     public IEnumerable<DUT> DUTs { get; private set; } = [];
