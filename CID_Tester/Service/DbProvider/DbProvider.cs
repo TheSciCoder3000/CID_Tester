@@ -16,6 +16,7 @@ namespace CID_Tester.Service.DbProvider
             _dbContextFactory = dbContextFactory;
         }
 
+        #region DUT Provider Functions
         public async Task<IEnumerable<DUT>> GetAllDuts()
         {
             using (TesterDbContext context = _dbContextFactory.CreateDbContext())
@@ -25,16 +26,35 @@ namespace CID_Tester.Service.DbProvider
             }
         }
 
+        #endregion
+
+        #region Test Plan Provider Functions
+
+        public async Task<IEnumerable<TEST_PLAN>> GetAllTestPlans()
+        {
+            using (TesterDbContext context = _dbContextFactory.CreateDbContext())
+            {
+                return await context.TEST_PLAN
+                    .Include(tp => tp.DUT)
+                    .Include(tp => tp.TEST_PARAMETERS)
+                        .ThenInclude(tp => tp.TEST_OUTPUTS)
+                    .Include(tp => tp.TEST_BATCHES)
+                        .ThenInclude(tp => tp.TEST_OUTPUTS)
+                    .ToListAsync();
+            }
+        }
+
+        #endregion
+
+        #region Test Parameter Provider Functions
         public Task<IEnumerable<TEST_PARAMETER>> GetAllTestParameters()
         {
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<TEST_PLAN>> GetAllTestPlans()
-        {
-            throw new NotImplementedException();
-        }
+        #endregion
 
+        #region Test User Provider Functions
         public async Task<TEST_USER?> GetUser(string username, string password, IDbCreator dbCreator)
         {
             using(TesterDbContext context = _dbContextFactory.CreateDbContext())
@@ -50,15 +70,21 @@ namespace CID_Tester.Service.DbProvider
 
                 TEST_USER? verifiedUser = await context.TEST_USER
                     .Where(r => r.UserCode == user.UserCode)
-                    .Include(u => u.TEST_PLANS)
-                        .ThenInclude(tp => tp.DUT)
-                    .Include(u => u.TEST_PLANS)
-                        .ThenInclude(tp => tp.TEST_PARAMETERS)
+                    .Include(u => u.TEST_BATCHES)
+                        .ThenInclude(tp => tp.TEST_PLAN)
+                            .ThenInclude(tp => tp.DUT)
+                    .Include(u => u.TEST_BATCHES)
+                        .ThenInclude(tp => tp.TEST_PLAN)
+                            .ThenInclude(tp => tp.TEST_PARAMETERS)
+                    .Include(u => u.TEST_BATCHES)
+                        .ThenInclude(tp => tp.TEST_OUTPUTS)
                     .FirstOrDefaultAsync();
 
                 return verifiedUser;
             }
 
         }
+
+        #endregion
     }
 }

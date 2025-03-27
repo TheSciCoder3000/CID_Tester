@@ -62,6 +62,9 @@
         <Button Tag="results" Margin="5" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Center" Command="{Binding NavigateToResults}">
             Results Overview
         </Button>
+        <Button Tag="history" Margin="5" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Center" Command="{Binding NavigateToHistory}">
+            History
+        </Button>
         <Button Tag="settings" Margin="5" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Center" Command="{Binding NavigateToSettings}">
             Settings
         </Button>

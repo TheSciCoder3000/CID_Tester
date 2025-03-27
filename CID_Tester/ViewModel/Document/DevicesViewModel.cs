@@ -5,12 +5,13 @@ using CID_Tester.ViewModel.Interfaces;
 using System.Windows;
 using System.Windows.Input;
 using CID_Tester.ViewModel.Windows;
+using CID_Tester.Store;
 
 namespace CID_Tester.ViewModel.Document;
 
 public class DevicesViewModel : BaseViewModel, IDocument
 {
-    private readonly Store _AppStore;
+    private readonly AppStore _AppStore;
 
     public string Title { get; set; }
 
@@ -40,7 +41,7 @@ public class DevicesViewModel : BaseViewModel, IDocument
     public ICommand DeleteDutCommand { get; }
     public ICommand CloseCommand { get; }
 
-    public DevicesViewModel(Store appStore)
+    public DevicesViewModel(AppStore appStore)
     {
         Title = "Devices";
 
@@ -68,7 +69,7 @@ public class DevicesViewModel : BaseViewModel, IDocument
     {
         _AppStore.OnDutUpdated -= Load;
         _AppStore.OnDutDeleted -= Load;
-        _AppStore.RemoveDocument(this);
+        _AppStore.DocumentStore.RemoveDocument(this);
     }
 
     private async void Load(IEnumerable<DUT>? devices = null)

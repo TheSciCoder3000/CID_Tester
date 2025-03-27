@@ -11,6 +11,6 @@ namespace CID_Tester.Service.DbCreator
         Task CreateTestParameter(TEST_PARAMETER param);
         Task DeleteTestParameter(TEST_PARAMETER param);
         Task UpdateTestParameter(TEST_PARAMETER param);
-
+        Task CreateBatch(TEST_BATCH batch);
     }
 }

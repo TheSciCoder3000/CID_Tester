@@ -1,4 +1,6 @@
-﻿using System.Diagnostics;
+﻿using ScottPlot.Triangulation;
+using System.Diagnostics;
+using System.Globalization;
 using System.IO.Ports;
 
 namespace CID_Tester.Service.Serial
@@ -25,7 +27,12 @@ namespace CID_Tester.Service.Serial
             try
             {
                 string mode = await GetFunc();
-                if (mode != "\"VOLT\"") SendCommand("CONF:VOLT:DC");
+                if (mode != "\"VOLT\"")
+                {
+                    SendCommand("CONF:VOLT:DC 50");
+                    Thread.Sleep(150);
+                    SendCommand("RATE F");
+                }
             }
             catch (Exception ex)
             {
@@ -52,13 +59,13 @@ namespace CID_Tester.Service.Serial
 
         #endregion
 
-        public async Task<string> GetMeasurement(int timeout_delay = 10000)
+        public async Task<double> GetMeasurement(int timeout_delay = 10000)
         {
             if (!_serialPort?.IsOpen ?? true) throw new Exception("Serial Port is not open");
 
             _taskCompletionSource = new TaskCompletionSource<string>();
 
-            await Task.Delay(1000);
+            await Task.Delay(2500);
             SendCommand("MEAS?");
 
             Task timeoutTask = Task.Delay(timeout_delay);
@@ -66,8 +73,13 @@ namespace CID_Tester.Service.Serial
 
             Task completedTask = await Task.WhenAny(responseTask, timeoutTask);
 
-            if (completedTask == responseTask) return responseTask.Result;
+            if (completedTask == responseTask) return ConvertRawReadingToFloat(responseTask.Result);
             throw new TimeoutException("TImed out in waiting for serial response");
+        }
+
+        private double ConvertRawReadingToFloat(string rawValue)
+        {
+            return double.Parse(rawValue, CultureInfo.InvariantCulture);
         }
     }
 }

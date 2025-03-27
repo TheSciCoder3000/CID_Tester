@@ -70,7 +70,7 @@ namespace CID_Tester.Service.Serial
                         
                             Debug.WriteLine($"condition: {response} | retries: {retries}");
                             serialPortChecker.WriteLine(command);
-                            Thread.Sleep(100);
+                            Thread.Sleep(200);
                             response = serialPortChecker.ReadExisting().Trim();
                             Debug.WriteLine($"Response {retries}: {response}");
                             retries--;

@@ -16,8 +16,6 @@ namespace CID_Tester.Model
         [Required]
         public string Type { get; set; } = null!;
 
-        [Required]
-        public TEST_PLAN TestPlan { get; set; } = null!;
 
         [Required]
         public string Description { get; set; } = null!;
@@ -25,18 +23,20 @@ namespace CID_Tester.Model
         [Required]
         public string Metric { get; set; } = null!;
 
-        public decimal? Value { get; set; }
-
         [Required]
         public decimal Target { get; set; }
 
-        public bool? Pass { get; set; }
+        public bool? Pass { get; set; }     // TODO: move to output table
 
         [Required]
         public string Parameters { get; set; } = null!;
 
         [Required]
         public string InputConfiguration { get; set; } = null!;
+        
+        [Required]
+        public TEST_PLAN TEST_PLAN { get; set; } = null!;
+        public ICollection<TEST_OUTPUT> TEST_OUTPUTS{ get; set; } = [];
 
         public Dictionary<string, bool> ParseToParameterDictionary()
         {

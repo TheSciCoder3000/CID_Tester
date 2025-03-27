@@ -1,4 +1,5 @@
 ﻿using CID_Tester.Model;
+using CID_Tester.Store;
 using CID_Tester.ViewModel.Command;
 using CID_Tester.ViewModel.Interfaces;
 using System.Collections.ObjectModel;
@@ -10,11 +11,11 @@ namespace CID_Tester.ViewModel.Anchorables;
 
 public class TestParameterPropertiesViewModel : BaseViewModel, IDocument
 {
-    private readonly Store _AppStore;
+    private readonly AppStore _AppStore;
     private readonly TEST_PARAMETER _testParameter;
 
     public ObservableCollection<ParametersItemViewModel> ParameterItems { get; set; } = new ObservableCollection<ParametersItemViewModel>();
-    public TestParameterPropertiesViewModel(Store appStore, TEST_PARAMETER testParameter)
+    public TestParameterPropertiesViewModel(AppStore appStore, TEST_PARAMETER testParameter)
     {
         _AppStore = appStore;
         _AppStore.OnTestParameterUpdated += VerifyParameterProperties;
@@ -43,7 +44,7 @@ public class TestParameterPropertiesViewModel : BaseViewModel, IDocument
         int parameterIndx = parameterArray.ToList().FindIndex(r => r.Contains(RelayName));
         parameterArray[parameterIndx] = $"{RelayName}={RelayState}";
         _testParameter.Parameters = string.Join(", ", parameterArray);
-        await _AppStore.UpdateTestParameter(_testParameter);
+        await _AppStore.TestPlanStore.UpdateTestParameter(_testParameter);
     }
 
     private void VerifyParameterProperties(IEnumerable<TEST_PARAMETER> testParameters)
@@ -54,12 +55,12 @@ public class TestParameterPropertiesViewModel : BaseViewModel, IDocument
 
     private async void ChangeHandler(object? sender, PropertyChangedEventArgs e)
     {
-        await _AppStore.UpdateTestParameter(_testParameter);
+        await _AppStore.TestPlanStore.UpdateTestParameter(_testParameter);
     }
 
     private void CloseAnchorable(object? obj)
     {
-        _AppStore.RemoveAnchorable(this);
+        _AppStore.DocumentStore.RemoveAnchorable(this);
     }
 
     public string Name

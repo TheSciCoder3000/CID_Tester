@@ -10,11 +10,13 @@ public class TesterDbContext : DbContext
     public DbSet<TEST_PLAN> TEST_PLAN { get; set; }
     public DbSet<TEST_PARAMETER> TEST_PARAMETER { get; set; }
     public DbSet<DUT> DUT { get; set; }
+    public DbSet<TEST_OUTPUT> TEST_OUTPUT { get; set; }
+    public DbSet<TEST_BATCH> TEST_BATCH { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<TEST_USER>()
-            .HasMany(e => e.TEST_PLANS)
+            .HasMany(e => e.TEST_BATCHES)
             .WithOne(e => e.TEST_USER)
             .HasForeignKey("UserCode")
             .IsRequired();
@@ -27,13 +29,31 @@ public class TesterDbContext : DbContext
 
         modelBuilder.Entity<TEST_PLAN>()
             .HasMany(e => e.TEST_PARAMETERS)
-            .WithOne(e => e.TestPlan)
+            .WithOne(e => e.TEST_PLAN)
             .HasForeignKey("TestCode")
+            .IsRequired();
+
+        modelBuilder.Entity<TEST_PLAN>()
+            .HasMany(e => e.TEST_BATCHES)
+            .WithOne(e => e.TEST_PLAN)
+            .HasForeignKey("TestCode")
+            .IsRequired();
+
+        modelBuilder.Entity<TEST_PARAMETER>()
+            .HasMany(e => e.TEST_OUTPUTS)
+            .WithOne(e => e.TEST_PARAMETER)
+            .HasForeignKey("ParamCode")
             .IsRequired();
 
         modelBuilder.Entity<TEST_PARAMETER>()
             .Property(param => param.Type)
             .HasDefaultValue("DC");
+
+        modelBuilder.Entity<TEST_BATCH>()
+            .HasMany(e => e.TEST_OUTPUTS)
+            .WithOne(e => e.TEST_BATCH)
+            .HasForeignKey("BatchCode")
+            .IsRequired();
 
         modelBuilder.Entity<TEST_USER>()
             .HasData(

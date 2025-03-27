@@ -1,23 +1,29 @@
 ﻿using CID_Tester.ViewModel.DebugSDK;
-using System;
-using System.Collections.Generic;
+using ScottPlot.WPF;
 using System.Diagnostics;
-using System.Linq;
+using System.Drawing;
+using System.Drawing.Imaging;
+using System.IO;
 using System.Reflection.Metadata;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-
 namespace CID_Tester.Service.Serial
 {
     public class FunctionSwitchService : BaseSerial
     {
+        private PS2000 Oscilloscope = new PS2000();
+        private PS2000SigGen FuncGen = new PS2000SigGen();
         private float _frequency = 0;
         private float _amplitude = 0;
-        private float _timebase = 0;
+        private short _timebase = 7;
+        private short _oversample = 1;
         private Imports.WaveType _signalType = Imports.WaveType.SINE;
         private bool _useFG1 = false;
         private bool _useFG2 = false;
+        private uint _range = 8;
+        private short _handle = 1;
+
+        private WpfPlot OscPlot = new WpfPlot();
+        public double[] ValuesOut = new double[100];
+        public double[] ValuesIn = new double[100];
 
         public void ParseInputConfiguration(string configurationString)
         {
@@ -32,49 +38,72 @@ namespace CID_Tester.Service.Serial
 
             _frequency = float.Parse(configuration["frequency"]);
             _amplitude = float.Parse(configuration["amplitude"]);
-            _timebase = float.Parse(configuration["timebase"]);
+            //_timebase = short.Parse(configuration["timebase"]);
+            _range = (uint)Imports.Range.Range_5V;
+            _timebase = 4;
             _signalType = (Imports.WaveType)Enum.Parse(typeof(Imports.WaveType), configuration["signalType"]);
             _useFG1 = configuration["FG1"] == "ON";
-            _useFG1 = configuration["FG2"] == "ON";
+            _useFG2 = configuration["FG2"] == "ON";
+
+            //if (configuration["range"] == "1V") _range = (uint)Imports.Range.Range_1V;
+            //if (configuration["range"] == "2V") _range = (uint)Imports.Range.Range_2V;
+            //if (configuration["range"] == "5V") _range = (uint)Imports.Range.Range_5V;
+            //if (configuration["range"] == "10V") _range = (uint)Imports.Range.Range_10V;
+            //if (configuration["range"] == "20V") _range = (uint)Imports.Range.Range_20V;
         }
         public void StartFunctionGen()
         {
-
             int offset = 0;
-            uint pkToPk = (uint)(_amplitude * 2 * 1000) * 1000;
-            uint sweeps = 0;
-            Double startFreq = _frequency;
-            Double stopFreq = startFreq;
-            Double increment = 0;
-            Double dwellTime = 0;
-            Imports.SweepType sweeptype = Imports.SweepType.UP;
-            Imports.WaveType wavetype = Imports.WaveType.SINE;
+            uint pkToPk = 2000;
 
-            int status = Imports.SetSigGenBuiltIn(1,
-                                              offset,
-                                              pkToPk,
-                                              wavetype,
-                                              (float)startFreq,
-                                              (float)stopFreq,
-                                              (float)increment,
-                                              (float)dwellTime,
-                                              sweeptype,
-                                              sweeps);
+            FuncGen.StartSignal((int)_signalType, offset, _frequency, pkToPk);
+            Thread.Sleep(1000);
 
-
-            if (status == 0) Debug.WriteLine("Function gen error");
             if (_useFG1) OpenInvFG();
             else if (_useFG2) OpenNinvFG();
         }
 
         public void StopFunctionGen()
         {
-            Imports.SetSigGenBuiltIn(0, 0, 0, Imports.WaveType.SINE, 0, 0, 0, 0, Imports.SweepType.UP, 0);
-            if (_useFG1) CloseInvFG();
-            else if (_useFG2) CloseNinvFG();
+            FuncGen.StartSignal(0,0,0,0);
+            CloseAll();
         }
 
-        public FunctionSwitchService() : base("FGRELAY", 9600) { }
+        public string CaptureGraph(string filename)
+        {
+            WpfPlot chart = Oscilloscope.GetDataGenerate(_timebase, _range);
+
+            string localAppData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+            string resultsPath = Path.Combine(localAppData, "Results", filename);
+            using (MemoryStream ms = new MemoryStream(chart.Plot.GetImageBytes(1000, 400)))
+            {
+                Bitmap bmp = new Bitmap(ms);
+                bmp.Save(resultsPath, ImageFormat.Jpeg);
+            }
+            return resultsPath;
+        }
+
+        public FunctionSwitchService() : base("FGRELAY", 9600)
+        {
+            OscPlot.Plot.Add.Signal(ValuesOut);
+            OscPlot.Plot.Add.Signal(ValuesIn);
+            ScottPlot.TickGenerators.NumericManual tickGen = new();
+
+            ScottPlot.AxisPanels.Experimental.LeftAxisWithSubtitle customAxisY = new()
+            {
+                LabelText = "VOLTAGES",
+                SubLabelText = "All units are in mV",
+            };
+
+            OscPlot.Plot.Axes.Remove(OscPlot.Plot.Axes.Left);
+            OscPlot.Plot.Axes.AddLeftAxis(customAxisY);
+
+            for (int i = 0; i < ValuesOut.Length; i++)
+            {
+                tickGen.AddMajor(i, "");
+            }
+            OscPlot.Plot.Axes.Bottom.TickGenerator = tickGen;
+        }
 
         #region Function Gen Relay Functions
         private void OpenInvFG()

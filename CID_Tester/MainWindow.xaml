@@ -41,6 +41,12 @@
         <DataTemplate DataType="{x:Type DocVm:DebugViewModel}">
             <documents:DebugView />
         </DataTemplate>
+        <DataTemplate DataType="{x:Type DocVm:BatchDetailsViewModel}">
+            <documents:BatchDetailsView />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type DocVm:HistoryViewModel}">
+            <documents:HistoryView />
+        </DataTemplate>
         <DataTemplate DataType="{x:Type AnchVm:TestParameterPropertiesViewModel}">
             <anchorable:TestParameterProperties />
         </DataTemplate>

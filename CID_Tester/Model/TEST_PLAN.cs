@@ -11,17 +11,13 @@ namespace CID_Tester.Model
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int TestCode { get; set; }
-        public string Name { get; set; }
-        public string Description { get; set; }
-        public DateTime Date { get; set; }
-        public int CycleNo { get; set; }
-        public int TestTime { get; set; }
+        public string Name { get; set; } = null!;
+        public string? Description { get; set; }
 
         public DUT DUT { get; set; } = null!;
 
-        public TEST_USER TEST_USER { get; set; } = null!;
-
         public ICollection<TEST_PARAMETER> TEST_PARAMETERS { get; set; } = [];
+        public ICollection<TEST_BATCH> TEST_BATCHES { get; set; } = [];
 
     }
 }
