@@ -41,6 +41,12 @@
         <DataTemplate DataType="{x:Type DocVm:DebugViewModel}">
             <documents:DebugView />
         </DataTemplate>
+        <DataTemplate DataType="{x:Type DocVm:BatchDetailsViewModel}">
+            <documents:BatchDetailsView />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type DocVm:HistoryViewModel}">
+            <documents:HistoryView />
+        </DataTemplate>
         <DataTemplate DataType="{x:Type AnchVm:TestParameterPropertiesViewModel}">
             <anchorable:TestParameterProperties />
         </DataTemplate>
@@ -90,6 +96,8 @@
                     <icon:Play Command="{Binding PlayTestCommand}" />
                     <icon:Pause Command="{Binding PauseTestCommand}" />
                     <icon:Stop Command="{Binding StopTestCommand}" />
+                    <Separator Background="#757575" Margin="0 0 10 0"/>
+                    <Button Foreground="White" Command="{Binding ReconnectDevicesCommand}">Reconnect to Devices</Button>
                 </ToolBar>
             </ToolBarPanel>
 

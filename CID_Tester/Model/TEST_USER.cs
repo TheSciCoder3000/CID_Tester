@@ -32,7 +32,7 @@ namespace CID_Tester.Model
         [Column(TypeName = "nvarchar(50)")]
         public string Password { get; set; } = null!;
 
-        public ICollection<TEST_PLAN> TEST_PLANS { get; set; } = [];
+        public ICollection<TEST_BATCH> TEST_BATCHES { get; set; } = [];
 
         public override string ToString()
         {

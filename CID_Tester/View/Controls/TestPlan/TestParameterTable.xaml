@@ -20,16 +20,11 @@
             </DataGrid.InputBindings>
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Name" Binding="{Binding Name}" MinWidth="200" />
-                <DataGridTextColumn Header="Description" Binding="{Binding Description}" MinWidth="250" />
+                <DataGridTextColumn Header="Type" Binding="{Binding Type}" MinWidth="80" />
                 <DataGridTextColumn Header="Target" Binding="{Binding Target}" Width="75" />
                 <DataGridTextColumn Header="Metric" Binding="{Binding Metric}" Width="75" />
-                <DataGridTextColumn Header="Parameters" Binding="{Binding Parameters}" Width="*">
-                    <DataGridTextColumn.ElementStyle>
-                        <Style>
-                            <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
-                        </Style>
-                    </DataGridTextColumn.ElementStyle>
-                </DataGridTextColumn>
+                <DataGridTextColumn Header="Description" Binding="{Binding Description}" Width="*" />
+                <DataGridTextColumn Header="Input Configuration" Binding="{Binding InputConfiguration}" Width="*" />
             </DataGrid.Columns>
         </DataGrid>
     </StackPanel>

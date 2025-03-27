@@ -35,65 +35,9 @@ namespace CID_Tester.ViewModel.DebugSDK
         short handle = 1;
         short status = 0;
 
-        private int _signalType;
-        public int signalType
-        {
-            get { return _signalType; }
-            set
-            {
-                _signalType = value;
-                signalChanged(value);
-                OnPropertyChanged();
-            }
-        }
-
-        private double _frequency;
-        public double frequency
-        {
-            get { return _frequency; }
-            set
-            {
-                _frequency = value;
-                OnPropertyChanged();
-            }
-        }
-
-        private UInt32 _p2pVoltage;
-        public UInt32 p2pVoltage
-        {
-            get { return _p2pVoltage; }
-            set
-            {
-                _p2pVoltage = value;
-                OnPropertyChanged();
-            }
-        }
-
-        private Int32 _offsetVoltage;
-        public Int32 offsetVoltage
-        {
-            get { return _offsetVoltage; }
-            set
-            {
-                _offsetVoltage = value;
-                OnPropertyChanged();
-            }
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-        protected void OnPropertyChanged([CallerMemberName] string name = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
-        }
-
-
         // Initialise view 
         public PS2000SigGen()
         {
-            _signalType = 0;
-            _frequency = 1000;
-            _p2pVoltage = 2000;
-            _offsetVoltage = 0;
         }
 
         // Disable sweep for DC waveType
@@ -108,29 +52,28 @@ namespace CID_Tester.ViewModel.DebugSDK
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        public void StartSignal()
+        public void StartSignal(int signalType, int offset, Double frequency, uint pTP)
         {
-            int offset = 0;
-            uint pkToPk = 0;
             uint sweeps = 0;
-            Double stopFreq = 0;
+            uint pkToPk = 0;
             Double startFreq = 0;
+            Double stopFreq = 0;
             Double increment = 0;
             Double dwellTime = 0;
+
             Imports.SweepType sweeptype = Imports.SweepType.UP;
 
             try
             {
-                startFreq = _frequency;
-                pkToPk = _p2pVoltage * 1000;
-                offset = _offsetVoltage * 1000;
+                startFreq = frequency;
+                pkToPk = pTP * 1000;
+                offset = offset * 1000;
             }
             catch
             {
                 MessageBox.Show("Error with start frequency, offset and/or pktopk", "INVALID VALUES");
                 return;
             }
-
             stopFreq = startFreq;
             increment = 0;
             dwellTime = 0;
@@ -139,9 +82,9 @@ namespace CID_Tester.ViewModel.DebugSDK
 
             Imports.WaveType wavetype = Imports.WaveType.SINE;
 
-            if (_signalType < (int)Imports.WaveType.MAX_WAVE_TYPES)
+            if (signalType < (int)Imports.WaveType.MAX_WAVE_TYPES)
             {
-                wavetype = (Imports.WaveType)(_signalType);
+                wavetype = (Imports.WaveType)(signalType);
 
                 if (wavetype == Imports.WaveType.DC_VOLTAGE)
                 {
@@ -185,6 +128,7 @@ namespace CID_Tester.ViewModel.DebugSDK
 
             return deltaPhase;
         }
+
 
     }
 }

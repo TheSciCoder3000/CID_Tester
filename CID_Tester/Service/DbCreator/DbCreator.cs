@@ -1,5 +1,4 @@
-﻿using CID_Tester.Exceptions;
-using CID_Tester.Model;
+﻿using CID_Tester.Model;
 using CID_Tester.Model.DbContexts;
 using Microsoft.EntityFrameworkCore;
 
@@ -14,9 +13,10 @@ namespace CID_Tester.Service.DbCreator
             _dbContextFactory = dbContextFactory;
         }
 
+        #region DUT
         public async Task CreateDUT(DUT dut)
         {
-            using (TesterDbContext context  = _dbContextFactory.CreateDbContext())
+            using (TesterDbContext context = _dbContextFactory.CreateDbContext())
             {
 
                 context.DUT.Add(dut);
@@ -33,14 +33,26 @@ namespace CID_Tester.Service.DbCreator
             }
         }
 
+        #endregion
+
+        #region Test Parameter
         public async Task CreateTestParameter(TEST_PARAMETER param)
         {
             using (TesterDbContext context = _dbContextFactory.CreateDbContext())
             {
-                context.Entry(param.TestPlan).State = EntityState.Unchanged;
+                context.Entry(param.TEST_PLAN).State = EntityState.Unchanged;
 
                 context.TEST_PARAMETER.Add(param);
 
+                await context.SaveChangesAsync();
+            }
+        }
+
+        public async Task UpdateTestParameter(TEST_PARAMETER param)
+        {
+            using (TesterDbContext context = _dbContextFactory.CreateDbContext())
+            {
+                context.Entry(param).State = EntityState.Modified;
                 await context.SaveChangesAsync();
             }
         }
@@ -49,7 +61,7 @@ namespace CID_Tester.Service.DbCreator
         {
             using (TesterDbContext context = _dbContextFactory.CreateDbContext())
             {
-                context.Entry(param.TestPlan).State = EntityState.Unchanged;
+                context.Entry(param.TEST_PLAN).State = EntityState.Unchanged;
 
                 context.TEST_PARAMETER.Remove(param);
 
@@ -57,18 +69,21 @@ namespace CID_Tester.Service.DbCreator
             }
         }
 
+        #endregion
+
+
         public async Task CreateTestPlan(TEST_PLAN testPlan)
         {
             using (TesterDbContext context = _dbContextFactory.CreateDbContext())
             {
                 context.Entry(testPlan.DUT).State = EntityState.Unchanged;
-                context.Entry(testPlan.TEST_USER).State = EntityState.Unchanged;
 
                 context.TEST_PLAN.Add(testPlan);
-                
+
                 await context.SaveChangesAsync();
             }
         }
+        
 
         public async Task CreateUser(TEST_USER user)
         {
@@ -79,11 +94,42 @@ namespace CID_Tester.Service.DbCreator
             }
         }
 
-        public async Task UpdateTestParameter(TEST_PARAMETER param)
+
+        public async Task CreateTestOutput(TEST_OUTPUT output)
         {
             using (TesterDbContext context = _dbContextFactory.CreateDbContext())
             {
-                context.Entry(param).State = EntityState.Modified;
+                context.Entry(output.TEST_BATCH).State = EntityState.Unchanged;
+                context.Entry(output.TEST_PARAMETER).State = EntityState.Unchanged;
+                context.TEST_OUTPUT.Add(output);
+                await context.SaveChangesAsync();
+            }
+        }
+
+        public async Task UpdateTestOutput(TEST_OUTPUT output)
+        {
+            using (TesterDbContext context = _dbContextFactory.CreateDbContext())
+            {
+                context.Entry(output).State = EntityState.Modified;
+                await context.SaveChangesAsync();
+            }
+        }
+
+        public async Task CreateBatch(TEST_BATCH batch)
+        {
+            using (TesterDbContext context = _dbContextFactory.CreateDbContext())
+            {
+                context.Entry(batch.TEST_PLAN.DUT).State = EntityState.Unchanged;
+                context.Entry(batch.TEST_PLAN).State = EntityState.Unchanged;
+                context.Entry(batch.TEST_USER).State = EntityState.Unchanged;
+
+                foreach (TEST_OUTPUT testOutput in batch.TEST_OUTPUTS)
+                {
+                    context.Entry(testOutput.TEST_PARAMETER).State = EntityState.Unchanged;
+                    context.Entry(testOutput).State = EntityState.Added;
+                }
+
+                context.TEST_BATCH.Add(batch);
                 await context.SaveChangesAsync();
             }
         }

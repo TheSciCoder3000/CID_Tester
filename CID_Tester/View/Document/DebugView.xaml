@@ -6,8 +6,8 @@
       xmlns:local="clr-namespace:CID_Tester.View.Document"
       xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
       xmlns:ScottPlot="clr-namespace:ScottPlot.WPF;assembly=ScottPlot.WPF"
-      mc:Ignorable="d" 
-      d:DesignHeight="964.689" d:DesignWidth="764.299"
+      xmlns:controls="clr-namespace:CID_Tester.View.Controls.DebugView"
+      mc:Ignorable="d"
       Unloaded="UserControl_Unloaded"   
       >
 
@@ -17,103 +17,114 @@
         </i:EventTrigger>
     </i:Interaction.Triggers>
 
-    <StackPanel Orientation="Vertical" Margin="0,0,0,-183">
-        <StackPanel Margin="20" VerticalAlignment="Stretch">
-            <Border CornerRadius="7" Background="#2D2D30">
-                <StackPanel Orientation="Vertical" Margin="20">
-                    <StackPanel Orientation="Vertical" >
-                        <StackPanel Orientation="Horizontal" Margin="0,7,0,0">
-                            <TextBlock Text="OSCILLOSCOPE" FontWeight="Bold" FontSize="22" HorizontalAlignment="Center" />
-                        </StackPanel>
+    <ScrollViewer HorizontalScrollBarVisibility="Auto">
+        <StackPanel Orientation="Vertical" Margin="0,0,0,0">
+            <StackPanel Margin="20" VerticalAlignment="Stretch">
+                <Border CornerRadius="7" Background="#2D2D30">
+                    <StackPanel Orientation="Vertical" Margin="20">
+                        <StackPanel Orientation="Vertical" >
+                            <StackPanel Orientation="Horizontal" Margin="0,7,0,0">
+                                <TextBlock Text="OSCILLOSCOPE" FontWeight="Bold" FontSize="22" HorizontalAlignment="Center" />
+                            </StackPanel>
 
-                        <StackPanel Orientation="Vertical" HorizontalAlignment="Stretch" Margin="42">
-                            <ContentControl MinHeight="300" MinWidth="300" Content="{Binding OscDisplay, Mode=OneTime}"/>
-                        </StackPanel>
-                        <Grid Width="250" HorizontalAlignment="Left">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition />
-                                <ColumnDefinition />
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition />
-                            </Grid.RowDefinitions>
-
-                            <Button Background="Transparent" Grid.Column="0"  HorizontalAlignment="Left" Margin="0 10" Command="{Binding CaptureMeasurement}" Click="Button_Click">
-                                <Border CornerRadius="7" Background="Green" Padding="15 6">
-                                    <TextBlock Text="Get Reading"/>
-                                </Border>
-                            </Button>
-                            <Button Background="Transparent" Grid.Column="1" HorizontalAlignment="Left" Margin="0 10" Command="{Binding GetInfo}" Click="Button_Click">
-                                <Border CornerRadius="7" Background="Green" Padding="15 6">
-                                    <TextBlock Text="Oscilloscope Info"/>
-                                </Border>
-                            </Button>
-                        </Grid>
-                        <DockPanel LastChildFill="True">
-                            <Grid Margin="10">
+                            <StackPanel Orientation="Vertical" HorizontalAlignment="Stretch" Margin="42">
+                                <ContentControl MinHeight="300" MinWidth="300" Content="{Binding OscDisplay, Mode=OneTime}"/>
+                            </StackPanel>
+                            <Grid Width="250" HorizontalAlignment="Left">
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition/>
-                                    <ColumnDefinition/>
+                                    <ColumnDefinition />
+                                    <ColumnDefinition />
                                 </Grid.ColumnDefinitions>
                                 <Grid.RowDefinitions>
-                                    <RowDefinition/>
-                                    <RowDefinition/>
-                                    <RowDefinition/>
-                                    <RowDefinition/>
+                                    <RowDefinition />
                                 </Grid.RowDefinitions>
-                                <TextBlock Text="Wave Form: " FontWeight="Bold" FontSize="15" Grid.Column="0" Grid.Row="0" VerticalAlignment="Center"/>
-                                <ComboBox FontSize="15" Grid.Column="1" Grid.Row="0" Height="30" VerticalAlignment="Center" SelectedIndex="{Binding signalType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
-                                    <ComboBoxItem Content="Sine" IsSelected="True"></ComboBoxItem>
-                                    <ComboBoxItem Content="Square"></ComboBoxItem>
-                                    <ComboBoxItem Content="Triangle"></ComboBoxItem>
-                                    <ComboBoxItem Content="Ramp Up"></ComboBoxItem>
-                                    <ComboBoxItem Content="Ramp Down"></ComboBoxItem>
-                                    <ComboBoxItem Content="Sin(x) / x"></ComboBoxItem>
-                                    <ComboBoxItem Content="Gaussian"></ComboBoxItem>
-                                    <ComboBoxItem Content="Half Sine"></ComboBoxItem>
-                                    <ComboBoxItem Content="DC"></ComboBoxItem>
-                                </ComboBox>
-                                <TextBlock Text="Frequency (Hz): " FontWeight="Bold" FontSize="15" Grid.Column="0" Grid.Row="1" VerticalAlignment="Center" />
-                                <TextBox Grid.Column="1" Grid.Row="1" VerticalAlignment="Center" Background="White" Width="100" PreviewTextInput="TextBox_PreviewTextInput" Text="{Binding frequency, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Foreground="Black"/>
-                                <TextBlock Text="P2P Voltage (mV): " FontWeight="Bold" FontSize="15" Grid.Column="0" Grid.Row="2" VerticalAlignment="Center"/>
-                                <TextBox Grid.Column="1" Grid.Row="2" VerticalAlignment="Center" Background="White" Width="100" PreviewTextInput="TextBox_PreviewTextInput" Text="{Binding p2pVoltage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Foreground="Black"/>
-                                <TextBlock Text="Offset Voltage (mV): " FontWeight="Bold" FontSize="15" Grid.Column="0" Grid.Row="3" VerticalAlignment="Center"/>
-                                <TextBox Grid.Column="1" Grid.Row="3" VerticalAlignment="Center" Background="White" Width="100" PreviewTextInput="TextBox_PreviewTextInput" Text="{Binding offsetVoltage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Foreground="Black"/>
+
+                                <Button Background="Transparent" Grid.Column="0"  HorizontalAlignment="Left" Margin="0 10" Command="{Binding CaptureMeasurement}" Click="Button_Click">
+                                    <Border CornerRadius="7" Background="Green" Padding="15 6">
+                                        <TextBlock Text="Get Reading"/>
+                                    </Border>
+                                </Button>
+                                <Button Background="Transparent" Grid.Column="1" HorizontalAlignment="Left" Margin="0 10" Command="{Binding GetInfo}" Click="Button_Click">
+                                    <Border CornerRadius="7" Background="Green" Padding="15 6">
+                                        <TextBlock Text="Oscilloscope Info"/>
+                                    </Border>
+                                </Button>
                             </Grid>
-                            <ScrollViewer Height="200" Margin="10" DockPanel.Dock="Top" Name="Scroll">
-                                <TextBox VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="White" FontSize="15" Foreground="Black" VerticalScrollBarVisibility="Auto" TextWrapping="Wrap" IsReadOnly="True" Text="{Binding ConsoleString, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" TextChanged="Output_TextChanged" />
-                            </ScrollViewer>
-                        </DockPanel>
-                        
-                        <Grid Width="250" HorizontalAlignment="Left">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition />
-                                <ColumnDefinition />
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition />
-                            </Grid.RowDefinitions>
+                            <DockPanel LastChildFill="True">
+                                <Grid Margin="10">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition/>
+                                        <ColumnDefinition/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition/>
+                                        <RowDefinition/>
+                                        <RowDefinition/>
+                                        <RowDefinition/>
+                                        <RowDefinition/>
+                                    </Grid.RowDefinitions>
+                                    <TextBlock Text="Wave Form: " FontWeight="Bold" FontSize="15" Grid.Column="0" Grid.Row="0" VerticalAlignment="Center"/>
+                                    <ComboBox Style="{StaticResource ComboBoxStyle1}" FontSize="15" Grid.Column="1" Grid.Row="0" Height="30" VerticalAlignment="Center" SelectedIndex="{Binding signalType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                                        <ComboBoxItem Content="Sine" IsSelected="True"></ComboBoxItem>
+                                        <ComboBoxItem Content="Square"></ComboBoxItem>
+                                        <ComboBoxItem Content="Triangle"></ComboBoxItem>
+                                        <ComboBoxItem Content="Ramp Up"></ComboBoxItem>
+                                        <ComboBoxItem Content="Ramp Down"></ComboBoxItem>
+                                        <ComboBoxItem Content="Sin(x) / x"></ComboBoxItem>
+                                        <ComboBoxItem Content="Gaussian"></ComboBoxItem>
+                                        <ComboBoxItem Content="Half Sine"></ComboBoxItem>
+                                        <ComboBoxItem Content="DC"></ComboBoxItem>
+                                    </ComboBox>
+                                    <TextBlock Text="Frequency (Hz): " FontWeight="Bold" FontSize="15" Grid.Column="0" Grid.Row="1" VerticalAlignment="Center" />
+                                    <TextBox Grid.Column="1" Grid.Row="1" VerticalAlignment="Center" Background="White" Width="100" PreviewTextInput="TextBox_PreviewTextInput" Text="{Binding frequency, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Foreground="Black"/>
+                                    <TextBlock Text="P2P Voltage (mV): " FontWeight="Bold" FontSize="15" Grid.Column="0" Grid.Row="2" VerticalAlignment="Center"/>
+                                    <TextBox Grid.Column="1" Grid.Row="2" VerticalAlignment="Center" Background="White" Width="100" PreviewTextInput="TextBox_PreviewTextInput" Text="{Binding p2pVoltage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Foreground="Black"/>
+                                    <TextBlock Text="Offset Voltage (mV): " FontWeight="Bold" FontSize="15" Grid.Column="0" Grid.Row="3" VerticalAlignment="Center"/>
+                                    <TextBox Grid.Column="1" Grid.Row="3" VerticalAlignment="Center" Background="White" Width="100" PreviewTextInput="TextBox_PreviewTextInput" Text="{Binding offsetVoltage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Foreground="Black"/>
+                                    <TextBlock Text="Timebase: " FontWeight="Bold" FontSize="15" Grid.Column="0" Grid.Row="4" VerticalAlignment="Center"/>
+                                    <ComboBox FontSize="15" 
+                                              Style="{StaticResource ComboBoxStyle1}"
+                                              Grid.Column="1" 
+                                              Grid.Row="4" Height="30" 
+                                              VerticalAlignment="Center" 
+                                              SelectedValue="{Binding SelectedTimebase, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                                              ItemsSource="{Binding TimebaseList, Mode=OneTime}"
+                                              SelectedValuePath="Key"
+                                              DisplayMemberPath="Value"/>
+                                </Grid>
+                                <ScrollViewer Height="200" Margin="10" DockPanel.Dock="Top" Name="Scroll">
+                                    <TextBox VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="White" FontSize="15" Foreground="Black" VerticalScrollBarVisibility="Auto" TextWrapping="Wrap" IsReadOnly="True" Text="{Binding ConsoleString, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" TextChanged="Output_TextChanged" />
+                                </ScrollViewer>
+                            </DockPanel>
 
-                            <Button Background="Transparent" Grid.Column="0"  HorizontalAlignment="Left" Margin="0 10" Command="{Binding StartSigGen}" Click="Button_Click">
-                                <Border CornerRadius="7" Background="Green" Padding="15 6">
-                                    <TextBlock Text="Start Signal"/>
-                                </Border>
-                            </Button>
-                            <Button Background="Transparent" Grid.Column="1" HorizontalAlignment="Left" Margin="0 10" Command="{Binding StopSigGen}" Click="Button_Click">
-                                <Border CornerRadius="7" Background="Maroon" Padding="15 6">
-                                    <TextBlock Text="Stop Signal"/>
-                                </Border>
-                            </Button>
-                        </Grid>
+                            <Grid Width="250" HorizontalAlignment="Left">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition />
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition />
+                                </Grid.RowDefinitions>
+
+                                <Button Background="Transparent" Grid.Column="0"  HorizontalAlignment="Left" Margin="0 10" Command="{Binding StartSigGen}" Click="Button_Click">
+                                    <Border CornerRadius="7" Background="Green" Padding="15 6">
+                                        <TextBlock Text="Start Signal"/>
+                                    </Border>
+                                </Button>
+                                <Button Background="Transparent" Grid.Column="1" HorizontalAlignment="Left" Margin="0 10" Command="{Binding StopSigGen}" Click="Button_Click">
+                                    <Border CornerRadius="7" Background="Maroon" Padding="15 6">
+                                        <TextBlock Text="Stop Signal"/>
+                                    </Border>
+                                </Button>
+                            </Grid>
 
 
+                        </StackPanel>
+
+                        <controls:SwitchMatrixPanelControl />
                     </StackPanel>
-                    
-
-                </StackPanel>
-            </Border>
+                </Border>
+            </StackPanel>
         </StackPanel>
-
-        <ContentControl Content="{Binding TestPlanStatusControl}" />
-    </StackPanel>
+    </ScrollViewer>
 </UserControl>

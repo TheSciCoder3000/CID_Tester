@@ -35,6 +35,8 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using ScottPlot.WPF;
 using ScottPlot.Colormaps;
+using ScottPlot;
+using static OfficeOpenXml.ExcelErrorValue;
 namespace CID_Tester.ViewModel.DebugSDK
 {
     struct ChannelSettings
@@ -73,6 +75,8 @@ namespace CID_Tester.ViewModel.DebugSDK
     public class PS2000
     {
 
+        // Variables
+        #region
         private DebugViewModel _DebugVM;
         public DebugViewModel DebugVM
         {
@@ -102,9 +106,13 @@ namespace CID_Tester.ViewModel.DebugSDK
 
         public PinnedArray<int> Captured;
 
+        public double[] _valuesOut = new double[100];
+
+        public double[] _valuesIn = new double[100];
+
         short _timebase = 0;
         short _oversample = 1;
-        short handle = 0;
+        short handle = 1;
         bool _hasFastStreaming = false;
 
         uint _totalSampleCount = 0;
@@ -126,6 +134,10 @@ namespace CID_Tester.ViewModel.DebugSDK
         private string BlockFile = "block.txt";
         private string StreamFile = "stream.txt";
 
+        #endregion
+
+        // Low Level Functions
+        #region
         /****************************************************************************
          * StreamingCallback
          * used by data streaming collection calls, on receipt of data.
@@ -178,6 +190,8 @@ namespace CID_Tester.ViewModel.DebugSDK
         {
             for (int i = 0; i < _channelCount; i++) // set channels to most recent settings
             {
+                Debug.WriteLine($"Channel settings: {i}");
+                Debug.WriteLine($"Enabled: {_channelSettings[i].enabled}\nDC Coupled: {_channelSettings[i].DCcoupled}\nRange: {inputRanges[(int)_channelSettings[i].range]}");
                 Imports.SetChannel(handle, (Imports.Channel)i,
                                    _channelSettings[i].enabled,
                                    _channelSettings[i].DCcoupled,
@@ -224,13 +238,8 @@ namespace CID_Tester.ViewModel.DebugSDK
             short timeUnit = 0;
             int timeIndisposed;
             short status = 0;
-            ScottPlot.TickGenerators.NumericManual tickGen = new();
-            //_DebugVM.OscDisplay.Plot.Clear();
-            //_DebugVM.Logger.Clear();
 
             // Buffer to hold time data
-
-
 
             int[] times = new int[sampleCount];
             PinnedArray<int> pinnedTimes = new PinnedArray<int>(times);
@@ -260,11 +269,6 @@ namespace CID_Tester.ViewModel.DebugSDK
 
             }
             while (status == 0);
-
-
-
-            
-
 
             Debug.WriteLine("Timebase: {0}\toversample:{1}\n", _timebase, _oversample);
             Print("Timebase: " + _timebase + "\toversample:" + _oversample + "\n");
@@ -303,24 +307,19 @@ namespace CID_Tester.ViewModel.DebugSDK
                 Debug.WriteLine('\n');
                 Print("" + '\n');
 
-                for (int i = 0; i < _DebugVM.Values.Length; i++)
+                for (int i = 0; i < _valuesOut.Length; i++)
                 {
 
-                    long y = adc_to_mv(pinned[0].Target[i], (int)_channelSettings[0].range);
+                    long y1 = adc_to_mv(pinned[0].Target[i], (int)_channelSettings[0].range);
+                    long y2 = adc_to_mv(pinned[1].Target[i], (int)_channelSettings[1].range);
                     int x = pinnedTimes.Target[i];
 
                     //Debug.Write(x.ToString() + '\t');
                     Print((Convert.ToDouble(x) / 100).ToString() + '\t');
-                    Print((Convert.ToDouble(y) / 1000).ToString() + '\t');
+                    Print((Convert.ToDouble(y1) / 1000).ToString() + '\t');
 
-                    _DebugVM.Values[i] = (Convert.ToDouble(y) / 1000);
-                    tickGen.AddMajor(i, "");
-
-                    //_DebugVM.Values[i] = Math.Sin(i * 1 + 2);
-
-                    //_DebugVM.Streamer.ViewWipeRight();
-
-                    Debug.WriteLine(Environment.NewLine);
+                    _valuesOut[i] = (Convert.ToDouble(y1) / 1000);
+                    _valuesIn[i] = (Convert.ToDouble(y2) / 1000);
                     Print("" + '\n');
                 }
 
@@ -331,10 +330,6 @@ namespace CID_Tester.ViewModel.DebugSDK
                 Console.WriteLine("Data collection aborted");
             }
 
-
-            _DebugVM.OscDisplay.Plot.Axes.Bottom.TickGenerator = tickGen;
-
-            UpdateData();
             Imports.Stop(handle);
         }
 
@@ -903,22 +898,10 @@ namespace CID_Tester.ViewModel.DebugSDK
         {
             bool valid = false;
 
-            Debug.WriteLine("Available voltage ranges:\n");
-
-            /* See what ranges are available... */
-            for (int i = (int)_firstRange; i <= (int)_lastRange; i++)
-            {
-                Debug.WriteLine("{0}: {1} mV", i, inputRanges[i]);
-            }
-
-            /* Ask the user to select a range */
-            Debug.WriteLine("\nSpecify voltage range ({0}..{1})", _firstRange, _lastRange);
-            Debug.WriteLine("99 - switches channel off");
-
             for (int ch = 0; ch < _channelCount; ch++)
             {
                 Debug.WriteLine("");
-                uint range = 8;
+                uint range = 10;
 
                 do
                 {
@@ -928,16 +911,13 @@ namespace CID_Tester.ViewModel.DebugSDK
 
                 } while (range != 99 && (range < (uint)_firstRange || range > (uint)_lastRange) || !valid);
 
-
                 if (range != 99)
                 {
                     _channelSettings[ch].range = (Imports.Range)range;
-                    Debug.WriteLine(" = {0} mV", inputRanges[range]);
                     _channelSettings[ch].enabled = 1;
                 }
                 else
                 {
-                    Debug.WriteLine("Channel switched off");
                     _channelSettings[ch].enabled = 0;
                 }
             }
@@ -957,20 +937,7 @@ namespace CID_Tester.ViewModel.DebugSDK
             short timeunit;
             bool valid = false;
             short status = 0;
-            short maxTimebaseIndex = 0; // Use this to place an upper bound on the timebase index selected
-
-            Debug.WriteLine("Available timebases indices and sampling intervals (nanoseconds):\n");
-
-            for (short i = 0; i < Imports.PS2200_MAX_TIMEBASE; i++)
-            {
-                status = Imports.GetTimebase(handle, i, BUFFER_SIZE, out timeInterval, out timeunit, _oversample, out maxSamples);
-
-                if (status == 1)
-                {
-                    Debug.WriteLine("{0,2}: {1} ns", i, timeInterval);
-                    maxTimebaseIndex = i;
-                }
-            }
+            short maxTimebaseIndex = 11; // Use this to place an upper bound on the timebase index selected
 
             do
             {
@@ -978,6 +945,7 @@ namespace CID_Tester.ViewModel.DebugSDK
                 try
                 {
                     _timebase = time;
+                    Debug.WriteLine(_timebase + " | " + maxTimebaseIndex);
 
                     if (_timebase < 0 || _timebase > maxTimebaseIndex)
                     {
@@ -1025,8 +993,21 @@ namespace CID_Tester.ViewModel.DebugSDK
         {
             int ch;
             int voltage;
+            int timeInterval;
+            int maxSamples;
+            short timeunit;
 
             Debug.WriteLine(Environment.NewLine);
+
+            for (short i = 0; i < Imports.PS2200_MAX_TIMEBASE; i++)
+            {
+                short status = Imports.GetTimebase(handle, i, BUFFER_SIZE, out timeInterval, out timeunit, _oversample, out maxSamples);
+
+                if (status == 1)
+                {
+                    Debug.WriteLine("{0,2}: {1} ns", i, timeInterval);
+                }
+            }
 
             for (ch = 0; ch < _channelCount; ch++)
             {
@@ -1073,7 +1054,7 @@ namespace CID_Tester.ViewModel.DebugSDK
             {
                 _channelSettings[i].enabled = 1;
                 _channelSettings[i].DCcoupled = 1; //DC coupled
-                _channelSettings[i].range = Imports.Range.Range_5V;
+                _channelSettings[i].range = Imports.Range.Range_20V;
             }
 
             // main loop - read key and call routine
@@ -1137,6 +1118,10 @@ namespace CID_Tester.ViewModel.DebugSDK
             //}
         }
 
+        #endregion
+
+        // High Level Functions
+        #region
         public void Start()
         {
 
@@ -1160,15 +1145,63 @@ namespace CID_Tester.ViewModel.DebugSDK
 
         private void Print(string text)
         {
-            _DebugVM.ConsoleString += text;
+            if (_DebugVM != null) _DebugVM.ConsoleString += text;
+
         }
 
-        private void UpdateData()
+        public WpfPlot GetDataGenerate(short timebase, uint range)
         {
-            //_DebugVM.OscDisplay.Series.Add(lineSeries);
-            _DebugVM.OscDisplay.Plot.Axes.AutoScale();
-            _DebugVM.OscDisplay.Refresh();
+
+            Run();
+            SetTimebase(timebase);
+            SetVoltages(range);
+            CollectBlockImmediate();
+
+            WpfPlot chart = new WpfPlot();
+
+            ScottPlot.AxisPanels.Experimental.LeftAxisWithSubtitle customAxisY = new()
+            {
+                LabelText = "VOLTAGES",
+                SubLabelText = "All units are in mV",
+            };
+
+            chart.Plot.Axes.Remove(chart.Plot.Axes.Left);
+            chart.Plot.Axes.AddLeftAxis(customAxisY);
+
+            ScottPlot.TickGenerators.NumericManual tickGen = new();
+            for (int i = 0; i < _valuesOut.Length; i++)
+            {
+                tickGen.AddMajor(i, "");
+            }
+
+            chart.Plot.Add.Signal(_valuesOut);
+            chart.Plot.Add.Signal(_valuesIn);
+
+            chart.Plot.Axes.AutoScale();
+            chart.Refresh();
+
+            return chart;
         }
+        public void GetDataUpdate(WpfPlot Chart, short timebase, uint range)
+        {
+            Run();
+            SetTimebase(timebase);
+            SetVoltages(range);
+            CollectBlockImmediate();
+
+            ScottPlot.TickGenerators.NumericManual tickGen = new();
+            for (int i = 0; i < _valuesOut.Length; i++)
+            {
+                tickGen.AddMajor(i, "");
+            }
+
+            Chart.Plot.Clear();
+            Chart.Plot.Add.Signal(_valuesOut);
+            Chart.Plot.Add.Signal(_valuesIn);
+            Chart.Plot.Axes.AutoScale();
+            Chart.Refresh();
+        }
+        #endregion
 
     }
 }

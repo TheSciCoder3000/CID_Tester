@@ -1,17 +1,18 @@
 ﻿using CID_Tester.Model;
+using CID_Tester.Store;
 using CID_Tester.View.Windows;
 using CID_Tester.ViewModel.Document;
 using CID_Tester.ViewModel.Windows;
 
 namespace CID_Tester.ViewModel.Command.Navigation;
 
-public class NavigateTestPlan(Store appStore) : CommandBase
+public class NavigateTestPlan(AppStore appStore) : CommandBase
 {
-    private readonly Store _AppStore = appStore;
+    private readonly AppStore _AppStore = appStore;
 
     public override void Execute(object? parameter)
     {
-        if (_AppStore.TestPlan == null)
+        if (_AppStore.TestPlanStore.SelectedTestPlan == null)
         {
             OpenTestPlanView testPlanDialog = new OpenTestPlanView();
             OpenTestPlanViewModel vm = new OpenTestPlanViewModel(_AppStore, () => testPlanDialog.Close());
@@ -19,6 +20,6 @@ public class NavigateTestPlan(Store appStore) : CommandBase
             testPlanDialog.ShowDialog();
         }
 
-        if (_AppStore.TestPlan != null) _AppStore.AddDocument<TestPlanViewModel>(new TestPlanViewModel(appStore));
+        if (_AppStore.TestPlanStore.SelectedTestPlan != null) _AppStore.DocumentStore.AddDocument<TestPlanViewModel>(new TestPlanViewModel(appStore));
     }
 }

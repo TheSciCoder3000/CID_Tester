@@ -1,4 +1,5 @@
 ﻿using CID_Tester.Model;
+using CID_Tester.Store;
 using CID_Tester.ViewModel.Command;
 using System.Windows.Input;
 
@@ -6,12 +7,12 @@ namespace CID_Tester.ViewModel.Controls.AddTestPlan;
 
 public class AddTestPlanTableSelectorViewModel : BaseViewModel
 {
-    private readonly Store _AppStore;
+    private readonly AppStore _AppStore;
     private readonly Action _closeDialog;
 
     public ICollection<TEST_PLAN> TestPlans
     {
-        get => _AppStore.TestUser.TEST_PLANS;
+        get => _AppStore.TestPlanStore.TestPlans;
     }
 
     private TEST_PLAN? _selectedTestPlan;
@@ -25,7 +26,7 @@ public class AddTestPlanTableSelectorViewModel : BaseViewModel
         }
     }
 
-    public AddTestPlanTableSelectorViewModel(Store appStore, Action closeDialog)
+    public AddTestPlanTableSelectorViewModel(AppStore appStore, Action closeDialog)
     {
         _AppStore = appStore;
         _closeDialog = closeDialog;
@@ -36,7 +37,7 @@ public class AddTestPlanTableSelectorViewModel : BaseViewModel
     {
         if (SelectedTestPlan != null)
         {
-            _AppStore.setTestPlan(SelectedTestPlan);
+            _AppStore.TestPlanStore.SelectTestPlan(SelectedTestPlan);
             _closeDialog();
         }
     }

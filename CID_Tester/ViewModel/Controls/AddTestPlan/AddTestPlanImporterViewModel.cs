@@ -7,12 +7,14 @@ using CID_Tester.Exceptions;
 using System.Windows.Input;
 using CID_Tester.ViewModel.Command;
 using System.Globalization;
+using System.Diagnostics;
+using CID_Tester.Store;
 
 namespace CID_Tester.ViewModel.Controls.AddTestPlan;
 
 public class AddTestPlanImporterViewModel : BaseViewModel
 {
-    private readonly Store _AppStore;
+    private readonly AppStore _AppStore;
     private readonly Action _closeDialog;
     private TEST_PLAN? _testPlan;
 
@@ -24,7 +26,7 @@ public class AddTestPlanImporterViewModel : BaseViewModel
     public ICommand SaveCommand { get; }
     public ICommand ImportCommand { get; }
 
-    public AddTestPlanImporterViewModel(Store appStore, Action closeDialog)
+    public AddTestPlanImporterViewModel(AppStore appStore, Action closeDialog)
     {
         _AppStore = appStore;
         _closeDialog = closeDialog;
@@ -38,7 +40,7 @@ public class AddTestPlanImporterViewModel : BaseViewModel
     {
         if (_testPlan != null)
         {
-            await _AppStore.CreateTestPlan(_testPlan);
+            await _AppStore.TestPlanStore.CreateTestPlan(_testPlan);
             _closeDialog();
         }
     }
@@ -66,17 +68,15 @@ public class AddTestPlanImporterViewModel : BaseViewModel
         {
             try
             {
-                // ==================== DC PARAMETERS ==================== 
-                var worksheet = package.Workbook.Worksheets[0];
 
+                var worksheet = package.Workbook.Worksheets[0];
                 int rows = worksheet.Dimension.Rows;
 
                 // Test Plan Data
                 string testName = worksheet.Cells[1, 2].Text;
 
                 string deviceName = worksheet.Cells[3, 3].Text;
-                DUT? device = _AppStore.DUTs.FirstOrDefault(dut => dut.DutName == deviceName);
-                if (device == null) throw new ExcelFormatException("Device in the Test Plan does not exist in the database");
+                DUT? device = _AppStore.DUTs.FirstOrDefault(dut => dut.DutName == deviceName) ?? throw new ExcelFormatException("Device in the Test Plan does not exist in the database");
 
                 int testCycNo = int.Parse(worksheet.Cells[4, 3].Text);
                 string testDesc = worksheet.Cells[5, 3].Text;
@@ -85,14 +85,12 @@ public class AddTestPlanImporterViewModel : BaseViewModel
                 {
                     Name = testName,
                     Description = testDesc,
-                    Date = DateTime.Now,
-                    CycleNo = testCycNo,
-                    TestTime = 0,
-                    TEST_USER = _AppStore.TestUser,
                     DUT = device,
                 };
 
-                for (int row = 11; row < rows; row += 12)
+                // ==================== DC PARAMETERS ==================== 
+                int row = 11;
+                while (worksheet.Cells[row, 1].Text != "")
                 {
                     string paramName = worksheet.Cells[row, 1].Text;
                     string nonInv = worksheet.Cells[row, 2].Text;
@@ -101,6 +99,7 @@ public class AddTestPlanImporterViewModel : BaseViewModel
                     string rF = worksheet.Cells[row, 5].Text;
                     var (target, unit) = parseRawTarget(worksheet.Cells[row, 6].Text);
                     string parameters = ParseParameterToString(worksheet, row);
+                    string inputConfiguration = ParseInputConfiguration("DC", worksheet, row);
 
                     _testPlan.TEST_PARAMETERS.Add(new TEST_PARAMETER()
                     {
@@ -108,8 +107,11 @@ public class AddTestPlanImporterViewModel : BaseViewModel
                         Description = $"Inverting={inv},\nNon-Inverting={nonInv},\nRin={rIn},\nRF={rF}",
                         Metric = unit,
                         Target = (decimal)target,
-                        Parameters = parameters
+                        Parameters = parameters,
+                        InputConfiguration = inputConfiguration
                     });
+
+                    row += 12;
                 }
 
                 // Loop through images in the worksheet
@@ -131,15 +133,69 @@ public class AddTestPlanImporterViewModel : BaseViewModel
                 //    }
                 //}
 
+                // ==================== AC PARAMETERS ==================== 
+                var worksheetAc = package.Workbook.Worksheets[1];
+                row = 11;
+                while (worksheetAc.Cells[row, 1].Text != "")
+                {
+                    string paramName = worksheetAc.Cells[row, 1].Text;
+                    string nonInv = worksheetAc.Cells[row, 2].Text;
+                    string inv = worksheetAc.Cells[row, 3].Text;
+                    string rIn = worksheetAc.Cells[row, 4].Text;
+                    string rF = worksheetAc.Cells[row, 5].Text;
+                    string parameters = ParseParameterToString(worksheetAc, row);
+                    string inputConfiguration = ParseInputConfiguration("AC", worksheetAc, row);
+
+
+                    _testPlan.TEST_PARAMETERS.Add(new TEST_PARAMETER()
+                    {
+                        Name = paramName,
+                        Description = $"Inverting={inv},\nNon-Inverting={nonInv},\nRin={rIn},\nRF={rF}",
+                        Metric = "GRAPH",
+                        Target = 0,
+                        Parameters = parameters,
+                        Type = "AC",
+                        InputConfiguration = inputConfiguration
+                    });
+
+                    row += 12;
+                }
             }
             catch (ExcelFormatException fmtEx)
             {
                 MessageBox.Show(fmtEx.Message);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 MessageBox.Show("Error in parsing Excel file, please check the format");
+                Debug.WriteLine(ex.Message);
             }
+        }
+    }
+
+    private string ParseInputConfiguration(string type, ExcelWorksheet worksheet, int row)
+    {
+        if (type == "DC")
+        {
+            float InputVoltage = float.Parse(worksheet.Cells[row, 30].Text);
+            string PMU1 = worksheet.Cells[row, 25].Text == "ON" ? "ON" : "OFF";
+            string PMU2 = worksheet.Cells[row, 26].Text == "ON" ? "ON": "OFF";
+
+            return $"PMU1={PMU1}, PMU2={PMU2}, Input={InputVoltage}";
+        }
+        else if (type == "AC")
+        {
+            float frequency = float.Parse(worksheet.Cells[row, 30].Text);
+            float amplitude = float.Parse(worksheet.Cells[row, 31].Text);
+            float timebase = float.Parse(worksheet.Cells[row, 32].Text);
+            string signalType = worksheet.Cells[row, 33].Text;
+            string FG1 = worksheet.Cells[row, 25].Text == "ON" ? "ON" : "OFF";
+            string FG2 = worksheet.Cells[row, 26].Text == "ON" ? "ON" : "OFF";
+            return $"FG1={FG1}, FG2={FG2}, frequency={frequency}, amplitude={amplitude}, timebase={timebase}, signalType={signalType}";
+        }
+        else
+        {
+            throw new ExcelFormatException("Incorrect Test Type");
         }
     }
 

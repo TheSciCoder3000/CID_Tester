@@ -1,4 +1,5 @@
 ﻿using CID_Tester.Model;
+using CID_Tester.Store;
 using CID_Tester.ViewModel.Command;
 using System.Windows.Input;
 
@@ -6,9 +7,9 @@ namespace CID_Tester.ViewModel.Windows;
 
 public class AddParameterViewModel : BaseViewModel
 {
-    private readonly Store _AppStore;
+    private readonly AppStore _AppStore;
     private Action _closeWindow;
-    public AddParameterViewModel(Store appStore, Action closeWindowCommand)
+    public AddParameterViewModel(AppStore appStore, Action closeWindowCommand)
     {
         _AppStore = appStore;
 
@@ -25,8 +26,8 @@ public class AddParameterViewModel : BaseViewModel
 
     private async void AddCommandHanlder(object? obj)
     {
-        if (_AppStore.TestPlan != null)
-            await _AppStore.CreateTestParameter(
+        if (_AppStore.TestPlanStore.SelectedTestPlan != null)
+            await _AppStore.TestPlanStore.CreateTestParameter(
                     new TEST_PARAMETER()
                     {
                         Name=Name, 
@@ -34,7 +35,7 @@ public class AddParameterViewModel : BaseViewModel
                         Metric= Metric, 
                         Target=Target, 
                         Parameters="",
-                        TestPlan = _AppStore.TestPlan
+                        TEST_PLAN = _AppStore.TestPlanStore.SelectedTestPlan
                     }
                 );
         _closeWindow();

@@ -10,12 +10,13 @@ using CID_Tester.ViewModel.Windows;
 using CID_Tester.ViewModel.Controls.AddTestPlan;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using CID_Tester.Store;
 
 namespace CID_Tester.ViewModel.Document;
 
 public class DashboardViewModel : BaseViewModel, IDocument
 {
-    private readonly Store _AppStore;
+    private readonly AppStore _AppStore;
 
     public string Title { get; set; }
     public string Fullname { get { return _AppStore.TestUser.ToString(); } }
@@ -48,16 +49,16 @@ public class DashboardViewModel : BaseViewModel, IDocument
     public RelayCommand PauseTestCommand => new RelayCommand(execute => PauseTestHandler(), canExecute => canPause());
     public RelayCommand StopTestCommand => new RelayCommand(execute => StopTestHandler(), canExecute => canStop());
 
-    public DashboardViewModel(Store appStore, ICommand navigateToTestPlanCommand)
+    public DashboardViewModel(AppStore appStore, ICommand navigateToTestPlanCommand)
     {
         _AppStore = appStore;
-        _AppStore.OnTestPlanUpdated += LoadTestMetrics;
+        _AppStore.TestPlanStore.OnTestPlanUpdated += LoadTestMetrics;
         NavigateToTestPlanCommand = new RelayCommand(OpenTestPlan);
         ImportCsvCommand = new RelayCommand(ImportTestPlan);
         Title = "Dashboard";
         CloseCommand = new RelayCommand(CloseCommandHanlder);
 
-        LoadTestMetrics(_AppStore.TestPlan);
+        LoadTestMetrics(_AppStore.TestPlanStore.SelectedTestPlan);
 
     }
 
@@ -109,8 +110,8 @@ public class DashboardViewModel : BaseViewModel, IDocument
 
     private void CloseCommandHanlder(object? parameter)
     {
-        _AppStore.OnTestPlanUpdated -= LoadTestMetrics;
-        _AppStore.RemoveDocument(this);
+        _AppStore.TestPlanStore.OnTestPlanUpdated -= LoadTestMetrics;
+        _AppStore.DocumentStore.RemoveDocument(this);
     }
 
 }

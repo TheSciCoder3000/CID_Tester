@@ -45,7 +45,6 @@ public partial class DashboardMetricControl : UserControl
             CreateCell(test.Description.ToString(), row_count, 0);
             CreateCell(test.Metric.ToString(), row_count, 1);
             CreateCell(test.Target.ToString(), row_count, 2);
-            CreateCell(test.Value.ToString(), row_count, 3);
 
             TextBlock text = new TextBlock
             {

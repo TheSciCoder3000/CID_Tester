@@ -1,19 +1,21 @@
 ﻿using CID_Tester.Model;
+using CID_Tester.Store;
 using CID_Tester.View.Windows;
 using CID_Tester.ViewModel.Command;
 using CID_Tester.ViewModel.Controls.AddTestPlan;
 using CID_Tester.ViewModel.Windows;
+using System.Windows.Input;
 
 namespace CID_Tester.ViewModel;
 
 public class ToolbarViewModel : BaseViewModel
 {
-    private readonly Store _AppStore;
+    private readonly AppStore _AppStore;
 
-    public ToolbarViewModel(Store appStore)
+    public ToolbarViewModel(AppStore appStore)
     {
         _AppStore = appStore;
-        _AppStore.OnTestPlanUpdated += updateTestPlanList;
+        _AppStore.TestPlanStore.OnTestPlanUpdated += updateTestPlanList;
         _AppStore.OnTesting += (TestingMode testing) => onPropertyChanged(nameof(NotLocked));
     }
 
@@ -56,13 +58,13 @@ public class ToolbarViewModel : BaseViewModel
         onPropertyChanged(nameof(SelectedTestPlan));
     }
 
-    public IEnumerable<TEST_PLAN> TestPlans { get => _AppStore.TestUser.TEST_PLANS; }
+    public IEnumerable<TEST_PLAN> TestPlans { get => _AppStore.TestPlanStore.TestPlans; }
     public TEST_PLAN? SelectedTestPlan
     {
-        get => _AppStore.TestPlan;
+        get => TestPlans.FirstOrDefault(tp => tp.TestCode == _AppStore.TestPlanStore.SelectedTestPlan?.TestCode);
         set
         {
-            if (value != null) _AppStore.setTestPlan(value);
+            if (value != null) _AppStore.TestPlanStore.SelectTestPlan(value);
             onPropertyChanged(nameof(SelectedTestPlan));
         }
     }
@@ -72,6 +74,7 @@ public class ToolbarViewModel : BaseViewModel
     public RelayCommand PlayTestCommand => new RelayCommand(execute => PlayTestHandller(), canExecute => canPlay());
     public RelayCommand PauseTestCommand => new RelayCommand(execute => PauseTestHandler(), canExecute => canPause());
     public RelayCommand StopTestCommand => new RelayCommand(execute => StopTestHandler(), canExecute => canStop());
+    public RelayCommand ReconnectDevicesCommand => new RelayCommand(execute => _AppStore.ReinitializeTestDevices());
 
     public bool NotLocked
     {
