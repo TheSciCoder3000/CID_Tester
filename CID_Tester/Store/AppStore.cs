@@ -5,6 +5,7 @@ using CID_Tester.Service.Serial;
 using CID_Tester.ViewModel;
 using System.Diagnostics;
 using System.Windows;
+using System.Windows.Input;
 
 namespace CID_Tester.Store;
 
@@ -26,19 +27,13 @@ public class AppStore
         set
         {
             _testing = value;
-            if (value == TestingMode.Start) Task.Run(() => _testPlanService?.Start(TestPlanStore.SelectedTestPlan, () => Testing = TestingMode.Stop));
-            if (value == TestingMode.Stop && _testPlanService?.TokenSource != null)
-            {
-                Debug.WriteLine("");
-                _testPlanService?.TokenSource?.Cancel();
-            }
             OnTesting?.Invoke(value);
         }
     }
     public IEnumerable<DUT> DUTs { get; private set; } = [];
     public TEST_USER TestUser { get; private set; }
 
-    private TestPlanService _testPlanService;
+    public TestPlanService TestPlanService;
 
     public TestPlanStore TestPlanStore { get; }
     public DocumentStore DocumentStore { get; }
@@ -53,7 +48,7 @@ public class AppStore
 
     public event Action<IEnumerable<TEST_PARAMETER>>? OnTestParameterUpdated;
 
-    
+
 
     public event Action<TestingMode>? OnTesting;
 
@@ -65,7 +60,7 @@ public class AppStore
         _dbCreator = dbCreator;
         TestUser = testUser;
 
-        _testPlanService = new TestPlanService(testUser, dbCreator);
+        TestPlanService = new TestPlanService(testUser, dbCreator);
         DocumentStore = new DocumentStore(documents);
         TestPlanStore = new TestPlanStore(dbProvider, dbCreator);
 
@@ -80,7 +75,7 @@ public class AppStore
     }
     public void ReinitializeTestDevices()
     {
-        int unconnectedDevices = _testPlanService.Initialize();
+        int unconnectedDevices = TestPlanService.Initialize();
         if (unconnectedDevices == 0)
         {
             MessageBox.Show("All devices are connected", "Device Connection", MessageBoxButton.OK, MessageBoxImage.Information);

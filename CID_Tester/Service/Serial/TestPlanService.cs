@@ -20,6 +20,12 @@ public class TestPlanService
 
     public CancellationTokenSource? TokenSource;
 
+    #region events
+
+    public event Action<ICollection<TEST_OUTPUT>>? OnTestCompleted;
+
+    #endregion
+
     public TestPlanService(TEST_USER testUser, IDbCreator dbCreator)
     {
         _testUser = testUser;
@@ -29,7 +35,7 @@ public class TestPlanService
 
     public int Initialize()
     {
-        _powerSupplyService = new PowerSupply();
+            _powerSupplyService = new PowerSupply();
         _measureService = new Measure();
         _functionSwitchService = new FunctionSwitchService();
         _switchMatrixService = new SwitchMatrix();
@@ -37,7 +43,7 @@ public class TestPlanService
         return _measureService.Unconnected() + _powerSupplyService.Unconnected() + _functionSwitchService.Unconnected() + _switchMatrixService.Unconnected();
     }
 
-    public async void Start(TEST_PLAN TestPlan, Action? OnTestComplete = null)
+    public async Task Start(TEST_PLAN TestPlan, Action? OnTestComplete = null)
     {
         _TestPlan = TestPlan;
         if (TestPlan == null)
@@ -60,6 +66,8 @@ public class TestPlanService
             //SoundPlayer soundPlayer = new SoundPlayer("Start.wav");
             //soundPlayer.Play();
 
+            SystemSounds.Beep.Play();
+
             TokenSource = new CancellationTokenSource();
             var token = TokenSource.Token;
 
@@ -70,12 +78,15 @@ public class TestPlanService
                 await RunTests(token);
             }
             //soundPlayer = new SoundPlayer("Alarm.wav");
-            //soundPlayer.Play();
+            //soundPlaye
+
+            SystemSounds.Asterisk.Play();
+
 
             await _dbCreator.CreateBatch(_testBatch);
 
         }
-        catch (OperationCanceledException ex)
+        catch (OperationCanceledException)
         {
             TokenSource?.Dispose();
             TokenSource = null;
@@ -95,15 +106,16 @@ public class TestPlanService
     private async Task RunTests(CancellationToken token)
     {
         // Open Services
-        //_powerSupplyService.Open();
+        _powerSupplyService.Open();
         _switchMatrixService.Open();
-        //_measureService.Open();
+        _measureService.Open();
         _functionSwitchService.Open();
 
         foreach (var parameter in _TestPlan!.TEST_PARAMETERS)
         {
             // setup matrix configuration
-            _switchMatrixService.Start(parameter.ParseToParameterDictionary());
+            await _switchMatrixService.Start(parameter.ParseToParameterDictionary());
+            ICollection<TEST_OUTPUT> ParameterTestOutput = [];
 
             for (int dutNum = 1; dutNum <= 4; dutNum++)
             {
@@ -125,15 +137,16 @@ public class TestPlanService
                 // supply.ToggleDPSNeg(true);
 
                 // turn on input
-                if (parameter.Type == "DC" && false)
+                if (parameter.Type == "DC")
                 {
                     // set voltage and open PMU
                     Debug.WriteLine($"Running dc test: {parameter.Name}");
-                    _powerSupplyService.StartPMU(parameter.Type, parameter.InputConfiguration);
+                    await _powerSupplyService.StartPMU(parameter.Type, parameter.InputConfiguration);
 
                     // start measurement
                     await _measureService.SetModeVoltage();
                     double rawValue = await _measureService.GetMeasurement();
+                    //double rawValue = 10;
 
                     TEST_OUTPUT result = new TEST_OUTPUT()
                     {
@@ -142,6 +155,7 @@ public class TestPlanService
                         DutLocation = dutNum,
                     };
                     _testBatch.TEST_OUTPUTS.Add(result);
+                    ParameterTestOutput.Add(result);
 
                     Debug.WriteLine($"Raw value: {rawValue}");
 
@@ -152,7 +166,7 @@ public class TestPlanService
                 {
                     // start function generator
                     _functionSwitchService.ParseInputConfiguration(parameter.InputConfiguration);
-                    _functionSwitchService.StartFunctionGen();
+                    await _functionSwitchService.StartFunctionGen();
 
                     // capture graph
                     string fullResultPath = _functionSwitchService.CaptureGraph($"D{dutNum}-P{parameter.ParamCode}-B{_testBatch.BatchCode}.jpeg");
@@ -178,7 +192,9 @@ public class TestPlanService
 
             // reset wiring
             _switchMatrixService.Reset();
-            Thread.Sleep(1000);
+            await Task.Delay(1000);
+            // Update Dashboard with results
+            OnTestCompleted?.Invoke(ParameterTestOutput);
         }
 
         // Close Services
