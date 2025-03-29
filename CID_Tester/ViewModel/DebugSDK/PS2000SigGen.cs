@@ -71,7 +71,7 @@ namespace CID_Tester.ViewModel.DebugSDK
             }
             catch
             {
-                MessageBox.Show("Error with start frequency, offset and/or pktopk", "INVALID VALUES");
+                //MessageBox.Show("Error with start frequency, offset and/or pktopk", "INVALID VALUES");
                 return;
             }
             stopFreq = startFreq;
@@ -92,7 +92,7 @@ namespace CID_Tester.ViewModel.DebugSDK
                 }
             }
 
-            MessageBox.Show(handle + " | " + offset + " | " + pkToPk + " | " + wavetype + " | " + (float)startFreq + " | " + (float)stopFreq + " | " + (float)increment + " | " + (float)dwellTime + " | " + sweeptype + " | " + sweeps);
+            //MessageBox.Show(handle + " | " + offset + " | " + pkToPk + " | " + wavetype + " | " + (float)startFreq + " | " + (float)stopFreq + " | " + (float)increment + " | " + (float)dwellTime + " | " + sweeptype + " | " + sweeps);
 
             status = Imports.SetSigGenBuiltIn(handle,
                                               offset,
@@ -107,7 +107,7 @@ namespace CID_Tester.ViewModel.DebugSDK
 
             if (status == 0)
             {
-                MessageBox.Show("Error SetSigGen parameters is out of range", "Error");
+                //MessageBox.Show("Error SetSigGen parameters is out of range", "Error");
             }
         }
 
