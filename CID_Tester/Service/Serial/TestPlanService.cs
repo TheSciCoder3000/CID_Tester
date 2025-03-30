@@ -35,7 +35,7 @@ public class TestPlanService
 
     public int Initialize()
     {
-            _powerSupplyService = new PowerSupply();
+        _powerSupplyService = new PowerSupply();
         _measureService = new Measure();
         _functionSwitchService = new FunctionSwitchService();
         _switchMatrixService = new SwitchMatrix();
