@@ -25,6 +25,8 @@ public class DebugParameterItemViewModel : BaseViewModel
         }
     }
 
+    public string ParameterName { get => _param.Name;  }
+
     public ICommand SetParameterCommand { get; }
 
     public DebugParameterItemViewModel(TEST_PARAMETER param, SwitchMatrix switchMatrix)
@@ -37,11 +39,13 @@ public class DebugParameterItemViewModel : BaseViewModel
 
     private async void SetParameterCommand_Handler(object? obj)
     {
-
+        _switchMatrixService.Open();
+        _switchMatrixService.Reset();
+        await Task.Delay(1000);
         if (_param != null)
         {
             await _switchMatrixService.Start(_param.ParseToParameterDictionary());
         }
-
+        _switchMatrixService.Close();
     }
 }
