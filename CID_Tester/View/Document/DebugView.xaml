@@ -121,7 +121,7 @@
 
                         </StackPanel>
 
-                        <controls:SwitchMatrixPanelControl />
+                        <controls:SwitchMatrixPanelControl DataContext="{Binding SwitchMatrixPanelViewModel}" />
                     </StackPanel>
                 </Border>
             </StackPanel>
