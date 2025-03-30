@@ -28,6 +28,11 @@ namespace CID_Tester.Service.Serial
             SendCommand($"DUTS DUT_{dut_indx}");
         }
 
+        public void DutOff()
+        {
+            SendCommand($"DUTS OFF");
+        }
+
         public void Reset()
         {
             SendCommand("ALL0");
