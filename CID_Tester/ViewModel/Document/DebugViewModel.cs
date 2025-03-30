@@ -164,7 +164,7 @@ public class DebugViewModel : BaseViewModel, IDocument, INotifyPropertyChanged
         OscDisplay.Plot.Add.Signal(ValuesOut);
         OscDisplay.Plot.Add.Signal(ValuesIn);
         ScottPlot.TickGenerators.NumericManual tickGen = new();
-        SwitchMatrixPanelViewModel = new SwitchMatrixPanelViewModel(_AppStore);
+        SwitchMatrixPanelViewModel = new SwitchMatrixPanelViewModel(appStore);
 
         ScottPlot.AxisPanels.Experimental.LeftAxisWithSubtitle customAxisY = new()
         {

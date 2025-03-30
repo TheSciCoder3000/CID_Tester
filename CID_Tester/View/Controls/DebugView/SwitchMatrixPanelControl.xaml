@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:CID_Tester.View.Controls.DebugView"
              xmlns:controls="clr-namespace:CID_Tester.ViewModel.Controls"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="600" d:DesignWidth="800">
     <UserControl.Resources>
         <DataTemplate DataType="{x:Type controls:DebugParameterItemViewModel}">
             <Button Content="{Binding ParameterName}" Command="{Binding SetParameterCommand}">
@@ -50,9 +50,21 @@
             <Grid.RowDefinitions >
                 <RowDefinition />
                 <RowDefinition />
+                <RowDefinition />
+                <RowDefinition />
+                <RowDefinition />
             </Grid.RowDefinitions>
 
-            <StackPanel Grid.Row="0" Grid.Column="0" HorizontalAlignment="Left">
+            <StackPanel>
+                <TextBlock FontSize="16" Foreground="White">Function Generator Relay</TextBlock>
+                <StackPanel HorizontalAlignment="Left">
+                    <Button Padding="20 5" Margin="0 5" Command="{Binding ToggleFGRelay1Command}">Inverting</Button>
+                    <Button Padding="20 5" Margin="0 5" Command="{Binding ToggleFGRelay2Command}">Non Inverting</Button>
+                    <Button Padding="20 5" Margin="0 5" Command="{Binding ResetFGRelayCommand}">Reset</Button>
+                </StackPanel>
+            </StackPanel>
+
+            <StackPanel Grid.Row="1" Grid.Column="0" HorizontalAlignment="Left">
                 <TextBlock Foreground="White" FontSize="16">Dut Selector</TextBlock>
                 <StackPanel Margin="0 10 0 0">
                     <Button Margin="0 5" Command="{Binding ToggleDut1Command}">DUT 1</Button>
@@ -63,9 +75,34 @@
                 </StackPanel>
             </StackPanel>
 
-            <StackPanel Grid.Row="1" Grid.Column="0" Margin="0 20 0 0" HorizontalAlignment="Left">
+            <StackPanel Grid.Row="2" Grid.Column="0" Margin="0 20 0 0" HorizontalAlignment="Left">
                 <TextBlock Foreground="White" FontSize="16">Parameter Selector</TextBlock>
+                <Button Padding="10 5" Command="{Binding ResetSwitchCommand}">ALL0</Button>
                 <ItemsControl ItemsSource="{Binding ParameterItems}" />
+            </StackPanel>
+
+            <StackPanel Grid.Row="3" Grid.Column="0" Margin="0 20 0 0">
+                <TextBlock Foreground="White" FontSize="16">Input Voltage Selector</TextBlock>
+                <Grid Margin="0 20 0 0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition Height="15" />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+                    <Button Command="{Binding ToggleInvCommand}" Grid.Column="0" Grid.Row="0" FontSize="16" Padding="20 5">Inverting</Button>
+                    <TextBox Grid.Column="1" Grid.Row="0" Width="50" Text="{Binding InvValue}" FontSize="16" Padding="0 5" TextAlignment="Center" />
+                    <Button Command="{Binding ToggleNinvCommand}" Grid.Column="0" Grid.Row="2" FontSize="16" Padding="20 5">Non Inverting</Button>
+                    <TextBox Grid.Column="1" Grid.Row="2" Width="50" Text="{Binding NinvValue}" FontSize="16" Padding="0 5" TextAlignment="Center" />
+                </Grid>
+            </StackPanel>
+
+            <StackPanel Grid.Row="4" Grid.Column="0" Margin="0 20 0 0" HorizontalAlignment="Left">
+                <TextBlock FontSize="16" Foreground="White">Measure</TextBlock>
+                <Button Command="{Binding MeasureCommand}" Margin="0 10 0 0" Padding="20 5">DMM Measure</Button>
             </StackPanel>
         </Grid>
     </StackPanel>
