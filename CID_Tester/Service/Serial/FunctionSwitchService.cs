@@ -51,13 +51,13 @@ namespace CID_Tester.Service.Serial
             //if (configuration["range"] == "10V") _range = (uint)Imports.Range.Range_10V;
             //if (configuration["range"] == "20V") _range = (uint)Imports.Range.Range_20V;
         }
-        public void StartFunctionGen()
+        public async Task StartFunctionGen()
         {
             int offset = 0;
             uint pkToPk = 2000;
 
             FuncGen.StartSignal((int)_signalType, offset, _frequency, pkToPk);
-            Thread.Sleep(1000);
+            await Task.Delay(1000);
 
             if (_useFG1) OpenInvFG();
             else if (_useFG2) OpenNinvFG();

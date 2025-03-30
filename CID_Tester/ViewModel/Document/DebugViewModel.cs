@@ -13,6 +13,7 @@ using ScottPlot.WPF;
 using ScottPlot.Plottables;
 using ScottPlot;
 using CID_Tester.Store;
+using CID_Tester.ViewModel.Controls.DebugControls;
 namespace CID_Tester.ViewModel.Document;
 
 public class DebugViewModel : BaseViewModel, IDocument, INotifyPropertyChanged
@@ -20,6 +21,8 @@ public class DebugViewModel : BaseViewModel, IDocument, INotifyPropertyChanged
     private readonly AppStore _AppStore;
 
     public event PropertyChangedEventHandler PropertyChanged;
+
+    public SwitchMatrixPanelViewModel SwitchMatrixPanelViewModel { get; private set; }
 
     private PS2000 Oscilloscope;
     private PS2000SigGen SigGen;
@@ -161,6 +164,7 @@ public class DebugViewModel : BaseViewModel, IDocument, INotifyPropertyChanged
         OscDisplay.Plot.Add.Signal(ValuesOut);
         OscDisplay.Plot.Add.Signal(ValuesIn);
         ScottPlot.TickGenerators.NumericManual tickGen = new();
+        SwitchMatrixPanelViewModel = new SwitchMatrixPanelViewModel(_AppStore);
 
         ScottPlot.AxisPanels.Experimental.LeftAxisWithSubtitle customAxisY = new()
         {

@@ -26,7 +26,7 @@
                 <DataGridTextColumn Header="DUT" Binding="{Binding TEST_PLAN.DUT.DutName}" Width="*" />
                 <DataGridTextColumn Header="Cycle No." Binding="{Binding CycleNo}" Width="100" ElementStyle="{StaticResource CenteredCellStyle}" />
                 <DataGridTextColumn Header="Date" Binding="{Binding Date, StringFormat=MMMM dd\, yyyy}" Width="150" ElementStyle="{StaticResource CenteredCellStyle}" />
-                <DataGridTextColumn Header="Time" Binding="{Binding Date, StringFormat=hh:MM tt}" Width="100" ElementStyle="{StaticResource CenteredCellStyle}" />
+                <DataGridTextColumn Header="Time" Binding="{Binding Date, StringFormat=hh:mm tt}" Width="100" ElementStyle="{StaticResource CenteredCellStyle}" />
             </DataGrid.Columns>
         </DataGrid>
     </StackPanel>

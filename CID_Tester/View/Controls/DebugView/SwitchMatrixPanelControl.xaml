@@ -59,7 +59,7 @@
                     <Button Margin="0 5" Command="{Binding ToggleDut2Command}">DUT 2</Button>
                     <Button Margin="0 5" Command="{Binding ToggleDut3Command}">DUT 3</Button>
                     <Button Margin="0 5" Command="{Binding ToggleDut4Command}">DUT 4</Button>
-                    <Button Margin="0 5" Command="{Binding ToggleDut4Command}">OFF</Button>
+                    <Button Margin="0 5" Command="{Binding ToggleOffCommand}">OFF</Button>
                 </StackPanel>
             </StackPanel>
 

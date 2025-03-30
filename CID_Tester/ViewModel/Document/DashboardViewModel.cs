@@ -63,9 +63,20 @@ public class DashboardViewModel : BaseViewModel, IDocument
     }
 
     #region Relay Command Handlers
-    private void PlayTestHandller() => _AppStore.Testing = TestingMode.Start;
+    private async Task PlayTestHandller()
+    {
+        _AppStore.Testing = TestingMode.Start;
+        if (_AppStore.TestPlanStore.SelectedTestPlan != null)
+        {
+            await _AppStore.TestPlanService.Start(_AppStore.TestPlanStore.SelectedTestPlan, () => _AppStore.Testing = TestingMode.Stop);
+        }
+    }
     private bool canPlay() => _AppStore.canTest && _AppStore.Testing != TestingMode.Start;
-    private void StopTestHandler() => _AppStore.Testing = TestingMode.Stop;
+    private void StopTestHandler()
+    {
+        _AppStore.Testing = TestingMode.Stop;
+        _AppStore.TestPlanService.TokenSource?.Cancel();
+    }
 
     private void PauseTestHandler() => _AppStore.Testing = TestingMode.Pause;
     private bool canPause() => _AppStore.canTest && _AppStore.Testing == TestingMode.Start;

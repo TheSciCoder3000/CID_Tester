@@ -27,11 +27,11 @@ namespace CID_Tester.Service.Serial
         }
         private void SetPMU1Voltage(float voltage)
         {
-            SendCommand($"3SETV{voltage}");
+            SendCommand($"2SETV{voltage}");
         }
         private void SetPMU2Voltage(float voltage)
         {
-            SendCommand($"6SETV{voltage}");
+            SendCommand($"3SETV{voltage}");
         }
 
         private void SetDPS1Current(int current)
@@ -44,11 +44,11 @@ namespace CID_Tester.Service.Serial
         }
         private void SetPMU1Current(float current)
         {
-            SendCommand($"3SETA{current}");
+            SendCommand($"2SETA{current}");
         }
         private void SetPMU2Current(float current)
         {
-            SendCommand($"6SETA{current}");
+            SendCommand($"3SETA{current}");
         }
 
         #endregion
@@ -66,17 +66,17 @@ namespace CID_Tester.Service.Serial
 
         private void OpenPMUInv()
         {
-            SendCommand("3TOGG1");
+            SendCommand("2TOGG1");
         }
 
         private  void OpenPMUNinv()
         {
-            SendCommand("6TOGG1");
+            SendCommand("3TOGG1");
         }
 
         #endregion
 
-        public void StartPMU(string type, string config)
+        public async Task StartPMU(string type, string config)
         {
             if (type != "DC") return;
 
@@ -96,9 +96,9 @@ namespace CID_Tester.Service.Serial
                 Debug.WriteLine($"voltage pmu1: {voltage}");
                 Debug.WriteLine($"COM Port: {_serialPort?.PortName}");
                 SetPMU1Voltage((int)voltage);
-                Thread.Sleep(1000);
+                await Task.Delay(1000);
                 SetPMU1Current(0.1f);
-                Thread.Sleep(1000);
+                await Task.Delay(1000);
                 OpenPMUInv();
             }
 
@@ -107,9 +107,9 @@ namespace CID_Tester.Service.Serial
                 Debug.WriteLine($"voltage pmu2: {voltage}");
                 Debug.WriteLine($"COM Port: {_serialPort?.PortName}");
                 SetPMU2Voltage((int)voltage);
-                Thread.Sleep(1000);
+                await Task.Delay(1000);
                 SetPMU2Current(0.1f);
-                Thread.Sleep(1000);
+                await Task.Delay(1000);
                 OpenPMUNinv();
             }
         }
@@ -117,8 +117,8 @@ namespace CID_Tester.Service.Serial
 
         public void ClosePMU()
         {
+            SendCommand("2TOGG0");
             SendCommand("3TOGG0");
-            SendCommand("6TOGG0");
         }
     }
 }

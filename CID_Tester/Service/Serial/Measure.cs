@@ -30,8 +30,9 @@ namespace CID_Tester.Service.Serial
                 if (mode != "\"VOLT\"")
                 {
                     SendCommand("CONF:VOLT:DC 50");
-                    Thread.Sleep(150);
+                    await Task.Delay(200);
                     SendCommand("RATE F");
+                    await Task.Delay(200);
                 }
             }
             catch (Exception ex)
