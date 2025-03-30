@@ -40,7 +40,7 @@ namespace CID_Tester.Service.Serial
             _amplitude = float.Parse(configuration["amplitude"]);
             //_timebase = short.Parse(configuration["timebase"]);
             _range = (uint)Imports.Range.Range_5V;
-            _timebase = 4;
+            _timebase = 7;
             _signalType = (Imports.WaveType)Enum.Parse(typeof(Imports.WaveType), configuration["signalType"]);
             _useFG1 = configuration["FG1"] == "ON";
             _useFG2 = configuration["FG2"] == "ON";
@@ -106,22 +106,22 @@ namespace CID_Tester.Service.Serial
         }
 
         #region Function Gen Relay Functions
-        private void OpenInvFG()
+        public void OpenInvFG()
         {
             SendCommand("ON1");
         }
 
-        private void OpenNinvFG()
+        public void OpenNinvFG()
         {
             SendCommand("ON2");
         }
 
-        private void CloseInvFG()
+        public void CloseInvFG()
         {
             SendCommand("OFF1");
         }
 
-        private void CloseNinvFG()
+        public void CloseNinvFG()
         {
             SendCommand("OFF2");
         }
