@@ -64,9 +64,15 @@
                 <ItemsControl Background="Transparent" ItemsSource="{Binding AcDutList}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <StackPanel Margin="0 20" DataContext="{Binding OutputList}">
-                                <Image Source="{Binding ImageDir}" Width="800" Height="auto" />
-                            </StackPanel>
+                            <ItemsControl Margin="0 20" ItemsSource="{Binding OutputList}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <ItemsControl Margin="0 20">
+                                            <Image Source="{Binding ImageDir}" Width="800" Height="auto" />
+                                        </ItemsControl>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
