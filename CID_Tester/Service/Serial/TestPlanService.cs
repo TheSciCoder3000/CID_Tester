@@ -55,6 +55,7 @@ public class TestPlanService
 
         try
         {
+            DateTime startTime = DateTime.Now;
             _testBatch = new TEST_BATCH()
             {
                 TEST_PLAN = TestPlan,
@@ -73,19 +74,18 @@ public class TestPlanService
             var token = TokenSource.Token;
 
 
-            
+
 
             for (int cycle = 0; cycle < 3; cycle++)
             {
                 Debug.WriteLine($"Test Cycle: {cycle + 1}");
-                await RunTests(token);
+                await RunTests(cycle, token);
             }
-            //soundPlayer = new SoundPlayer("Alarm.wav");
-            //soundPlaye
+            DateTime endTime = DateTime.Now;
 
             SystemSounds.Asterisk.Play();
 
-
+            _testBatch.TestTime = (int)(endTime - startTime).TotalSeconds;
             await _dbCreator.CreateBatch(_testBatch);
 
         }
@@ -106,7 +106,7 @@ public class TestPlanService
         CommandManager.InvalidateRequerySuggested();
     }
 
-    private async Task RunTests(CancellationToken token)
+    private async Task RunTests(int cycle, CancellationToken token)
     {
         // Open Services
         _powerSupplyService.Open();
@@ -115,107 +115,110 @@ public class TestPlanService
         _functionSwitchService.Open();
 
 
-
-        foreach (var parameter in _TestPlan!.TEST_PARAMETERS)
+        try
         {
-
-            _switchMatrixService.Reset();
-            await Task.Delay(500);
-
-            // setup matrix configuration
-            await _switchMatrixService.Start(parameter.ParseToParameterDictionary());
-            ICollection<TEST_OUTPUT> ParameterTestOutput = []; 
-
-            for (int dutNum = 1; dutNum <= 4; dutNum++)
+            foreach (var parameter in _TestPlan!.TEST_PARAMETERS)
             {
-                if (token.IsCancellationRequested)
+
+                _switchMatrixService.Reset();
+                await Task.Delay(500);
+
+                // setup matrix configuration
+                await _switchMatrixService.Start(parameter.ParseToParameterDictionary());
+                ICollection<TEST_OUTPUT> ParameterTestOutput = [];
+
+                for (int dutNum = 1; dutNum <= 4; dutNum++)
                 {
-
-                    _powerSupplyService.ClosePMU();
-                    _functionSwitchService.StopFunctionGen();
-                    _switchMatrixService.Reset();
-
-                    _powerSupplyService.Close();
-                    _measureService.Close();
-                    _switchMatrixService.Close();
-                    _functionSwitchService.Close();
-                    token.ThrowIfCancellationRequested();
-                }
-                // switch to dut num
-                Debug.WriteLine($"Switching to DUT {dutNum}");
-                _switchMatrixService.ChangeDut(dutNum);
-
-                // turn on + power supply
-                // supply.ToggleDPSPos(true);
-
-                // turn on - power supply
-                // supply.ToggleDPSNeg(true);
-
-                // turn on input
-                if (parameter.Type == "DC")
-                {
-                    // set voltage and open PMU
-                    Debug.WriteLine($"Running dc test: {parameter.Name}");
-                    await _powerSupplyService.StartPMU(parameter.Type, parameter.InputConfiguration);
-
-                    // start measurement
-                    await _measureService.SetModeVoltage();
-                    double rawValue = await _measureService.GetMeasurement();
-                    //double rawValue = 10;
-
-
-
-                    TEST_OUTPUT result = new TEST_OUTPUT()
+                    if (token.IsCancellationRequested)
                     {
-                        Measured = rawValue.ToString(),
-                        TEST_PARAMETER = parameter,
-                        DutLocation = dutNum,
-                        Pass = CheckAccuracy(rawValue, parameter.Target, 8)
-                    };
-                    _testBatch.TEST_OUTPUTS.Add(result);
-                    ParameterTestOutput.Add(result);
 
-                    Debug.WriteLine($"Raw value: {rawValue}");
+                        _powerSupplyService.ClosePMU();
+                        _functionSwitchService.StopFunctionGen();
+                        _switchMatrixService.Reset();
 
-                    // close pmu
-                    _powerSupplyService.ClosePMU();
-                    OnDUTCompleted?.Invoke(result);
-                }
-                else if (parameter.Type == "AC")
-                {
-                    // start function generator
-                    _functionSwitchService.ParseInputConfiguration(parameter.InputConfiguration);
-                    await _functionSwitchService.StartFunctionGen();
+                        _powerSupplyService.Close();
+                        _measureService.Close();
+                        _switchMatrixService.Close();
+                        _functionSwitchService.Close();
+                        token.ThrowIfCancellationRequested();
+                    }
+                    // switch to dut num
+                    Debug.WriteLine($"Switching to DUT {dutNum}");
+                    _switchMatrixService.ChangeDut(dutNum);
 
-                    // capture graph
-                    string fullResultPath = _functionSwitchService.CaptureGraph($"D{dutNum}-P{parameter.ParamCode}-B{_testBatch.BatchCode}.jpeg");
+                    // turn on + power supply
+                    // supply.ToggleDPSPos(true);
 
-                    // stop function generator
-                    _functionSwitchService.StopFunctionGen();
+                    // turn on - power supply
+                    // supply.ToggleDPSNeg(true);
 
-                    TEST_OUTPUT result = new TEST_OUTPUT()
+                    // turn on input
+                    if (parameter.Type == "DC")
                     {
-                        Measured = fullResultPath,
-                        TEST_PARAMETER = parameter,
-                        DutLocation = dutNum,
-                    };
-                    _testBatch.TEST_OUTPUTS.Add(result);
-                    OnDUTCompleted?.Invoke(result);
+                        // set voltage and open PMU
+                        Debug.WriteLine($"Running dc test: {parameter.Name}");
+                        await _powerSupplyService.StartPMU(parameter.Type, parameter.InputConfiguration);
+
+                        // start measurement
+                        await _measureService.SetModeVoltage();
+                        double rawValue = await _measureService.GetMeasurement();
+                        //double rawValue = 10;
+
+
+
+                        TEST_OUTPUT result = new TEST_OUTPUT()
+                        {
+                            Measured = rawValue.ToString(),
+                            TEST_PARAMETER = parameter,
+                            DutLocation = dutNum,
+                            Pass = CheckAccuracy(rawValue, parameter.Target, (decimal)0.3)
+                        };
+                        _testBatch.TEST_OUTPUTS.Add(result);
+                        ParameterTestOutput.Add(result);
+
+                        Debug.WriteLine($"Raw value: {rawValue}");
+
+                        // close pmu
+                        _powerSupplyService.ClosePMU();
+                        OnDUTCompleted?.Invoke(result);
+                    }
+                    else if (parameter.Type == "AC")
+                    {
+                        // start function generator
+                        _functionSwitchService.ParseInputConfiguration(parameter.InputConfiguration);
+                        await _functionSwitchService.StartFunctionGen();
+
+                        // capture graph
+                        string fullResultPath = _functionSwitchService.CaptureGraph($"D{dutNum}-P{parameter.ParamCode}-C{cycle}-d{DateTime.Now.Day}-t{DateTime.Now.Hour}{DateTime.Now.Minute}{DateTime.Now.Second}.jpeg");
+
+                        // stop function generator
+                        _functionSwitchService.StopFunctionGen();
+
+                        TEST_OUTPUT result = new TEST_OUTPUT()
+                        {
+                            Measured = fullResultPath,
+                            TEST_PARAMETER = parameter,
+                            DutLocation = dutNum,
+                        };
+                        _testBatch.TEST_OUTPUTS.Add(result);
+                        OnDUTCompleted?.Invoke(result);
+                    }
+
+                    // turn off - power supply
+                    // supply.ToggleDPSNeg(false);
+
+                    // turn off + power supply
+                    // supply.ToggleDPSPos(false);
                 }
 
-                // turn off - power supply
-                // supply.ToggleDPSNeg(false);
-
-                // turn off + power supply
-                // supply.ToggleDPSPos(false);
+                // reset wiring
+                _switchMatrixService.Reset();
+                await Task.Delay(500);
+                // Update Dashboard with results
+                OnTestCompleted?.Invoke(ParameterTestOutput);
             }
-
-            // reset wiring
-            _switchMatrixService.Reset();
-            await Task.Delay(500);
-            // Update Dashboard with results
-            OnTestCompleted?.Invoke(ParameterTestOutput);
         }
+        catch (Exception ex) { throw; }
 
         // Close Services
         _powerSupplyService.Close();
@@ -224,11 +227,10 @@ public class TestPlanService
         _functionSwitchService.Close();
     }
 
-    private String CheckAccuracy(double value, decimal target, decimal ratioTolerance)
+    private String CheckAccuracy(double value, decimal target, decimal tolerance)
     {
-        decimal error = ratioTolerance / 100; 
-        double upperLimit = (double)(target + (target * error));
-        double lowerLimit = (double)(target - (target * error));
+        double upperLimit = (double)(target + tolerance);
+        double lowerLimit = (double)(target - tolerance);
         return value >= lowerLimit && value <= upperLimit ? "PASS" : "FAIL";
     }
 }
