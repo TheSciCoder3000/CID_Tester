@@ -13,13 +13,14 @@ public class TEST_OUTPUT
 
     [Required]
     public int DutLocation { get; set; }
- 
+
+    public int? Pass { get; set; }
+
     [Required]
     public TEST_PARAMETER TEST_PARAMETER { get; set; } = null!;
 
     [Required]
     public TEST_BATCH TEST_BATCH { get; set; } = null!;
 
-    // TODO: add parameter "PASS"
     // TODO: add parameter "Cycle"
 }

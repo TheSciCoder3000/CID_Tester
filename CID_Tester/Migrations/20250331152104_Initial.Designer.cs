@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CID_Tester.Migrations
 {
     [DbContext(typeof(TesterDbContext))]
-    [Migration("20250325003105_Initial")]
+    [Migration("20250331152104_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -100,6 +100,9 @@ namespace CID_Tester.Migrations
                     b.Property<int>("ParamCode")
                         .HasColumnType("INTEGER");
 
+                    b.Property<int?>("Pass")
+                        .HasColumnType("INTEGER");
+
                     b.HasKey("OutputCode");
 
                     b.HasIndex("BatchCode");
@@ -134,9 +137,6 @@ namespace CID_Tester.Migrations
                     b.Property<string>("Parameters")
                         .IsRequired()
                         .HasColumnType("TEXT");
-
-                    b.Property<bool?>("Pass")
-                        .HasColumnType("INTEGER");
 
                     b.Property<decimal>("Target")
                         .HasColumnType("TEXT");

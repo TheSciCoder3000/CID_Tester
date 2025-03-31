@@ -108,7 +108,6 @@ namespace CID_Tester.Migrations
                     Description = table.Column<string>(type: "TEXT", nullable: false),
                     Metric = table.Column<string>(type: "TEXT", nullable: false),
                     Target = table.Column<decimal>(type: "TEXT", nullable: false),
-                    Pass = table.Column<bool>(type: "INTEGER", nullable: true),
                     Parameters = table.Column<string>(type: "TEXT", nullable: false),
                     InputConfiguration = table.Column<string>(type: "TEXT", nullable: false),
                     TestCode = table.Column<int>(type: "INTEGER", nullable: false)
@@ -132,6 +131,7 @@ namespace CID_Tester.Migrations
                         .Annotation("Sqlite:Autoincrement", true),
                     Measured = table.Column<string>(type: "TEXT", nullable: false),
                     DutLocation = table.Column<int>(type: "INTEGER", nullable: false),
+                    Pass = table.Column<int>(type: "INTEGER", nullable: true),
                     ParamCode = table.Column<int>(type: "INTEGER", nullable: false),
                     BatchCode = table.Column<int>(type: "INTEGER", nullable: false)
                 },

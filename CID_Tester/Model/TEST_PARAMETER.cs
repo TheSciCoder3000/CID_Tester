@@ -24,9 +24,7 @@ namespace CID_Tester.Model
         public string Metric { get; set; } = null!;
 
         [Required]
-        public decimal Target { get; set; }
-
-        public bool? Pass { get; set; }     // TODO: move to output table
+        public decimal Target { get; set; }   // TODO: move to output table
 
         [Required]
         public string Parameters { get; set; } = null!;

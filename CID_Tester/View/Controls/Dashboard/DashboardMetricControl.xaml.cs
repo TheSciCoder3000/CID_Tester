@@ -30,44 +30,4 @@ public partial class DashboardMetricControl : UserControl
         Grid.SetRow(border, rowCount);
         Grid.SetColumn(border, columnCount);
     }
-
-    private void CreateCustomTable(List<TEST_PARAMETER> tableData)
-    {
-        Debug.WriteLine(tableData.Count);
-
-
-        int row_count = 1;
-
-        foreach (var test in tableData)
-        {
-
-            CreateCell(test.Description.ToString(), row_count, 0);
-            CreateCell(test.Metric.ToString(), row_count, 1);
-            CreateCell(test.Target.ToString(), row_count, 2);
-
-            TextBlock text = new TextBlock
-            {
-                Text = (test.Pass == true) ? "PASS" : "FAIL",
-                FontWeight = FontWeights.Bold,
-                Padding = new Thickness(10),
-                Foreground = Brushes.White,
-                HorizontalAlignment = HorizontalAlignment.Center,
-            };
-
-            Border border = new Border
-            {
-                Child = text,
-                Padding = new Thickness(5),
-                Background = (test.Pass == true) ? Brushes.Green : Brushes.Red
-            };
-            Grid.SetRow(border, row_count);
-            Grid.SetColumn(border, 4);
-
-
-            RowDefinition rowParams = new RowDefinition();
-
-            Debug.WriteLine(row_count);
-            row_count++;
-        }
-    }
 }

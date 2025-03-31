@@ -45,8 +45,8 @@ namespace CID_Tester.ViewModel
             }
         }
 
-        public string TestsPassed { get => $"{_AppStore.TestPlanStore.SelectedTestPlan!.TEST_PARAMETERS.Where(par => par.Pass == true).Count()} PASSED"; }
-        public string TestsFailed { get => $"{_AppStore.TestPlanStore.SelectedTestPlan!.TEST_PARAMETERS.Where(par => par.Pass == true).Count()} FAILED"; }
+        public string TestsPassed { get; }
+        public string TestsFailed { get; }
         public string TestStatus
         {
             get
