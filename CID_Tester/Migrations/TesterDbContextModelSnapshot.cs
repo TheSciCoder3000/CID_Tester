@@ -87,6 +87,9 @@ namespace CID_Tester.Migrations
                     b.Property<int>("BatchCode")
                         .HasColumnType("INTEGER");
 
+                    b.Property<int>("Cycle")
+                        .HasColumnType("INTEGER");
+
                     b.Property<int>("DutLocation")
                         .HasColumnType("INTEGER");
 

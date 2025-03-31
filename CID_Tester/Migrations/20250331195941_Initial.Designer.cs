@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CID_Tester.Migrations
 {
     [DbContext(typeof(TesterDbContext))]
-    [Migration("20250331155733_initial")]
-    partial class initial
+    [Migration("20250331195941_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -88,6 +88,9 @@ namespace CID_Tester.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("BatchCode")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("Cycle")
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("DutLocation")

@@ -16,6 +16,9 @@ public class TEST_OUTPUT
 
     public String? Pass { get; set; }
 
+    [Required] 
+    public int Cycle { get; set; }
+
     [Required]
     public TEST_PARAMETER TEST_PARAMETER { get; set; } = null!;
 

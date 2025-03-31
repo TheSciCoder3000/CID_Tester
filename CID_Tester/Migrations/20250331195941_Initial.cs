@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace CID_Tester.Migrations
 {
     /// <inheritdoc />
-    public partial class initial : Migration
+    public partial class Initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -132,6 +132,7 @@ namespace CID_Tester.Migrations
                     Measured = table.Column<string>(type: "TEXT", nullable: false),
                     DutLocation = table.Column<int>(type: "INTEGER", nullable: false),
                     Pass = table.Column<string>(type: "TEXT", nullable: true),
+                    Cycle = table.Column<int>(type: "INTEGER", nullable: false),
                     ParamCode = table.Column<int>(type: "INTEGER", nullable: false),
                     BatchCode = table.Column<int>(type: "INTEGER", nullable: false)
                 },
