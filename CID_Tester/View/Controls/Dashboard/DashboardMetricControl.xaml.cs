@@ -17,17 +17,14 @@ public partial class DashboardMetricControl : UserControl
         //CreateCustomTable(context.TEST_PARAMETER.Local.ToList());
     }
 
-    private void CreateCell(String displayText, int rowCount, int columnCount)
-    {
-        TextBlock text = new TextBlock
-        {
-            Text = displayText,
-            Padding = new Thickness(10),
-            Foreground = Brushes.White
-        };
 
-        Border border = new Border { Child = text, Padding = new Thickness(5) };
-        Grid.SetRow(border, rowCount);
-        Grid.SetColumn(border, columnCount);
+    private void OngoingTests_AddingNewItem(object sender, AddingNewItemEventArgs e)
+    {
+        var dataGrid = sender as DataGrid;
+        if (dataGrid.Items.Count > 0)
+        {
+            var lastItem = dataGrid.Items[dataGrid.Items.Count - 1];
+            dataGrid.ScrollIntoView(lastItem);
+        }
     }
 }

@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace CID_Tester.Migrations
 {
     /// <inheritdoc />
-    public partial class Initial : Migration
+    public partial class initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -131,7 +131,7 @@ namespace CID_Tester.Migrations
                         .Annotation("Sqlite:Autoincrement", true),
                     Measured = table.Column<string>(type: "TEXT", nullable: false),
                     DutLocation = table.Column<int>(type: "INTEGER", nullable: false),
-                    Pass = table.Column<int>(type: "INTEGER", nullable: true),
+                    Pass = table.Column<string>(type: "TEXT", nullable: true),
                     ParamCode = table.Column<int>(type: "INTEGER", nullable: false),
                     BatchCode = table.Column<int>(type: "INTEGER", nullable: false)
                 },

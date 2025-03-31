@@ -23,6 +23,7 @@ public class TestPlanService
     #region events
 
     public event Action<ICollection<TEST_OUTPUT>>? OnTestCompleted;
+    public event Action<TEST_OUTPUT>? OnDUTCompleted;
 
     #endregion
 
@@ -72,6 +73,8 @@ public class TestPlanService
             var token = TokenSource.Token;
 
 
+            
+
             for (int cycle = 0; cycle < 3; cycle++)
             {
                 Debug.WriteLine($"Test Cycle: {cycle + 1}");
@@ -111,19 +114,31 @@ public class TestPlanService
         _measureService.Open();
         _functionSwitchService.Open();
 
+
+
         foreach (var parameter in _TestPlan!.TEST_PARAMETERS)
         {
+
+            _switchMatrixService.Reset();
+            await Task.Delay(500);
+
             // setup matrix configuration
             await _switchMatrixService.Start(parameter.ParseToParameterDictionary());
-            ICollection<TEST_OUTPUT> ParameterTestOutput = [];
+            ICollection<TEST_OUTPUT> ParameterTestOutput = []; 
 
             for (int dutNum = 1; dutNum <= 4; dutNum++)
             {
                 if (token.IsCancellationRequested)
                 {
+
                     _powerSupplyService.ClosePMU();
                     _functionSwitchService.StopFunctionGen();
                     _switchMatrixService.Reset();
+
+                    _powerSupplyService.Close();
+                    _measureService.Close();
+                    _switchMatrixService.Close();
+                    _functionSwitchService.Close();
                     token.ThrowIfCancellationRequested();
                 }
                 // switch to dut num
@@ -148,11 +163,14 @@ public class TestPlanService
                     double rawValue = await _measureService.GetMeasurement();
                     //double rawValue = 10;
 
+
+
                     TEST_OUTPUT result = new TEST_OUTPUT()
                     {
                         Measured = rawValue.ToString(),
                         TEST_PARAMETER = parameter,
                         DutLocation = dutNum,
+                        Pass = CheckAccuracy(rawValue, parameter.Target, 8)
                     };
                     _testBatch.TEST_OUTPUTS.Add(result);
                     ParameterTestOutput.Add(result);
@@ -161,6 +179,7 @@ public class TestPlanService
 
                     // close pmu
                     _powerSupplyService.ClosePMU();
+                    OnDUTCompleted?.Invoke(result);
                 }
                 else if (parameter.Type == "AC")
                 {
@@ -181,6 +200,7 @@ public class TestPlanService
                         DutLocation = dutNum,
                     };
                     _testBatch.TEST_OUTPUTS.Add(result);
+                    OnDUTCompleted?.Invoke(result);
                 }
 
                 // turn off - power supply
@@ -192,7 +212,7 @@ public class TestPlanService
 
             // reset wiring
             _switchMatrixService.Reset();
-            await Task.Delay(1000);
+            await Task.Delay(500);
             // Update Dashboard with results
             OnTestCompleted?.Invoke(ParameterTestOutput);
         }
@@ -202,5 +222,13 @@ public class TestPlanService
         _measureService.Close();
         _switchMatrixService.Close();
         _functionSwitchService.Close();
+    }
+
+    private String CheckAccuracy(double value, decimal target, decimal ratioTolerance)
+    {
+        decimal error = ratioTolerance / 100; 
+        double upperLimit = (double)(target + (target * error));
+        double lowerLimit = (double)(target - (target * error));
+        return value >= lowerLimit && value <= upperLimit ? "PASS" : "FAIL";
     }
 }

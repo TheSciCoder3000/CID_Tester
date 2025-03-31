@@ -66,7 +66,7 @@ namespace CID_Tester.Service.Serial
 
             _taskCompletionSource = new TaskCompletionSource<string>();
 
-            await Task.Delay(2500);
+            await Task.Delay(1000);
             SendCommand("MEAS?");
 
             Task timeoutTask = Task.Delay(timeout_delay);

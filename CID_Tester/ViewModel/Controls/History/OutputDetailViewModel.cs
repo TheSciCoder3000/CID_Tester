@@ -25,13 +25,6 @@ public class OutputDetailViewModel
         Target = testOutput.TEST_PARAMETER.Target.ToString();
         Metric = testOutput.TEST_PARAMETER.Metric;
         Measured = testOutput.Measured;
-        Pass = CheckAccuracy(Double.Parse(Measured)) ? "PASS" : "FAIL";
-    }
-
-    private bool CheckAccuracy(double value)
-    {
-        double upperLimit = (double)(_testOutput.TEST_PARAMETER.Target + (decimal)ratioTolerance);
-        double lowerLimit = (double)(_testOutput.TEST_PARAMETER.Target - (decimal)ratioTolerance);
-        return value >= lowerLimit && value <= upperLimit;
+        Pass = testOutput.Pass != null ? testOutput.Pass : "";
     }
 }

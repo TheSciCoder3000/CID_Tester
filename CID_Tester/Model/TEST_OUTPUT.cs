@@ -14,7 +14,7 @@ public class TEST_OUTPUT
     [Required]
     public int DutLocation { get; set; }
 
-    public int? Pass { get; set; }
+    public String? Pass { get; set; }
 
     [Required]
     public TEST_PARAMETER TEST_PARAMETER { get; set; } = null!;

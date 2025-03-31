@@ -97,8 +97,8 @@ namespace CID_Tester.Migrations
                     b.Property<int>("ParamCode")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int?>("Pass")
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("Pass")
+                        .HasColumnType("TEXT");
 
                     b.HasKey("OutputCode");
 
