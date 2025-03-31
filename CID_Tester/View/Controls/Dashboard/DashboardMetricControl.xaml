@@ -6,6 +6,19 @@
              xmlns:local="clr-namespace:CID_Tester.View.Controls.Dashboard"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <Style TargetType="TextBlock" x:Key="CenteredCellStyle">
+            <Setter Property="TextAlignment" Value="Center" />
+        </Style>
+        <Style TargetType="DataGridCell" x:Key="StatusStyle">
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding MyViewModel.Modified}" 
+                                         Value="True">
+                    <Setter Property="Background" Value="Yellow"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+    </UserControl.Resources>
     <StackPanel>
 
         <Grid Margin="20, 0">
@@ -76,41 +89,41 @@
                     <!--<DataGrid Name="ViewDataTable" Margin="0 30 0 0" AllowDrop="False" IsReadOnly="True" d:ItemsSource="{d:SampleData ItemCount=5}"/>-->
 
                 </StackPanel>
-                <Grid Name="MainGrid">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"  MinWidth="300"/>
-                        <ColumnDefinition Width="100"/>
-                        <ColumnDefinition Width="100"/>
-                        <ColumnDefinition Width="100"/>
-                        <ColumnDefinition Width="100"/>
-
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition/>
-                    </Grid.RowDefinitions>
-
-                    <Border Background="#252526" Grid.Column="0" Padding="5">
-                        <TextBlock Text="TEST" Padding="10" Foreground="White"/>
-
-                    </Border>
-                    <Border Background="#252526" Grid.Column="1"  Padding="5">
-                        <TextBlock Text="UNIT" Padding="10" Foreground="White"/>
-
-                    </Border>
-                    <Border Background="#252526" Grid.Column="2" Padding="5">
-                        <TextBlock Text="MEASURED" Padding="10" Foreground="White"/>
-
-                    </Border>
-                    <Border Background="#252526" Grid.Column="3" Padding="5">
-                        <TextBlock Text="TARGET" Padding="10" Foreground="White"/>
-                    </Border>
-                    <Border Background="#252526" Grid.Column="4" Padding="5">
-                        <TextBlock Text="STATUS" Padding="10" Foreground="White" HorizontalAlignment="Center"/>
-                    </Border>
-
-
-                    <!-- The table will be dynamically created in the code-behind -->
-                </Grid>
+                
+                <DataGrid Name="OngoingTests">
+                    <DataGrid.CellStyle>
+                        <Style TargetType="DataGridCell">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding MyViewModel.Modified}" Value="PASS">
+                                    <Setter Property="Background" Value="Yellow"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </DataGrid.CellStyle>
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="TEST" Width="*" Binding="{Binding outputs.TEST_PARAMETER.Name}" ElementStyle="{StaticResource CenteredCellStyle}"/>
+                        <DataGridTextColumn Header="DUT" Width="50" Binding="{Binding outputs.DutLocation}" ElementStyle="{StaticResource CenteredCellStyle}"/>
+                        <DataGridTextColumn Header="UNIT" Width="50" Binding="{Binding outputs.TEST_PARAMETER.Metric}" ElementStyle="{StaticResource CenteredCellStyle}"/>
+                        <DataGridTextColumn Header="MEASURED" Width="100" Binding="{Binding outputs.Measured}" ElementStyle="{StaticResource CenteredCellStyle}"/>
+                        <DataGridTextColumn Header="TARGET" Width="100" Binding="{Binding outputs.TEST_PARAMETER.Target}" ElementStyle="{StaticResource CenteredCellStyle}"/>
+                        <DataGridTextColumn Header="STATUS" Width="100" Binding="{Binding outputs.TEST_PARAMETER.Pass}">
+                            <DataGridTextColumn.CellStyle>
+                                <Style TargetType="DataGridCell">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding outputs.TEST_PARAMETER.Pass}" 
+                                         Value="True">
+                                            <Setter Property="Background" Value="Green"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding outputs.TEST_PARAMETER.Pass}" 
+                                         Value="False">
+                                            <Setter Property="Background" Value="Red"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGridTextColumn.CellStyle>
+                        </DataGridTextColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
 
             </StackPanel>
         </Border>

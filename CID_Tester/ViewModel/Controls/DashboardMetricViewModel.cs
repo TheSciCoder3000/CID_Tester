@@ -13,6 +13,17 @@ namespace CID_Tester.ViewModel
         public string DUTDescription { get => _AppStore.TestPlanStore.SelectedTestPlan!.DUT.Description; }
 
         private int _testsRemaining;
+
+        private ICollection<TEST_OUTPUT> _outputs;
+        public ICollection<TEST_OUTPUT> outputs
+        {
+            get => _outputs;
+            set
+            {
+                _outputs = value;
+                onPropertyChanged(nameof(outputs));
+            }
+        }
         public int TotalNumberTests
         {
             get => _testsRemaining;
@@ -49,7 +60,7 @@ namespace CID_Tester.ViewModel
             }
         }
 
-        
+
 
         public DashboardMetricViewModel(AppStore appStore)
         {
@@ -71,6 +82,7 @@ namespace CID_Tester.ViewModel
 
         private void UpdateDashboardTestOutputMetrics(ICollection<TEST_OUTPUT> collection)
         {
+            outputs = collection;
             TotalNumberTests -= 1;
             if (TotalNumberTests == 0)
             {

@@ -29,7 +29,6 @@ public partial class DashboardMetricControl : UserControl
         Border border = new Border { Child = text, Padding = new Thickness(5) };
         Grid.SetRow(border, rowCount);
         Grid.SetColumn(border, columnCount);
-        MainGrid.Children.Add(border);
     }
 
     private void CreateCustomTable(List<TEST_PARAMETER> tableData)
@@ -63,11 +62,9 @@ public partial class DashboardMetricControl : UserControl
             };
             Grid.SetRow(border, row_count);
             Grid.SetColumn(border, 4);
-            MainGrid.Children.Add(border);
 
 
             RowDefinition rowParams = new RowDefinition();
-            MainGrid.RowDefinitions.Add(rowParams);
 
             Debug.WriteLine(row_count);
             row_count++;
