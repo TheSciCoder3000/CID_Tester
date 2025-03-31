@@ -132,7 +132,6 @@ namespace CID_Tester.ViewModel
 
                 MaxTests = _AppStore.TestPlanStore.SelectedTestPlan!.TEST_PARAMETERS.Count * 4 * 3;
                 CurrentTest = 0;
-                if (outputs != null) outputs.Clear();
             }
 
             onPropertyChanged(nameof(TestStatus));
