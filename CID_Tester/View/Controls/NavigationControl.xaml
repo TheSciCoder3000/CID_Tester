@@ -59,9 +59,6 @@
         <Button Tag="plan" Margin="5" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Center" Command="{Binding NavigateToTestPlan}">
             Test Plan
         </Button>
-        <Button Tag="results" Margin="5" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Center" Command="{Binding NavigateToResults}">
-            Results Overview
-        </Button>
         <Button Tag="history" Margin="5" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Center" Command="{Binding NavigateToHistory}">
             History
         </Button>
