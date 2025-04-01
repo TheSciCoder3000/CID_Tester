@@ -24,13 +24,16 @@
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="5" />
                     <RowDefinition Height="Auto" />
+                    <RowDefinition Height="5" />
+                    <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
                 <TextBlock FontWeight="Medium" Grid.Row="0" Grid.Column="0" Text="Batch No: " Margin="0 0 20 0" Foreground="White" FontSize="16" />
                 <TextBlock FontWeight="Medium" Grid.Row="2" Grid.Column="0" Text="Cycle No: " Margin="0 0 20 0" Foreground="White" FontSize="16" />
                 <TextBlock FontWeight="Medium" Grid.Row="4" Grid.Column="0" Text="Test Time: " Margin="0 0 20 0" Foreground="White" FontSize="16" />
                 <TextBlock FontWeight="Medium" Grid.Row="6" Grid.Column="0" Text="Date: " Margin="0 0 20 0" Foreground="White" FontSize="16" />
-
+                <TextBlock />
+                <Button Grid.Row="8" Grid.Column="0" FontWeight="Medium" Margin="0 20 20 0" Foreground="White" Background="Green" FontSize="16" Click="{Binding Export}">EXPORT</Button>
                 <TextBlock Margin="6 0" FontWeight="Light" Grid.Row="0" Grid.Column="1"  Text="{Binding BatchDetails.BatchCode}" Foreground="White" FontSize="15" />
                 <ComboBox  HorizontalAlignment="Left" Width="50" Grid.Row="2" Grid.Column="1" ItemsSource="{Binding CycleNoList}" SelectedItem="{Binding SelectedCycle, Mode=TwoWay}" Style="{StaticResource ComboBoxStyle1}" Foreground="White" FontSize="15" />
                 <TextBlock Margin="6 0" FontWeight="Light" Grid.Row="4" Grid.Column="1"  Text="{Binding BatchDetails.TestTime}" Foreground="White" FontSize="15" />
