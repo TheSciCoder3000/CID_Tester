@@ -364,3 +364,4 @@ MigrationBackup/
 FodyWeavers.xsd
 /CID_Tester/DbContexts/TesterDesignTimeDbContextFactory.cs
 /CID_Tester/Model/DbContexts/TesterDesignTimeDbContextFactory.cs
+/CID_Tester/Migrations/TesterDesignTimeDbContextFactory.cs
