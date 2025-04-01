@@ -10,14 +10,16 @@ public class ResultsViewModel : BaseViewModel, IDocument
 {
     private readonly AppStore _AppStore;
     public string Title { get; }
+    public string path { get; set; }
 
     public ICommand CloseCommand { get; }
 
-    public ResultsViewModel(AppStore appStore)
+    public ResultsViewModel(AppStore appStore, string pathToDoc)
     {
         _AppStore = appStore;
         Title = "Results Overview";
         CloseCommand = new RelayCommand(CloseCommandHanlder);
+        path = pathToDoc;
     }
 
     private void CloseCommandHanlder(object? parameter) => _AppStore.DocumentStore.RemoveDocument(this);

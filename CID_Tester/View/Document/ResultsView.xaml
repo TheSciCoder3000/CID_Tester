@@ -20,7 +20,7 @@
                 </StackPanel>
             </Border>
             <Border CornerRadius="7" Background="#2D2D30">
-                <wv2:WebView2 MinWidth="1000" Margin="10" MinHeight="800" Name="pdf" Source="file:///C:/Users/pc/source/repos/TheSciCoder3000/CID_Tester/CID_Tester/bin/Debug/net8.0-windows/PDF/Sample.pdf"/>
+                <wv2:WebView2 MinWidth="1000" Margin="10" MinHeight="800" Name="pdf" Source="{Binding path}"/>
 
             </Border>
         </StackPanel>

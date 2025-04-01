@@ -48,7 +48,6 @@ namespace CID_Tester.ViewModel
         public ICommand NavigateToDashboard { get; } = null!;
         public ICommand NavigateToDevices { get; } = null!;
         public ICommand NavigateToTestPlan { get; } = null!;
-        public ICommand NavigateToResults { get; } = null!;
         public ICommand NavigateToHistory { get; } = null!;
         public ICommand NavigateToSettings { get; } = null!;
         public ICommand NavigateToDebug { get; } = null!;
@@ -77,7 +76,6 @@ namespace CID_Tester.ViewModel
             NavigateToTestPlan  = new NavigateTestPlan(_AppStore);
             NavigateToDashboard = new NavigateDashboard(_AppStore, NavigateToTestPlan);
             NavigateToDevices   = new NavigateDevices(_AppStore);
-            NavigateToResults   = new NavigateResults(_AppStore);
             NavigateToHistory = new NavigateHistory(_AppStore);
             NavigateToDebug = new NavigateDebug(_AppStore, Oscilloscope, SigGen);
 

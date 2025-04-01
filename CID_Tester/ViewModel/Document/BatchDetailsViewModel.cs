@@ -1,23 +1,23 @@
-﻿using CID_Tester.Model;
+﻿
+using System.Windows.Input;
+using CID_Tester.Model;
 using CID_Tester.Store;
 using CID_Tester.ViewModel.Command;
 using CID_Tester.ViewModel.Controls.History;
 using CID_Tester.ViewModel.Interfaces;
-using Syncfusion.Pdf;
-using Syncfusion.Pdf.Graphics;
-using System;
-using System.ComponentModel;
-using System.Drawing;
-using System.Windows;
-using System.Windows.Input;
+using MigraDoc.DocumentObjectModel;
+using MigraDoc.DocumentObjectModel.Fields;
+using MigraDoc.DocumentObjectModel.Shapes;
+using MigraDoc.Rendering;
+using PdfSharp.Pdf;
+using CID_Tester.ViewModel.Document;
 
-using System.IO;
 namespace CID_Tester.ViewModel.Document;
 
 public class BatchDetailsViewModel : BaseViewModel, IDocument
 {
     private readonly AppStore _AppStore;
-
+    private RenderPDF renderHandler;
     public string Title { get; set; }
     public ICommand CloseCommand { get; }
     public ICommand ExportCommand { get; }
@@ -81,25 +81,13 @@ public class BatchDetailsViewModel : BaseViewModel, IDocument
         Title = title;
         CloseCommand = new RelayCommand(CloseCommandHanlder);
         ExportCommand = new RelayCommand(ExportCommandHandler);
+        renderHandler = new RenderPDF(_batchDetails, _AppStore);
     }
 
     private void ExportCommandHandler(object? obj)
     {
-        using (PdfDocument document = new PdfDocument())
-        {
-            string localAppData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-            string resultsPath = Path.Combine(localAppData, "Results/PDF", "temp.pdf");
-            //Add a page to the document.
-            PdfPage page = document.Pages.Add();
-            //Create PDF graphics for a page.
-            PdfGraphics graphics = page.Graphics;
-            //Set the standard font.
-            PdfFont font = new PdfStandardFont(PdfFontFamily.Helvetica, 20);
-            //Draw the text.
-            graphics.DrawString("Hello World!!!", font, PdfBrushes.Black, new PointF(0, 0));
-            //Save the document.
-            document.Save(resultsPath);
-        }
+        
+        renderHandler.Render();
     }
 
     private void CloseCommandHanlder(object? obj)
