@@ -1149,7 +1149,7 @@ namespace CID_Tester.ViewModel.DebugSDK
 
         }
 
-        public WpfPlot GetDataGenerate(short timebase, uint range)
+        public WpfPlot GetDataGenerate(short timebase, uint range, string parameter, string dut)
         {
 
             Run();
@@ -1161,7 +1161,7 @@ namespace CID_Tester.ViewModel.DebugSDK
 
             ScottPlot.AxisPanels.Experimental.LeftAxisWithSubtitle customAxisY = new()
             {
-                LabelText = "VOLTAGES",
+                LabelText = $"DUT {dut} | {parameter}",
                 SubLabelText = "All units are in mV",
             };
 

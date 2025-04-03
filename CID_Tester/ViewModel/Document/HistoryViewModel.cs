@@ -20,8 +20,13 @@ public class HistoryViewModel : BaseViewModel, IDocument
         Title = "History";
         CloseCommand = new RelayCommand(CloseCommandHanlder);
         DoubleClickCommand = new RelayCommand(DoubleClickCommandHandler);
+        _AppStore.TestPlanService.OnBatchTestingCompleted += UpdateTestHistoryHandler;
     }
 
+    private void UpdateTestHistoryHandler(TEST_BATCH batch)
+    {
+        onPropertyChanged(nameof(Batches)); 
+    }
 
     public ICollection<TEST_BATCH> Batches
     {

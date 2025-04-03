@@ -39,7 +39,7 @@ namespace CID_Tester.Service.Serial
             _frequency = float.Parse(configuration["frequency"]);
             _amplitude = float.Parse(configuration["amplitude"]);
             //_timebase = short.Parse(configuration["timebase"]);
-            _range = (uint)Imports.Range.Range_5V;
+            _range = (uint)Imports.Range.Range_10V;
             _timebase = 7;
             _signalType = (Imports.WaveType)Enum.Parse(typeof(Imports.WaveType), configuration["signalType"]);
             _useFG1 = configuration["FG1"] == "ON";
@@ -69,9 +69,9 @@ namespace CID_Tester.Service.Serial
             CloseAll();
         }
 
-        public string CaptureGraph(string filename)
+        public string CaptureGraph(string filename, string parameter, string dut)
         {
-            WpfPlot chart = Oscilloscope.GetDataGenerate(_timebase, _range);
+            WpfPlot chart = Oscilloscope.GetDataGenerate(_timebase, _range, parameter, dut);
 
             string localAppData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
             string resultsPath = Path.Combine(localAppData, "Results", filename);

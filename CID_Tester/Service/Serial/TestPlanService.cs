@@ -24,6 +24,7 @@ public class TestPlanService
 
     public event Action<ICollection<TEST_OUTPUT>>? OnTestCompleted;
     public event Action<TEST_OUTPUT>? OnDUTCompleted;
+    public event Action<TEST_BATCH>? OnBatchTestingCompleted;
 
     #endregion
 
@@ -103,6 +104,7 @@ public class TestPlanService
 
         await Task.Delay(2000);
         OnTestComplete?.Invoke();
+        OnBatchTestingCompleted?.Invoke(_testBatch);
         CommandManager.InvalidateRequerySuggested();
     }
 
@@ -164,14 +166,13 @@ public class TestPlanService
                         double rawValue = await _measureService.GetMeasurement();
                         //double rawValue = 10;
 
-
-
                         TEST_OUTPUT result = new TEST_OUTPUT()
                         {
                             Measured = rawValue.ToString(),
                             TEST_PARAMETER = parameter,
                             DutLocation = dutNum,
-                            Pass = CheckAccuracy(rawValue, parameter.Target, (decimal)0.3)
+                            Pass = CheckAccuracy(rawValue, parameter.Target, (decimal)1.2, parameter.Metric),
+                            Cycle = cycle
                         };
                         _testBatch.TEST_OUTPUTS.Add(result);
                         ParameterTestOutput.Add(result);
@@ -189,7 +190,7 @@ public class TestPlanService
                         await _functionSwitchService.StartFunctionGen();
 
                         // capture graph
-                        string fullResultPath = _functionSwitchService.CaptureGraph($"D{dutNum}-P{parameter.ParamCode}-C{cycle}-d{DateTime.Now.Day}-t{DateTime.Now.Hour}{DateTime.Now.Minute}{DateTime.Now.Second}.jpeg");
+                        string fullResultPath = _functionSwitchService.CaptureGraph($"D{dutNum}-P{parameter.ParamCode}-C{cycle}-d{DateTime.Now.Day}-t{DateTime.Now.Hour}{DateTime.Now.Minute}{DateTime.Now.Second}.jpeg", parameter.Name, dutNum.ToString());
 
                         // stop function generator
                         _functionSwitchService.StopFunctionGen();
@@ -199,6 +200,7 @@ public class TestPlanService
                             Measured = fullResultPath,
                             TEST_PARAMETER = parameter,
                             DutLocation = dutNum,
+                            Cycle = cycle
                         };
                         _testBatch.TEST_OUTPUTS.Add(result);
                         OnDUTCompleted?.Invoke(result);
@@ -227,8 +229,14 @@ public class TestPlanService
         _functionSwitchService.Close();
     }
 
-    private String CheckAccuracy(double value, decimal target, decimal tolerance)
+    private String CheckAccuracy(double value, decimal target, decimal tolerance, string metric)
     {
+
+        if (metric == "mV")
+        {
+            value *= 1000;
+        }
+
         double upperLimit = (double)(target + tolerance);
         double lowerLimit = (double)(target - tolerance);
         return value >= lowerLimit && value <= upperLimit ? "PASS" : "FAIL";

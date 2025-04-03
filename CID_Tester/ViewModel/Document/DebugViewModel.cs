@@ -211,7 +211,7 @@ public class DebugViewModel : BaseViewModel, IDocument, INotifyPropertyChanged
 
     private void CaptureMeasurementHandler()
     {
-        Oscilloscope.GetDataUpdate(OscDisplay, (short)SelectedTimebase, 8);
+        Oscilloscope.GetDataUpdate(OscDisplay, (short)SelectedTimebase, (uint)Imports.Range.Range_10V);
 
     }
 
